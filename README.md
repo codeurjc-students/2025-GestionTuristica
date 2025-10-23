@@ -2,13 +2,11 @@
 
 ## Summary
 
-This hotel booking application is designed looking to make a functional app that can be used by both clients and agencies to 
+This hotel booking application is designed to be a functional app that can be used by both clients and agencies to 
 book and manage hotel reservations.
 
 This application provides the tools for clients to search for hotels, reserve rooms, modify the reservation, cancel it 
 and rate the hotels where they stayed. And also the necessary tools for a travel agency to manage the ones made by the clients.
-
-This app provides the function to search for hotels based on location, name, stars or other users ratings.
 
 Only technical and functional objectives have been defined so far. Implementation has not been started yet.
 
@@ -67,7 +65,9 @@ Spring Security
 
 The project was scheduled following an agile methodology. The following Gantt diagram shows how the tasks are distributed:
 
-#### Main project phases
+<img width="2775" height="281" alt="gantt_diagram_5" src="https://github.com/user-attachments/assets/f16012d7-4e19-44ac-903c-fb47a681232d" />
+
+### Main project phases
 
 - *Phase 1* - Initial analysis and functionality design: Identify and define the functionality of the web and the design 
 and interactions. Differentiating the functionality of each user type.
@@ -87,8 +87,8 @@ minimal functionality to connect the projects and database. Implement basic auto
 
 Functionalities have been sorted into three categories: 
 - Basic: Basic functionalities that are not very complex and fundamental for the application.
-- Intermediate: Functionalities with a little more complexity, less vital to the app, but still necessary for the basic
-functionalities of the application.
+- Intermediate: Functionalities with a little more complexity, less vital to the app, but still necessary for the main
+  services provided by the application.
 - Advanced: The most complex functionalities of the app.
 
 ### Basic functionalities
@@ -131,8 +131,8 @@ functionalities of the application.
 
 ### Images
 
-- Room images: Each room has an image which is shown in the rooms reservation page
-- Hotel images: Hotels can have multiple images, one that'll be shown in the hotel searching page and the rest can be 
+- Room images: Each room has an image which is shown in the rooms reservation page of the hotel they belong to
+- Hotel images: Hotels can have multiple images, one will be shown in the hotel searching page and the rest can be 
 seen in the hotel detail page
 
 ### Graphs
@@ -148,7 +148,7 @@ hotels of the app
 
 ### Algorithms and advanced queries
 
-- Hotel search: User will be able to search for hotels that meet multiple requirements, such as number of stars, price,
+- Hotel search: User will be able to search for hotels that meet one or multiple requirements, such as number of stars, price,
 city... 
 
 ### Pages
@@ -176,7 +176,7 @@ a personalized page where they'll be able to check their own reservations
 
 <img width="745" height="411" alt="img_4" src="https://github.com/user-attachments/assets/2b854540-dfba-42bc-a9b8-ac1d6dbd4a2a" />
 
-- **Reservation detail page**: page where users or the admins will be able to check the detail of a reservation, cancel it
+- **Reservation detail page**: page where users or the admins will be able to check the details of a reservation, cancel it
 or modify it
 
 <img width="735" height="414" alt="img_5" src="https://github.com/user-attachments/assets/fa9e2bf0-57b6-4296-9816-e55f8bbd1ba6" />
@@ -191,7 +191,11 @@ or modify it
 
 - **Hotel addition page**: page where admins will be able to add new hotels to the application
 
-<img width="748" height="666" alt="img_12" src="https://github.com/user-attachments/assets/6bd86b42-a03e-44c0-9687-cfd36848d036" />
+<img width="938" height="834" alt="hotel_creation_page" src="https://github.com/user-attachments/assets/4857832f-bde9-431e-a962-43113001287a" />
+
+- **Room addition page**: page where admins will be able to add a new room to a hotel
+
+<img width="935" height="528" alt="room_creation_page" src="https://github.com/user-attachments/assets/0ad62518-9573-4771-9319-db38a47c2947" />
 
 ### Entities
 
