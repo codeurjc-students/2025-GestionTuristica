@@ -10,6 +10,8 @@ and rate the hotels where they stayed. And also the necessary tools for a travel
 
 This app provides the function to search for hotels based on location, name, stars or other users ratings.
 
+Only technical and functional objectives have been defined so far. Implementation has not been started yet.
+
 ## Index
 
 - [Objectives](#project-objectives)
@@ -50,14 +52,13 @@ Spring Security
 
 ----------------------------------------------------------------------------------------------------------
 
-| Phase   | Description                              | Objective date | Initial date   | Finish date  |
-|---------|------------------------------------------|----------------|----------------|--------------|  
-| Phase 1 | Functionality definition and prototyping | September 15th | September 10th | October 15th | 
-| Phase 2 | Repository setup, CI/CD, Sonar           | October 1st    | October 16th   | -            |
-| Phase 3 | Basic functionality with testing         | November 1st   | -              | -            | 
-| Phase 4 | Full functionality with Docker setup     | December 15th  | -              | -            |
-| Phase 5 | Memory                                   | January 15th   | -              | -            | 
-| Phase 6 | Presentation and defence                 | June           | -              | -            | 
+| Phase   | Description                              | Objective date | Initial date | Finish date  |
+|---------|------------------------------------------|----------------|--------------|--------------|  
+| Phase 1 | Functionality definition and prototyping | October 15th   | October 1st  | October 23rd | 
+| Phase 2 | Repository setup, CI/CD, Sonar           | November 7th   | October 23rd | -            |
+| Phase 3 | Full functionality with Docker setup     | December 22nd  | -            | -            |
+| Phase 4 | Memory                                   | January 15th   | -            | -            | 
+| Phase 5 | Presentation and defence                 | June           | -            | -            | 
 ----------------------------------------------------------------------------------------------------------
 
 ## Project Planning and Schedule
@@ -66,25 +67,23 @@ Spring Security
 
 The project was scheduled following an agile methodology. The following Gantt diagram shows how the tasks are distributed:
 
+
+
 #### Main project phases
 
 - Phase 1 - Initial analysis and functionality design: Identify and define the functionality of the web and the design 
 and interactions. Differentiating the functionality of each user type.
 - Phase 2 - Repository, testing and CI: Create the git repository, both client and server project and implement the 
 minimal functionality to connect the projects and database. Implement basic automatic tests and the CI system.
-- Phase 3 - Version 0.1 - Basic functionality and Docker: Add basic functionality (with automatic tests) and the Docker 
-packaging. Capacity for continuous delivery will be added. Version 0.1 of the application will be released.
-- Phase 4 - Version 0.2 - Intermediate functionality: Implement intermediate functionality (with automatic tests). 
-Version 0.2 of the application will be released. The application will also be deployed in this phase.
-- Phase 5 - Version 1.0 - Advanced functionality: The development of the application will be finished and the Version 
+- Phase 3 - Version 1.0 - Advanced functionality: The development of the application will be finished and the Version 
 1.0 will be released.
-- Phase 6 - Report: Make the first draft of the first report (application).
-- Phase 7 - Docker compose with backend replicas: Implementation of a backend with multiple instances of backend
-- Phase 8 - Simple deployment with AWS: App will be launched in EC2, database will be launched in a RDS.
-- Phase 9 - Advanced deployment with AWS: App will also have scalability (Autoscaling groups), load balancer and load testing
-- Phase 10 - Infrastructure as code and continuous deployment: Create a CouldFormation and continuous deployment.
-- Phase 11 - Report 2: Make the first draft of the second report (cloud deployment).
-- Phase 12 - Defense: Presentation of the final degree projects.
+- Phase 4 - Report: Make the first draft of the first report (application).
+- Phase 5 - Docker compose with backend replicas: Implementation of a backend with multiple instances of backend
+- Phase 6 - Simple deployment with AWS: App will be launched in EC2, database will be launched in an RDS.
+- Phase 7 - Advanced deployment with AWS: App will also have scalability (Autoscaling groups), load balancer and load testing
+- Phase 8 - Infrastructure as code and continuous deployment: Create a CouldFormation and continuous deployment.
+- Phase 9 - Report 2: Make the first draft of the second report (cloud deployment).
+- Phase 10 - Defence: Presentation of the final degree projects.
 
 ## System Functionalities
 
@@ -96,28 +95,63 @@ functionalities of the application.
 
 ### Basic functionalities
 
-- Do reservations, modify and cancel them
-- Check reservations made
-- Check hotels and rooms
-- Show a room as not available if it's already reserved
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+| Functionality                                 | Unregistered User        | Registered User        | Admin User                             | 
+|-----------------------------------------------|--------------------------|------------------------|----------------------------------------| 
+| View existing hotels, detailed view and rooms | Yes                      | Yes                    | Yes, also create, edit and delete them |
+| Do reservations                               | No                       | Yes, but only for them | No                                     |
+| Modify and cancel reservations                | No                       | Yes, but only theirs   | Yes, any user's                        |
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Intermediate functionalities
 
-- Authentication and user creation
-- Check reservations made by the user
-- Create, modify and delete hotels from admin page
-- Create and delete admin users
-- Find reservations by identifier and being able to see them in admin page with modification and delete included
+-------------------------------------------------------------------------------------------------------------------------------------
+
+| Functionality                 | Unregistered User | Registered User                                    | Admin User              | 
+|-------------------------------|-------------------|----------------------------------------------------|-------------------------| 
+| Create an user                | Yes               | -                                                  | -                       |
+| Log in                        | Yes               | -                                                  | -                       |
+| Leave reviews in hotels       | No                | Yes, but only in those where they had reservations | No, but can manage them |
+| Create and delete admin users | No                | No                                                 | Yes                     | 
+| Filter reservations           | No                | Only theirs                                        | Yes, in the admin page  |
+-------------------------------------------------------------------------------------------------------------------------------------
 
 ### Advanced functionalities
 
-- Filter hotels by location, rating, users opinion...
-- Filter reservations in admin page by user, hotel, date...
-- Review and rate hotels where the user had reservations
-- Get bill in PDF format to download when you make a reservation
-- Get an email when an admin cancelled or modified your reservation
+--------------------------------------------------------------------------------------------------------------------------------
+
+| Functionality                                                | Unregistered User | Registered User | Admin User             | 
+|--------------------------------------------------------------|-------------------|-----------------|------------------------| 
+| Filter hotels by location, rating, users' opinion            | Yes               | Yes             | Yes                    |
+| Get bill in PDF format when reservation is made              | -                 | Yes             | -                      |
+| Get an email when reservation is made, modified or cancelled | -                 | Yes             | -                      |
+--------------------------------------------------------------------------------------------------------------------------------
+
 
 ## Initial Analysis
+
+### Images
+
+- Room images: Each room has an image which is shown in the rooms reservation page
+- Hotel images: Hotels can have multiple images, one that'll be shown in the hotel searching page and the rest can be 
+seen in the hotel detail page
+
+### Graphs
+
+- Hotels with the most reservations: Graphic in the hotels page where it'll show how reservations distribute among the 
+hotels of the app
+
+### Complimentary technologies
+
+- Email notifications: User will be contacted by email when a reservation is made, modified or cancelled
+- PDF generation: A PDF will be generated with the info of a reservation once it's made
+- Maps location: In the hotel detail page, a Google Maps component will show where the hotel is located
+
+### Algorithms and advanced queries
+
+- Hotel search: User will be able to search for hotels that meet multiple requirements, such as number of stars, price,
+city... 
 
 ### Pages
 
