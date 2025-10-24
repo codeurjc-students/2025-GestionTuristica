@@ -95,11 +95,13 @@ Functionalities have been sorted into three categories:
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-| Functionality                                 | Unregistered User        | Registered User        | Admin User                             | 
-|-----------------------------------------------|--------------------------|------------------------|----------------------------------------| 
-| View existing hotels, detailed view and rooms | Yes                      | Yes                    | Yes, also create, edit and delete them |
-| Do reservations                               | No                       | Yes, but only for them | No                                     |
-| Modify and cancel reservations                | No                       | Yes, but only theirs   | Yes, any user's                        |
+| Functionality                                 | Unregistered User | Registered User      | Admin User      | 
+|-----------------------------------------------|-------------------|----------------------|-----------------| 
+| View existing hotels, detailed view and rooms | Yes               | Yes                  | Yes             |
+| Manage hotels and their rooms                 | No                | No                   | Yes             |
+| Make reservations                             | No                | Yes                  | No              |
+| View reservations                             | No                | Yes, but only theirs | Yes, any user's |
+| Modify and cancel reservations                | No                | Yes, but only theirs | Yes, any user's |
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Intermediate functionalities
