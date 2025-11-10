@@ -1,0 +1,21 @@
+package com.urjc.plushotel.services;
+
+import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.repositories.HotelRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class HotelService {
+
+    private final HotelRepository hotelRepository;
+
+    public HotelService(HotelRepository hotelRepository) {
+        this.hotelRepository = hotelRepository;
+    }
+
+    public List<Hotel> findAllHotels() {
+        return hotelRepository.findAll();
+    }
+}
