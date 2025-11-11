@@ -1,0 +1,27 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'backend/**'
+
+jobs:
+  test:
+    name: frontend test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Run tests
+        working-directory: frontend
+        run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
