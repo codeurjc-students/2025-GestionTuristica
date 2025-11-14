@@ -1,4 +1,4 @@
-name: Basic
+name: Basic worflow
 
 on:
   push:
