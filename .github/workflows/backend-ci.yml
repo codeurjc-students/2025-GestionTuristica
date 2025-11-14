@@ -1,0 +1,37 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'backend/**'
+
+jobs:
+  test:
+    name: backend test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+      - name: Cache sonar packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Run tests
+        working-directory: backend
+        run: mvn test
+      - name: Sonar analysis
+        working-directory: backend
+        env:
+          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+        run: mvn -B verify sonar:sonar -Dsonar.organization=plushotel -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=plushotel_codeurjc

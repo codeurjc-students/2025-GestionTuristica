@@ -1,0 +1,9 @@
+<h2> Hoteles </h2>
+
+<ul>
+    @for (hotel of hotels; track hotel.id) {
+    <li>
+        {{hotel.name}} - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
+    </li>
+    }
+</ul>
