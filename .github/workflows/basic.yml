@@ -1,14 +1,14 @@
 name: Basic worflow
 
 on:
-#  push:
-#    branches:
-#      - 'feature/**'
+  #  push:
+  #    branches:
+  #      - 'feature/**'
   workflow_dispatch:
 
 jobs:
   test-build-backend:
-    name: backend test
+    name: basic test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
