@@ -18,4 +18,10 @@ public class RoomService {
     public List<Room> getAll() {
         return roomRepository.findAll();
     }
+
+    public Room getRoomByIdAndHotelSlug(Long id, String slug) {
+        return roomRepository.findByIdAndHotel_Slug(id, slug).orElseThrow(
+                () -> new RuntimeException("There is no room with such id that belongs to this hotel")
+        );
+    }
 }
