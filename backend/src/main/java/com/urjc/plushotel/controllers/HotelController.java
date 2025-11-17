@@ -3,10 +3,7 @@ package com.urjc.plushotel.controllers;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,12 @@ public class HotelController {
     public ResponseEntity<List<Hotel>> getAllHotels() {
 
         return ResponseEntity.ok(hotelService.getAll());
+    }
+
+    @GetMapping("/hotels/{slug}")
+    public ResponseEntity<Hotel> getHotelBySlug(@PathVariable String slug) {
+
+        Hotel hotel = hotelService.getHotelBySlug(slug);
+        return ResponseEntity.ok(hotel);
     }
 }

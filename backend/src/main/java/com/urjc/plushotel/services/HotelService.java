@@ -18,4 +18,10 @@ public class HotelService {
     public List<Hotel> getAll() {
         return hotelRepository.findAll();
     }
+
+    public Hotel getHotelBySlug(String slug) {
+        return hotelRepository.findBySlug(slug).orElseThrow(
+                () -> new RuntimeException("This hotel doesn't exist")
+        );
+    }
 }
