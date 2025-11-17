@@ -22,8 +22,8 @@ public class HotelController {
     }
 
     @GetMapping("/hotels")
-    public ResponseEntity<List<Hotel>> findAll() {
+    public ResponseEntity<List<Hotel>> getAllHotels() {
 
-        return ResponseEntity.ok(hotelService.findAllHotels());
+        return ResponseEntity.ok(hotelService.getAll());
     }
 }
