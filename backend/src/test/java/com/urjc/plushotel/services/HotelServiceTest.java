@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class HotelServiceTest {
+class HotelServiceTest {
 
     @InjectMocks
     HotelService hotelService;
@@ -23,16 +23,16 @@ public class HotelServiceTest {
     HotelRepository hotelRepository;
 
     @Test
-    public void findAllTest() {
+    void findAllTest() {
 
-        Hotel h1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, Madrid", 3);
-        Hotel h2 = new Hotel("H2", "Hotel2 desc", "España", "Barcelona", "C/ Example 3, Barcelona", 4);
+        Hotel h1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, Madrid", 3, "h1");
+        Hotel h2 = new Hotel("H2", "Hotel2 desc", "España", "Barcelona", "C/ Example 3, Barcelona", 4, "h2");
 
         List<Hotel> hotels = List.of(h1, h2);
 
         when(hotelRepository.findAll()).thenReturn(hotels);
 
-        List<Hotel> result = hotelService.findAllHotels();
+        List<Hotel> result = hotelService.getAll();
 
         assertEquals(2, result.size());
         assertEquals(h1, result.getFirst());
