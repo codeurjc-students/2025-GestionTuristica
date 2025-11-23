@@ -1,0 +1,52 @@
+<form (ngSubmit)="submit()" #f="ngForm" class="hotel-form">
+  <div>
+    <label>
+      Nombre
+      <input name="name" [(ngModel)]="model.name" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Descripción
+      <textarea name="description" [(ngModel)]="model.description"></textarea>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      País
+      <input name="country" [(ngModel)]="model.country" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Ciudad
+      <input name="city" [(ngModel)]="model.city" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Dirección
+      <input name="address" [(ngModel)]="model.address" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Estrellas
+      <select name="stars" [(ngModel)]="model.stars">
+        @for (s of [1,2,3,4,5]; track $index) {
+        <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="submit">Crear</button>
+    <button type="button" (click)="cancel()">Cancelar</button>
+  </div>
+</form>
