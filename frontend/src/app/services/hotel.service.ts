@@ -17,11 +17,15 @@ export interface Hotel {
 })
 export class HotelService {
 
-    private apiUrl = 'http://localhost:8080/api/v1';
+    private readonly apiUrl = 'http://localhost:8080/api/v1';
 
-    constructor(private http: HttpClient){}
+    constructor(private readonly http: HttpClient){}
 
     getHotels(): Observable<Hotel[]> {
         return this.http.get<Hotel[]>(this.apiUrl + "/hotels")
+    }
+
+    create(hotel: Partial<Hotel>): Observable<Hotel> {
+        return this.http.post<Hotel>(this.apiUrl + "/hotels", hotel);
     }
 }
