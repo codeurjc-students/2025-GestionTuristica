@@ -25,8 +25,10 @@ class HotelServiceTest {
     @Test
     void findAllTest() {
 
-        Hotel h1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, Madrid", 3, "h1");
-        Hotel h2 = new Hotel("H2", "Hotel2 desc", "España", "Barcelona", "C/ Example 3, Barcelona", 4, "h2");
+        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+                " Example 4, Madrid").stars(3).slug("h1").build();
+        Hotel h2 = Hotel.builder().name("H2").description("Hotel2 desc").country("España").city("Barcelona").address(
+                "C/ Example 3, Barcelona").stars(4).slug("h2").build();
 
         List<Hotel> hotels = List.of(h1, h2);
 
