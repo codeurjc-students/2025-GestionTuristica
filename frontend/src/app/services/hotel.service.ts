@@ -2,14 +2,23 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
+export interface Room {
+        id?: number;
+        name: string;
+        description: string;
+        price: number;
+        available: boolean;
+    };
 export interface Hotel {
-    id: number;
+    id?: number;
     name: string;
     description: string;
     country: string;
     city: string;
     address: string;
     stars: number;
+    slug: string;
+    rooms: Room[];
 }
 
 @Injectable({
