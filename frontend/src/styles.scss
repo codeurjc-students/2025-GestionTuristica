@@ -3,3 +3,23 @@
     gap: 15px;
     margin-bottom: 15px;
 }
+
+.hotel-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .action-button{
+        display: auto;
+        margin-right: 10px;
+    }
+
+    .rooms-list ul{
+        gap: 10px;
+    }
+
+    .rooms-list li{
+        display: space-between;
+        padding: 5px;
+    }
+}
