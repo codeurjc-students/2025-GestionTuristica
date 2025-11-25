@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Data
@@ -34,7 +34,7 @@ public class Hotel {
     @Column(unique = true, nullable = false)
     private String slug;
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Room> rooms;
+    private ArrayList<Room> rooms = new ArrayList<>();
 
     public void addRoom(Room room) {
         rooms.add(room);
