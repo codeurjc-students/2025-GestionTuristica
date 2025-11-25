@@ -1,23 +1,18 @@
 package com.urjc.plushotel.entities;
 
-import java.math.BigDecimal;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Room {
 
     @Id
@@ -33,11 +28,4 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
-
-    public Room(BigDecimal price, String description, String name, Hotel hotel) {
-        this.price = price;
-        this.description = description;
-        this.name = name;
-        this.hotel = hotel;
-    }
 }
