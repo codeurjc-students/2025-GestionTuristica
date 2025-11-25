@@ -4,8 +4,6 @@ import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.RoomRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class RoomService {
 
@@ -13,10 +11,6 @@ public class RoomService {
 
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
-    }
-
-    public List<Room> getAll() {
-        return roomRepository.findAll();
     }
 
     public Room getRoomByIdAndHotelSlug(Long id, String slug) {
