@@ -1,6 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,22 @@ public class HotelService {
         this.hotelRepository = hotelRepository;
     }
 
-    public List<Hotel> findAllHotels() {
+    public List<Hotel> getAll() {
         return hotelRepository.findAll();
+    }
+
+    public Hotel getHotelBySlug(String slug) {
+        return hotelRepository.findBySlug(slug).orElseThrow(
+                () -> new RuntimeException("This hotel doesn't exist")
+        );
+    }
+
+    public Hotel createHotel(Hotel hotel) {
+        if (hotel.getRooms() != null) {
+            for (Room room : hotel.getRooms()) {
+                room.setHotel(hotel);
+            }
+        }
+        return hotelRepository.save(hotel);
     }
 }

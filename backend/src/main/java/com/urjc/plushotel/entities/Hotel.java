@@ -2,15 +2,19 @@ package com.urjc.plushotel.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
+
+import java.util.ArrayList;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Check(constraints = "stars >= 1 AND stars <= 5")
+@Builder
 public class Hotel {
 
     @Id
@@ -27,13 +31,13 @@ public class Hotel {
     private String address;
     @Column(nullable = false)
     private Integer stars;
+    @Column(unique = true, nullable = false)
+    private String slug;
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ArrayList<Room> rooms = new ArrayList<>();
 
-    public Hotel(String name, String description, String country, String city, String address, Integer stars) {
-        this.name = name;
-        this.description = description;
-        this.country = country;
-        this.city = city;
-        this.address = address;
-        this.stars = stars;
+    public void addRoom(Room room) {
+        rooms.add(room);
+        room.setHotel(this);
     }
 }

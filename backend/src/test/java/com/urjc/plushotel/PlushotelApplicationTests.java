@@ -1,6 +1,7 @@
 package com.urjc.plushotel;
 
 import com.urjc.plushotel.repositories.HotelRepository;
+import com.urjc.plushotel.repositories.RoomRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -14,6 +15,9 @@ class PlushotelApplicationTests {
 
     @MockitoBean
     private HotelRepository hotelRepository;
+
+    @MockitoBean
+    private RoomRepository roomRepository;
 
     @Test
     void contextLoads() {

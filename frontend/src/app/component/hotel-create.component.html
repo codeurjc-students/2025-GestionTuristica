@@ -1,0 +1,101 @@
+<form (ngSubmit)="submit()" #f="ngForm" class="hotel-form">
+  <div>
+    <label>
+      Nombre
+      <input name="name" [(ngModel)]="hotelModel.name" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Descripción
+      <textarea name="description" [(ngModel)]="hotelModel.description"></textarea>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      País
+      <input name="country" [(ngModel)]="hotelModel.country" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Ciudad
+      <input name="city" [(ngModel)]="hotelModel.city" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Dirección
+      <input name="address" [(ngModel)]="hotelModel.address" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Estrellas
+      <select name="stars" [(ngModel)]="hotelModel.stars">
+        @for (s of [1,2,3,4,5]; track $index) {
+        <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="rooms-list">
+    <h3> Habitaciones</h3>
+    <ul>
+      @for (room of hotelModel.rooms; track room.name) {
+      <li>
+        {{room.name}} - {{room.description}} - {{room.price}}€
+        <button class="action_buton" type="button" (click)="removeRoom(room)">Eliminar habitación</button>
+      </li>
+      }
+    </ul>
+  </div>
+
+  @if (!showForm) {
+  <div class="actions">
+    <button class="action-button" type="button" (click)="toggleRoomFormVisibility()">Añadir habitación</button>
+  </div>
+  }
+
+  @if (showForm) {
+  <h3>Nueva habitación</h3>
+
+  <div>
+    <label>
+      Nombre
+      <input name="name" [(ngModel)]="roomModel.name" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Descripción
+      <input name="description" [(ngModel)]="roomModel.description" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Precio
+      <input name="room" [(ngModel)]="roomModel.price" required/>
+      €
+    </label>
+  </div>
+
+  <div class="actions">
+    <button class="action-button" type="button" (click)="addRoom()">Crear habitación</button>
+    <button class="action-button" type="button" (click)="cancelRoomCreation()">Cancelar creación habitación</button>
+  </div>
+  }
+
+  <div class="actions">
+    <button class="action-button" type="submit">Crear</button>
+    <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+  </div>
+</form>
