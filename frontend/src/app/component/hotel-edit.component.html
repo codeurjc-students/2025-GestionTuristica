@@ -1,0 +1,108 @@
+<h2> Editar hotel</h2>
+
+<form (ngSubmit)="submit()" #f="ngForm" class="hotel-form">
+  <div>
+    <label>
+      Nombre
+      <input name="name" [(ngModel)]="hotelModel.name" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Descripción
+      <textarea name="description" [(ngModel)]="hotelModel.description"></textarea>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      País
+      <input name="country" [(ngModel)]="hotelModel.country" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Ciudad
+      <input name="city" [(ngModel)]="hotelModel.city" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Dirección
+      <input name="address" [(ngModel)]="hotelModel.address" required/>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Estrellas
+      <select name="stars" [(ngModel)]="hotelModel.stars">
+        @for (s of [1,2,3,4,5]; track $index) {
+        <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="rooms-list">
+    <h3>Habitaciones</h3>
+    <ul>
+      @for (room of hotelModel.rooms; track room.name; let i = $index) {
+      <li>
+        {{room.name}} - {{room.description}} - {{room.price}}€
+        <button class="action-buton" type="button" (click)="removeRoom(room)">Eliminar</button>
+        <button class="action-buton" type="button" (click)="startRoomUpdate(room, i)">Editar</button>
+      </li>
+      }
+    </ul>
+  </div>
+
+  @if(!showForm){ 
+    <div class="actions">
+      <button class="action-button" type="button" (click)="startRoomCreation()">Añadir habitación</button>
+    </div>
+  }
+  @if(showForm){
+    <div>
+      <div>
+        <label>
+          Nombre
+          <input name="roomName" [(ngModel)]="roomModel.name" required/>
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Descripción
+          <input name="roomDescription" [(ngModel)]="roomModel.description" required/>
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Precio
+          <input name="roomPrice" [(ngModel)]="roomModel.price" type="number" required/>
+          €
+        </label>
+      </div>
+
+      <div class="actions">
+        @if(creatingRoom){
+          <button class="action-button" type="button" (click)="addRoom()">Añadir</button>
+        } 
+        @if(updatingRoom){
+          <button class="action-button" type="button" (click)="updateRoom()">Actualizar</button>
+        }
+        <button class="action-button" type="button" (click)="cancelRoomUpdate()">Cancelar</button>
+      </div>
+    </div>
+  }
+
+  <div class="actions">
+    <button class="action-button" type="submit">Guardar</button>
+    <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+  </div>
+</form>
