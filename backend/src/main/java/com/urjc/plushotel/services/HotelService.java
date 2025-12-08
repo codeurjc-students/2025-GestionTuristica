@@ -34,4 +34,16 @@ public class HotelService {
         }
         return hotelRepository.save(hotel);
     }
+
+    public Hotel updateHotel(Hotel hotel, String slug) {
+        hotelRepository.findBySlug(slug).orElseThrow(
+                () -> new RuntimeException("This hotel doesn't exist")
+        );
+        for (Room room : hotel.getRooms()) {
+            if (room.getId() == null) {
+                room.setHotel(hotel);
+            }
+        }
+        return hotelRepository.save(hotel);
+    }
 }
