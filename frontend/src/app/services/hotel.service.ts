@@ -42,7 +42,7 @@ export class HotelService {
         return this.http.post<Hotel>(this.apiUrl + "/hotels", hotel);
     }
 
-    updateHotel(hotel: Partial<Hotel>): Observable<Hotel> {
-        return this.http.put<Hotel>(this.apiUrl + "/hotels/" + hotel.slug, hotel);
+    updateHotel(hotel: Partial<Hotel>, oldSlug: string): Observable<Hotel> {
+        return this.http.put<Hotel>(this.apiUrl + "/hotels/" + oldSlug, hotel);
     }
 }
