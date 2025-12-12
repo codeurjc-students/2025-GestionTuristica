@@ -36,14 +36,24 @@ public class HotelService {
     }
 
     public Hotel updateHotel(Hotel hotel, String slug) {
-        hotelRepository.findBySlug(slug).orElseThrow(
+        Hotel savedHotel = hotelRepository.findBySlug(slug).orElseThrow(
                 () -> new RuntimeException("This hotel doesn't exist")
         );
+
+        savedHotel.getRooms().clear();
+
         for (Room room : hotel.getRooms()) {
-            if (room.getId() == null) {
-                room.setHotel(hotel);
-            }
+            savedHotel.addRoom(room);
         }
-        return hotelRepository.save(hotel);
+
+        savedHotel.setName(hotel.getName());
+        savedHotel.setDescription(hotel.getDescription());
+        savedHotel.setCountry(hotel.getCountry());
+        savedHotel.setCity(hotel.getCity());
+        savedHotel.setAddress(hotel.getAddress());
+        savedHotel.setStars(hotel.getStars());
+        savedHotel.setSlug(hotel.getSlug());
+
+        return hotelRepository.save(savedHotel);
     }
 }
