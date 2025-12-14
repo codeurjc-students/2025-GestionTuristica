@@ -45,4 +45,8 @@ export class HotelService {
     updateHotel(hotel: Partial<Hotel>, oldSlug: string): Observable<Hotel> {
         return this.http.put<Hotel>(this.apiUrl + "/hotels/" + oldSlug, hotel);
     }
+
+    removeHotel(slug: string): Observable<Hotel> {
+        return this.http.delete<Hotel>(this.apiUrl + "/hotels/" + slug)
+    }
 }
