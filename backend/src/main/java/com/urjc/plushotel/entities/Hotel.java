@@ -1,5 +1,6 @@
 package com.urjc.plushotel.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,7 +35,8 @@ public class Hotel {
     @Column(unique = true, nullable = false)
     private String slug;
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ArrayList<Room> rooms = new ArrayList<>();
+    @JsonManagedReference
+    private List<Room> rooms = List.of();
 
     public void addRoom(Room room) {
         rooms.add(room);
