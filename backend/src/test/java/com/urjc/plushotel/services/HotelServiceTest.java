@@ -89,4 +89,16 @@ class HotelServiceTest {
 
         verify(hotelRepository, times(1)).save(any());
     }
+
+    @Test
+    void removeHotelTest() {
+        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+                " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
+
+        when(hotelRepository.findBySlug(any())).thenReturn(Optional.of(h1));
+
+        hotelService.removeHotel("h1");
+
+        verify(hotelRepository, times(1)).delete(any());
+    }
 }

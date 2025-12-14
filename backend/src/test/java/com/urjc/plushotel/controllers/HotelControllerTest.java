@@ -84,4 +84,11 @@ class HotelControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(updatedH1.getName()));
     }
+
+    @Test
+    void removeHotelTest() throws Exception {
+
+        mockMvc.perform(delete("/api/v1/hotels/{}", "h1"))
+                .andExpect(status().isNoContent());
+    }
 }

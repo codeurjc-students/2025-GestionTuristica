@@ -6,6 +6,7 @@
         {{hotel.name}} - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
 
         <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar </button>
+        <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar </button>
     </li>
     }
 </ul>

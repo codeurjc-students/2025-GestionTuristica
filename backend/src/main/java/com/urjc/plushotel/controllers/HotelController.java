@@ -49,4 +49,10 @@ public class HotelController {
         Hotel updatedHotel = hotelService.updateHotel(hotel, slug);
         return ResponseEntity.ok(updatedHotel);
     }
+
+    @DeleteMapping("/hotels/{slug}")
+    public ResponseEntity<Hotel> removeHotel(@PathVariable String slug) {
+        hotelService.removeHotel(slug);
+        return ResponseEntity.noContent().build();
+    }
 }

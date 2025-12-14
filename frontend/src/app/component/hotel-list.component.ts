@@ -22,4 +22,13 @@ export class HotelListComponent implements OnInit{
             error: (err) => console.error(err)
         });
     }
+
+    deleteHotel(slug: string) {
+        this.hotelService.removeHotel(slug).subscribe({
+            next: () => {
+                this.hotels = this.hotels.filter(hotel => hotel.slug !== slug);
+            },
+            error: (err) => console.error(err)
+        });
+    }
 }

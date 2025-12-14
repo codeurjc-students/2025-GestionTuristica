@@ -56,4 +56,12 @@ public class HotelService {
 
         return hotelRepository.save(savedHotel);
     }
+
+    public void removeHotel(String slug) {
+        Hotel hotelToRemove = hotelRepository.findBySlug(slug).orElseThrow(
+                () -> new RuntimeException("Hotel not found")
+        );
+
+        hotelRepository.delete(hotelToRemove);
+    }
 }
