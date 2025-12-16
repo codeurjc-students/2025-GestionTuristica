@@ -1,0 +1,24 @@
+  <div>
+      <h1>{{hotel.name}} - {{hotel.stars}}* </h1>
+      
+			<p>{{hotel.description}}</p>
+
+			<p> {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</p>
+  </div>
+
+  <div class="rooms-list">
+    <h2> Habitaciones</h2>
+    <ul>
+      @for (room of hotel.rooms; track room.name) {
+      <li>
+        <h3>{{room.name}}</h3>
+				<p>{{room.description}}</p>
+				<p>{{room.price}}€/noche</p>
+      </li>
+      }
+    </ul>
+  </div>
+
+	<div class="actions">
+    <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+  </div>

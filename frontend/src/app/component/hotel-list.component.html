@@ -3,7 +3,7 @@
 <ul>
     @for (hotel of hotels; track hotel.id) {
     <li>
-        {{hotel.name}} - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
+        <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a> - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
 
         <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar </button>
         <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar </button>
