@@ -14,7 +14,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,11 +26,11 @@ class RoomServiceTest {
     private RoomRepository roomRepository;
 
     @Test
-    void getRoomByIdAndHotelSlugTest() {
+    void getRoomById() {
         Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.TEN).build();
-        when(roomRepository.findByIdAndHotel_Slug(anyLong(), anyString())).thenReturn(Optional.of(room));
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(room));
 
-        Room resultRoom = roomService.getRoomByIdAndHotelSlug(1L, "hotel-test");
+        Room resultRoom = roomService.getRoomById(1L);
 
         assertNotNull(resultRoom);
         assertEquals(room, resultRoom);
