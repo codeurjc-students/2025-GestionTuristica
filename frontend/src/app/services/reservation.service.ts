@@ -43,4 +43,13 @@ export class ReservationService {
     getReservedDates(roomId: number): Observable<ReservedRange[]> {
         return this.http.get<ReservedRange[]>(this.apiUrl + "/reservations/" + roomId + "/reserved-dates");
     };
+
+    getReservationByIdentifier(reservationIdentifier: string): Observable<Reservation> {
+        return this.http.get<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier);
+    }
+
+    updateReservation(reservationIdentifier: string, reservationRequest: Partial<ReservationRequest>): Observable<Reservation> {
+        return this.http.patch<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier, reservationRequest);
+    }
+
 }
