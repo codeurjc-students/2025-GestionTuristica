@@ -52,4 +52,7 @@ export class ReservationService {
         return this.http.patch<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier, reservationRequest);
     }
 
+    cancelReservation(reservationIdentifier: string): Observable<void> {
+        return this.http.delete<void>(this.apiUrl + "/reservations/" + reservationIdentifier);
+    }
 }

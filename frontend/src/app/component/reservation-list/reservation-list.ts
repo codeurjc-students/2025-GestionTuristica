@@ -23,4 +23,20 @@ export class ReservationList implements OnInit{
         error: (err) => console.error(err)
       });
   }
+
+  cancelReservation(reservationIdentifier: string): void {
+    const confirmed = globalThis.confirm('¿Confirmar cancelación de reserva?');
+
+    if(!confirmed) {
+      return;
+    }
+
+    this.reservationService.cancelReservation(reservationIdentifier).subscribe({
+      next: () => {
+        this.reservations = this.reservations.filter(reservation => reservation.reservationIdentifier !== reservationIdentifier);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
 }
