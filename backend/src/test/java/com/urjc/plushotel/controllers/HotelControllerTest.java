@@ -49,6 +49,19 @@ class HotelControllerTest {
     }
 
     @Test
+    void findHotelBySlugTest() throws Exception {
+
+        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+                " Example 4, Madrid").stars(3).slug("h1").build();
+
+        when(hotelService.getHotelBySlug(anyString())).thenReturn(h1);
+
+        mockMvc.perform(get("/api/v1/hotels/{}", "h1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("H1"));
+    }
+
+    @Test
     void createHotelTest() throws Exception {
 
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
