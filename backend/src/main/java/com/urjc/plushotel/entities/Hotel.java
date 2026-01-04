@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,7 +37,7 @@ public class Hotel {
     private String slug;
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Room> rooms = List.of();
+    private List<Room> rooms = new ArrayList<>();
 
     public void addRoom(Room room) {
         rooms.add(room);
