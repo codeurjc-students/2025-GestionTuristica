@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelService;
+import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,20 +21,20 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @GetMapping("/hotels")
+    @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
     public ResponseEntity<List<Hotel>> getAllHotels() {
 
         return ResponseEntity.ok(hotelService.getAll());
     }
 
-    @GetMapping("/hotels/{slug}")
+    @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
     public ResponseEntity<Hotel> getHotelBySlug(@PathVariable String slug) {
 
         Hotel hotel = hotelService.getHotelBySlug(slug);
         return ResponseEntity.ok(hotel);
     }
 
-    @PostMapping("/hotels")
+    @PostMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
     public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
         Hotel savedHotel = hotelService.createHotel(hotel);
         URI location = ServletUriComponentsBuilder
@@ -44,13 +45,13 @@ public class HotelController {
         return ResponseEntity.created(location).body(savedHotel);
     }
 
-    @PutMapping("/hotels/{slug}")
+    @PutMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
     public ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel, @PathVariable String slug) {
         Hotel updatedHotel = hotelService.updateHotel(hotel, slug);
         return ResponseEntity.ok(updatedHotel);
     }
 
-    @DeleteMapping("/hotels/{slug}")
+    @DeleteMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
     public ResponseEntity<Hotel> removeHotel(@PathVariable String slug) {
         hotelService.removeHotel(slug);
         return ResponseEntity.noContent().build();

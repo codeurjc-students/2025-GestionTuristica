@@ -5,6 +5,14 @@ public final class EndpointConstants {
     private EndpointConstants() {
     }
 
+    public static class HotelsEndpoints {
+        private HotelsEndpoints() {
+        }
+
+        public static final String HOTELS_BASE_URL = "/hotels";
+        public static final String HOTELS_SLUG_URL = "/hotels/{slug}";
+    }
+
     public static class ReservationsEndpoints {
         private ReservationsEndpoints() {
         }
