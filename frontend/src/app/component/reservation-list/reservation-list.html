@@ -1,0 +1,22 @@
+<h1>Reservas</h1>
+
+<ul>
+  @for (reservation of reservations; track reservation.id) {
+  <li>
+    <div class="reservation-card">
+      <p>Identificador de reserva: {{reservation.reservationIdentifier}}</p>
+      <p><strong>Habitación reservada:</strong> {{reservation.roomName}}</p>
+      <p><strong>Fecha de entrada:</strong> {{reservation.startDate | date: 'dd/MM/yyyy'}}</p>
+      <p><strong>Fecha de salida:</strong> {{reservation.endDate | date: 'dd/MM/yyyy'}}</p>
+      <p><strong>Fecha de reserva:</strong> {{reservation.createdAt | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+
+      <button class="action-button" type="button" [routerLink]="[reservation.reservationIdentifier]"> Modificar
+        reserva
+      </button>
+      <button class="action-button" type="button" (click)="cancelReservation(reservation.reservationIdentifier)">
+        Cancelar reserva
+      </button>
+    </div>
+  </li>
+  }
+</ul>

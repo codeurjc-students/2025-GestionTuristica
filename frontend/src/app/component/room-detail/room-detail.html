@@ -1,0 +1,39 @@
+	@if (room){
+		<div>
+				<h1>{{room.name}}</h1>
+				
+				<p>{{room.description}}</p>
+
+				<p> {{room.price}}€/noche</p>
+		</div>
+
+		<p>Seleccionar fechas de reserva</p>
+
+		<div [formGroup]="dateRange">
+			<mat-form-field appearance="fill">
+				<mat-label>Fechas reserva</mat-label>
+				<mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
+						<input matStartDate formControlName="start" placeholder="Fecha entrada">
+						<input matEndDate formControlName="end" placeholder="Fecha salida">
+				</mat-date-range-input>
+				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-date-range-picker #picker></mat-date-range-picker>
+			</mat-form-field>
+		</div>
+
+		@if (nights > 0) {
+		<div>
+			<p> Noches: {{nights}}</p>
+			<p> Precio total: {{totalPrice}}€</p>
+		</div>
+		}
+		
+		<div class="actions">
+			@if (nights > 0) {
+			<button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>	
+			}
+			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+		</div>
+	} @else {
+		<p>Cargando datos de la habitación...</p>
+	}

@@ -13,9 +13,9 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public Room getRoomByIdAndHotelSlug(Long id, String slug) {
-        return roomRepository.findByIdAndHotel_Slug(id, slug).orElseThrow(
-                () -> new RuntimeException("There is no room with such id that belongs to this hotel")
+    public Room getRoomById(Long id) {
+        return roomRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("There is no room with such id")
         );
     }
 }
