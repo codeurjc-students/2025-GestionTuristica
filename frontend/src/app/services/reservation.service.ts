@@ -36,6 +36,10 @@ export class ReservationService {
         return this.http.post<Reservation>(this.apiUrl + "/reservations/" + roomId + "/reserve", reservation);
     };
 
+    getReservations(): Observable<Reservation[]> {
+        return this.http.get<Reservation[]>(this.apiUrl + "/reservations");
+    };
+
     getReservedDates(roomId: number): Observable<ReservedRange[]> {
         return this.http.get<ReservedRange[]>(this.apiUrl + "/reservations/" + roomId + "/reserved-dates");
     };
