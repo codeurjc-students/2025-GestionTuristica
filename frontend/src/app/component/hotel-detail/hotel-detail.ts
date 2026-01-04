@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Hotel, HotelService } from '../../services/hotel.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-hotel-detail',
-  imports: [],
+  imports: [
+    RouterModule
+  ],
   templateUrl: './hotel-detail.html',
 })
 export class HotelDetail implements OnInit {
