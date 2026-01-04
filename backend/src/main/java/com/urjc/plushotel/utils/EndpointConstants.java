@@ -9,6 +9,8 @@ public final class EndpointConstants {
         private ReservationsEndpoints() {
         }
 
+        public static final String RESERVATIONS_BASE_URL = "/reservations";
+        public static final String RESERVATIONS_IDENTIFIER_URL = "/reservations/{reservationIdentifier}";
         public static final String RESERVATIONS_CREATE_URL = "/reservations/{roomId}/reserve";
         public static final String RESERVED_DATES_BY_ROOM_ID = "/reservations/{roomId}/reserved-dates";
     }

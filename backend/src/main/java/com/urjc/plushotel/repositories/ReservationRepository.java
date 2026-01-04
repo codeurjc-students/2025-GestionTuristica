@@ -1,6 +1,7 @@
 package com.urjc.plushotel.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,8 @@ import com.urjc.plushotel.entities.Reservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
+    Optional<Reservation> findByReservationIdentifier(String reservationIdentifier);
 
     @Query("""
             select new com.urjc.plushotel.dtos.response.ReservedDatesDTO(
