@@ -1,6 +1,5 @@
 package com.urjc.plushotel.repositories;
 
-import com.urjc.plushotel.entities.Reservation;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
