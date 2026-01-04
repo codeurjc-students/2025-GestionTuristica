@@ -6,8 +6,5 @@ import { registerLocaleData } from '@angular/common';
 
 registerLocaleData(localeEs);
 
-try{
-  await bootstrapApplication(App, appConfig);
-} catch {
-  console.error(err);
-}
+bootstrapApplication(App, appConfig)
+  .catch(err => console.error(err));
