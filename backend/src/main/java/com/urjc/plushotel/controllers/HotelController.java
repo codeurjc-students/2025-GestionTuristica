@@ -4,6 +4,7 @@ import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,6 +35,7 @@ public class HotelController {
         return ResponseEntity.ok(hotel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
     public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
         Hotel savedHotel = hotelService.createHotel(hotel);
@@ -45,12 +47,14 @@ public class HotelController {
         return ResponseEntity.created(location).body(savedHotel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
     public ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel, @PathVariable String slug) {
         Hotel updatedHotel = hotelService.updateHotel(hotel, slug);
         return ResponseEntity.ok(updatedHotel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
     public ResponseEntity<Hotel> removeHotel(@PathVariable String slug) {
         hotelService.removeHotel(slug);
