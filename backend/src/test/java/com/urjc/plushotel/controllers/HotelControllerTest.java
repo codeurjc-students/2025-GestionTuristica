@@ -1,12 +1,17 @@
 package com.urjc.plushotel.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelService;
+import com.urjc.plushotel.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(HotelController.class)
+@Import(SecurityConfig.class)
 class HotelControllerTest {
 
     @Autowired
@@ -26,6 +32,12 @@ class HotelControllerTest {
 
     @MockitoBean
     private HotelService hotelService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -62,6 +74,7 @@ class HotelControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void createHotelTest() throws Exception {
 
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
@@ -81,6 +94,7 @@ class HotelControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void updateHotelTest() throws Exception {
 
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
@@ -99,6 +113,7 @@ class HotelControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void removeHotelTest() throws Exception {
 
         mockMvc.perform(delete("/api/v1/hotels/{}", "h1"))

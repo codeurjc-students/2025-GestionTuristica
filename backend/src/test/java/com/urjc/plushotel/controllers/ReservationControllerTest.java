@@ -1,12 +1,17 @@
 package com.urjc.plushotel.controllers;
 
+import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
+import com.urjc.plushotel.services.CustomUserDetailsService;
+import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(ReservationController.class)
+@Import(SecurityConfig.class)
 class ReservationControllerTest {
 
     @Autowired
@@ -31,7 +37,14 @@ class ReservationControllerTest {
     @MockitoBean
     private ReservationService reservationService;
 
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
+
     @Test
+    @WithMockUser
     void getReservationsTest() throws Exception {
 
         ReservationDTO reservation1 = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", LocalDate.now(),
@@ -51,6 +64,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getReservationByReservationIdentifierTest() throws Exception {
 
         ReservationDTO reservation = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", LocalDate.now(),
@@ -66,6 +80,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getReservedDatesByRoomIdTest() throws Exception {
 
         ReservedDatesDTO dates1 = new ReservedDatesDTO(LocalDate.parse("2025-12-23"), LocalDate.now().plusDays(3));
@@ -84,6 +99,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     void reserveRoomTest() throws Exception {
 
         String reservationRequest = """
@@ -109,6 +125,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void updateRoomTest() throws Exception {
 
         String request = """
@@ -133,6 +150,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void cancelReservationTest() throws Exception {
 
         mockMvc.perform(delete("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL,
