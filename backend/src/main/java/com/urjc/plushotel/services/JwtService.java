@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,10 +21,11 @@ public class JwtService {
     private String secretKey;
     private static final Duration EXPIRATION_TIME = Duration.ofHours(1);
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User user) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
+                .subject(user.getUsername())
+                .claim("role", user.getAuthorities().iterator().next().getAuthority())
+                .claim("name", user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME.toMillis()))
                 .signWith(getSigningKey())

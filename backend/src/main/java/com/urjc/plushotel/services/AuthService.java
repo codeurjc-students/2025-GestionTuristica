@@ -10,7 +10,6 @@ import com.urjc.plushotel.repositories.UserRepository;
 import com.urjc.plushotel.utils.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,9 +59,9 @@ public class AuthService {
                 )
         );
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        User user = userDetailsService.loadUserByUsername(request.getEmail());
 
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(user);
 
         return new LoginTokenDTO(token);
     }
