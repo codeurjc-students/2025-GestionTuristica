@@ -3,7 +3,6 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.request.LoginRequest;
 import com.urjc.plushotel.dtos.request.RegisterRequest;
 import com.urjc.plushotel.dtos.response.LoginTokenDTO;
-import com.urjc.plushotel.dtos.response.UserDTO;
 import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.exceptions.EmailAlreadyRegisteredException;
 import com.urjc.plushotel.repositories.UserRepository;
@@ -34,7 +33,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public UserDTO registerUser(RegisterRequest registerRequest) {
+    public void registerUser(RegisterRequest registerRequest) {
         boolean registeredEmail = userRepository.existsByEmail(registerRequest.getEmail());
         if (registeredEmail) {
             throw new EmailAlreadyRegisteredException("This email is already registered");
@@ -46,9 +45,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(Role.USER).build();
 
-        User user = userRepository.save(newUser);
-
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole());
+        userRepository.save(newUser);
     }
 
     public LoginTokenDTO authenticate(LoginRequest request) {
