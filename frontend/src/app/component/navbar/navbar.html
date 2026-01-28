@@ -1,0 +1,18 @@
+<mat-toolbar class="main-nav">
+  <button mat-button routerLink="/">+HOTEL</button>
+  <div class="nav-links">
+    <button mat-button routerLink="/hotels">Hoteles</button>
+    @if(userLoggedIn) {
+    <button mat-button routerLink="/reservations">Reservas</button>
+    }
+  </div>
+  <span class="spacer"></span>
+  <div class="auth-links">
+    @if(!userLoggedIn) {
+    <button matButton="outlined" routerLink="/login">Iniciar sesión</button>
+    <button matButton="outlined" routerLink="/register">Registrarse</button>
+    } @else {
+    <button matButton="outlined" (click)="logout()">Cerrar sesión</button>
+    }
+  </div>
+</mat-toolbar>

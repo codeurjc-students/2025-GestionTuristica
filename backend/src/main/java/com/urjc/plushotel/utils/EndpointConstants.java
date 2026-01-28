@@ -23,6 +23,14 @@ public final class EndpointConstants {
         public static final String RESERVED_DATES_BY_ROOM_ID = "/reservations/{roomId}/reserved-dates";
     }
 
+    public static class AuthorizationEndpoints {
+        private AuthorizationEndpoints() {
+        }
+
+        public static final String REGISTER_URL = "/register";
+        public static final String LOGIN_URL = "/login";
+    }
+
     public final class RoomsEndpoints {
         private RoomsEndpoints() {
         }

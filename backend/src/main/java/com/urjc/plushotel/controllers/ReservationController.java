@@ -7,6 +7,7 @@ import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,6 +56,7 @@ public class ReservationController {
         return ResponseEntity.created(location).body(createdReservation);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL)
     public ResponseEntity<ReservationDTO> updateReservation(@PathVariable String reservationIdentifier,
                                                             @RequestBody ReservationRequest request) {
@@ -62,6 +64,7 @@ public class ReservationController {
         return ResponseEntity.ok(updatedReservation);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL)
     public ResponseEntity<Void> cancelReservation(@PathVariable String reservationIdentifier) {
         reservationService.cancelReservation(reservationIdentifier);

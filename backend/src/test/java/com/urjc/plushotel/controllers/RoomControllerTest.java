@@ -1,11 +1,14 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.services.CustomUserDetailsService;
+import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.RoomService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,7 +29,14 @@ class RoomControllerTest {
     @MockitoBean
     private RoomService roomService;
 
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
+
     @Test
+    @WithMockUser
     void getRoomByRoomIdTest() throws Exception {
 
         Room room = Room.builder().id(1L).name("Room1").description("Small room").price(BigDecimal.TEN).build();
