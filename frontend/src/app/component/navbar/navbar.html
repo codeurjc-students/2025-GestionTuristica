@@ -2,7 +2,7 @@
   <button mat-button routerLink="/">+HOTEL</button>
   <div class="nav-links">
     <button mat-button routerLink="/hotels">Hoteles</button>
-    @if(!userLoggedIn) {
+    @if(userLoggedIn) {
     <button mat-button routerLink="/reservations">Reservas</button>
     }
   </div>
