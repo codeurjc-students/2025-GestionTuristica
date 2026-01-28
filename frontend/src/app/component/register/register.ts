@@ -6,8 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   imports: [FormsModule],
-  templateUrl: './register.html',
-  styleUrl: './register.scss',
+  templateUrl: './register.html'
 })
 export class Register {
   name: string = '';
