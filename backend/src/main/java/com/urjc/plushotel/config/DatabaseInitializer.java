@@ -20,10 +20,10 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Value("${demo.users.admin-password}")
     private String adminPassword;
 
-    @Value("${demo.users.user1.password}")
+    @Value("${demo.users.user1-password}")
     private String user1Password;
 
-    @Value("${demo.users.user2.password}")
+    @Value("${demo.users.user2-password}")
     private String user2Password;
 
     public DatabaseInitializer(HotelRepository hotelRepository, UserRepository userRepository,
