@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Hotel, HotelService } from "../services/hotel.service";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "../services/auth.service";
 
 
 @Component({
@@ -12,11 +13,14 @@ import { RouterLink } from "@angular/router";
 })
 export class HotelListComponent implements OnInit{
 
-    hotels: Hotel[] = []
+    hotels: Hotel[] = [];
+    adminUser!: boolean;
 
-    constructor(private readonly hotelService: HotelService){}
+    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService){}
 
     ngOnInit() {
+        this.adminUser = this.authService.getRole() === 'ROLE_ADMIN';
+
         this.hotelService.getHotels().subscribe({
             next: (data) => this.hotels = data,
             error: (err) => console.error(err)
