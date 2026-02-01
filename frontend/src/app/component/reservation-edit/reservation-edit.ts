@@ -64,15 +64,7 @@ export class ReservationEdit implements OnInit {
         this.reservation = data;
         this.roomId = this.reservation.roomId;
         this.actualReservedRange = {startDate: this.normalizeDate(new Date(this.reservation.startDate)), endDate: this.normalizeDate(new Date(this.reservation.endDate))}
-      }
-    });
-
-    this.reservationService.getReservedDates(this.roomId).subscribe({
-      next: (data) => {
-        this.reservedDates = data.map(range => ({
-          startDate: this.normalizeDate(new Date(range.startDate)),
-          endDate: this.normalizeDate(new Date(range.endDate))
-        })).filter(range => !this.sameRange(range, this.actualReservedRange));
+        this.loadReservedDates();
       }
     });
 
@@ -90,6 +82,17 @@ export class ReservationEdit implements OnInit {
         }
 
         this.calculateNights(start, end);
+      }
+    });
+  }
+
+  loadReservedDates() {
+    this.reservationService.getReservedDates(this.roomId).subscribe({
+      next: (data) => {
+        this.reservedDates = data.map(range => ({
+          startDate: this.normalizeDate(new Date(range.startDate)),
+          endDate: this.normalizeDate(new Date(range.endDate))
+        })).filter(range => !this.sameRange(range, this.actualReservedRange));
       }
     });
   }
@@ -114,7 +117,7 @@ export class ReservationEdit implements OnInit {
   }
 
   sameRange(range: ReservedRange, comparedRange: ReservedRange): boolean {
-    return range.startDate == comparedRange.startDate && range.endDate == comparedRange.endDate;
+    return range.startDate.getTime() == comparedRange.startDate.getTime() && range.endDate.getTime() == comparedRange.endDate.getTime();
   }
 
   updateReservation() {
