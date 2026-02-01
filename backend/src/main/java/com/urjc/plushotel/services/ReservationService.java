@@ -47,17 +47,19 @@ public class ReservationService {
         return "RSV-" + Long.toString(RANDOM.nextLong() & Long.MAX_VALUE, 36).toUpperCase();
     }
 
-    public ReservationDTO reserveRoom(Long roomId, Reservation reservation) {
+    public ReservationDTO reserveRoom(Long roomId, ReservationRequest request, Authentication authentication) {
         List<ReservedDatesDTO> reservedDates = getReservedDatesByRoomId(roomId);
         for (ReservedDatesDTO reservedRange : reservedDates) {
-            if (reservation.getStartDate().isBefore(reservedRange.getStartDate()) &&
-                    reservation.getEndDate().isAfter(reservedRange.getEndDate())) {
+            if (request.getStartDate().isBefore(reservedRange.getStartDate()) &&
+                    request.getEndDate().isAfter(reservedRange.getEndDate())) {
                 throw new InvalidReservationRangeException("The selected range includes already reserved dates");
             }
         }
+        User user = userDetailsService.loadUserByUsername(authentication.getName());
         Room room = roomService.getRoomById(roomId);
-        reservation.setRoom(room);
-        reservation.setReservationIdentifier(generateReservationCode());
+        Reservation reservation =
+                Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
+                        .room(room).reservationIdentifier(generateReservationCode()).build();
         return convertToDTO(reservationRepository.save(reservation));
     }
 

@@ -45,8 +45,9 @@ public class ReservationController {
 
     @PostMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_CREATE_URL)
     public ResponseEntity<ReservationDTO> reserveRoom(@PathVariable Long roomId,
-                                                      @RequestBody Reservation reservation) {
-        ReservationDTO createdReservation = reservationService.reserveRoom(roomId, reservation);
+                                                      @RequestBody ReservationRequest reservationRequest,
+                                                      Authentication authentication) {
+        ReservationDTO createdReservation = reservationService.reserveRoom(roomId, reservationRequest, authentication);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path(EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL)

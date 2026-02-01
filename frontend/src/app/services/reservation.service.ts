@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface ReservationRequest {
-    roomId?: number;
     startDate: string;
     endDate: string;
 }
@@ -13,6 +12,7 @@ export interface Reservation {
         reservationIdentifier: string;
         roomId: number;
         roomName: string;
+        userEmail: string;
         startDate: string;
         endDate: string;
         createdAt: Date;

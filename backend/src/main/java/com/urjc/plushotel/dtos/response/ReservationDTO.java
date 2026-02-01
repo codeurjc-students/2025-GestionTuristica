@@ -16,6 +16,7 @@ public class ReservationDTO {
     private String reservationIdentifier;
     private Long roomId;
     private String roomName;
+    private String userEmail;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDateTime createdAt;
