@@ -3,11 +3,11 @@ package com.urjc.plushotel.controllers;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
-import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -70,5 +70,12 @@ public class ReservationController {
     public ResponseEntity<Void> cancelReservation(@PathVariable String reservationIdentifier) {
         reservationService.cancelReservation(reservationIdentifier);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_USER_ID)
+    public ResponseEntity<List<ReservationDTO>> findReservationsByUser(@PathVariable Long userId) {
+        List<ReservationDTO> reservationsByUser = reservationService.findReservationsByUser(userId);
+        return ResponseEntity.ok(reservationsByUser);
     }
 }

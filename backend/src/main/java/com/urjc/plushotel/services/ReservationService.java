@@ -5,8 +5,10 @@ import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
 import com.urjc.plushotel.repositories.ReservationRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -17,12 +19,15 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomService roomService;
+    private final CustomUserDetailsService userDetailsService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public ReservationService(ReservationRepository reservationRepository, RoomService roomService) {
+    public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
+                              CustomUserDetailsService userDetailsService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
+        this.userDetailsService = userDetailsService;
     }
 
     public List<ReservationDTO> getAllReservations() {
@@ -83,12 +88,18 @@ public class ReservationService {
         reservationRepository.delete(reservation);
     }
 
+    public List<ReservationDTO> findReservationsByUser(Long userId) {
+        List<Reservation> userReservations = reservationRepository.findByUserId(userId);
+        return userReservations.stream().map(this::convertToDTO).toList();
+    }
+
     private ReservationDTO convertToDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
                 reservation.getReservationIdentifier(),
                 reservation.getRoom().getId(),
                 reservation.getRoom().getName(),
+                reservation.getUser().getEmail(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
                 reservation.getCreatedAt()

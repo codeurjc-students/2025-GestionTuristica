@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Reservation, ReservationService } from '../../services/reservation.service';
 import { DatePipe } from '@angular/common';
@@ -13,15 +14,30 @@ export class ReservationList implements OnInit{
 
   reservations: Reservation[] = [];
 
-  constructor(private readonly reservationService: ReservationService){}
+  constructor(
+    private readonly reservationService: ReservationService,
+    private readonly authService: AuthService
+  ){}
 
   ngOnInit(): void {
+    if(this.authService.getRole() === 'ROLE_ADMIN'){
       this.reservationService.getReservations().subscribe({
         next: (data) => {
           this.reservations = data;
         },
         error: (err) => console.error(err)
       });
+    } else {
+      const userId = this.authService.getUserId();
+      if(userId) {
+        this.reservationService.getReservationsByUserId(userId).subscribe({
+          next: (data) => {
+            this.reservations = data;
+          },
+          error: (err) => console.error(err)
+        });
+      }
+    }
   }
 
   cancelReservation(reservationIdentifier: string): void {

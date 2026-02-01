@@ -48,6 +48,10 @@ export class ReservationService {
         return this.http.get<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier);
     }
 
+    getReservationsByUserId(userId: string): Observable<Reservation[]> {
+        return this.http.get<Reservation[]>(this.apiUrl + "/reservations/user/" + userId);
+    }
+
     updateReservation(reservationIdentifier: string, reservationRequest: Partial<ReservationRequest>): Observable<Reservation> {
         return this.http.patch<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier, reservationRequest);
     }
