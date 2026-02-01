@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/hotels/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
