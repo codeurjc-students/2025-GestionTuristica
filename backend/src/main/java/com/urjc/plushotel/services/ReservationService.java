@@ -4,6 +4,7 @@ import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.Reservation;
+import com.urjc.plushotel.entities.ReservationStatus;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
@@ -30,9 +31,14 @@ public class ReservationService {
         this.userDetailsService = userDetailsService;
     }
 
-    public List<ReservationDTO> getAllReservations() {
-        List<Reservation> allReservations = reservationRepository.findAll();
-        return allReservations.stream().map(this::convertToDTO).toList();
+    public List<ReservationDTO> getReservations(ReservationStatus status) {
+        List<Reservation> reservations;
+        if (status == null) {
+            reservations = reservationRepository.findAll();
+        } else {
+            reservations = reservationRepository.findByStatus(status);
+        }
+        return reservations.stream().map(this::convertToDTO).toList();
 
     }
 
@@ -85,12 +91,19 @@ public class ReservationService {
                 () -> new RuntimeException("This reservation identifier doesn't correspond to any reservation")
         );
 
-        reservationRepository.delete(reservation);
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
     }
 
     public List<ReservationDTO> findReservationsByUser(Long userId) {
         List<Reservation> userReservations = reservationRepository.findByUserId(userId);
         return userReservations.stream().map(this::convertToDTO).toList();
+    }
+
+    public Reservation getReservationEntityByIdentifier(String reservationIdentifier) {
+        return reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
+                () -> new RuntimeException("This reservation doesn't exist")
+        );
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {

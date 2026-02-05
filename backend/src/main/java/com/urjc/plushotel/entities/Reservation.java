@@ -27,6 +27,8 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
     private LocalDateTime createdAt;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -34,5 +36,6 @@ public class Reservation {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.status = ReservationStatus.ACTIVE;
     }
 }

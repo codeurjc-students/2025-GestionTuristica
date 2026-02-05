@@ -2,6 +2,7 @@ package com.urjc.plushotel.repositories;
 
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.Reservation;
+import com.urjc.plushotel.entities.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<ReservedDatesDTO> findReservedDatesByRoomId(Long roomId);
 
     List<Reservation> findByUserId(Long userId);
+
+    List<Reservation> findByStatus(ReservationStatus status);
 }
