@@ -76,6 +76,40 @@ public class ReservationChangeRequestService {
         reservationChangeRequestRepository.save(request);
     }
 
+    public void approveRequest(Long requestId) {
+        ReservationChangeRequest reservationChangeRequest =
+                reservationChangeRequestRepository.findById(requestId).orElseThrow(
+                        () -> new RuntimeException("Reservation change request with such id doesn't exist")
+                );
+
+        String reservationIdentifier = reservationChangeRequest.getReservation().getReservationIdentifier();
+
+        reservationService.getReservationEntityByIdentifier(reservationIdentifier);
+
+        if (reservationChangeRequest.getType().equals(RequestType.MODIFICATION)) {
+            ReservationRequest newDates = new ReservationRequest(
+                    reservationChangeRequest.getRequestedStartDate(),
+                    reservationChangeRequest.getRequestedEndDate()
+            );
+
+            reservationService.updateReservation(reservationIdentifier, newDates);
+        } else {
+            reservationService.cancelReservation(reservationIdentifier);
+        }
+        reservationChangeRequest.setStatus(RequestStatus.APPROVED);
+        reservationChangeRequestRepository.save(reservationChangeRequest);
+    }
+
+    public void rejectRequest(Long requestId) {
+        ReservationChangeRequest reservationChangeRequest =
+                reservationChangeRequestRepository.findById(requestId).orElseThrow(
+                        () -> new RuntimeException("Reservation change request with such id doesn't exist")
+                );
+
+        reservationChangeRequest.setStatus(RequestStatus.REJECTED);
+        reservationChangeRequestRepository.save(reservationChangeRequest);
+    }
+
     private ModificationRequestDTO convertToDTO(ReservationChangeRequest request) {
         return new ModificationRequestDTO(
                 request.getId(),

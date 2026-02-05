@@ -31,4 +31,16 @@ public class ReservationChangeRequestController {
         reservationChangeRequestService.createRequest(request);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/requests/approve/{requestId}")
+    public ResponseEntity<Void> approveRequest(@PathVariable Long requestId) {
+        reservationChangeRequestService.approveRequest(requestId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/requests/reject/{requestId}")
+    public ResponseEntity<Void> rejectRequest(@PathVariable Long requestId) {
+        reservationChangeRequestService.rejectRequest(requestId);
+        return ResponseEntity.ok().build();
+    }
 }
