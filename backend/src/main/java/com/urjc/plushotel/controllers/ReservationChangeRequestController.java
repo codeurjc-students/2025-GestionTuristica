@@ -1,12 +1,14 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.request.ModificationRequest;
+import com.urjc.plushotel.dtos.request.RequestFilter;
+import com.urjc.plushotel.dtos.response.ModificationRequestDTO;
 import com.urjc.plushotel.services.ReservationChangeRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/v1")
@@ -16,6 +18,12 @@ public class ReservationChangeRequestController {
 
     public ReservationChangeRequestController(ReservationChangeRequestService reservationChangeRequestService) {
         this.reservationChangeRequestService = reservationChangeRequestService;
+    }
+
+    @GetMapping("/requests")
+    public ResponseEntity<List<ModificationRequestDTO>> findReservationChangeRequest(@RequestParam(name = "status",
+            defaultValue = "PENDING") RequestFilter status) {
+        return ResponseEntity.ok(reservationChangeRequestService.findReservationChangeRequests(status));
     }
 
     @PostMapping("/requests")
