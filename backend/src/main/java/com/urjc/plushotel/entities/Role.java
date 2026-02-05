@@ -1,4 +1,4 @@
-package com.urjc.plushotel.utils;
+package com.urjc.plushotel.entities;
 
 public enum Role {
     USER,

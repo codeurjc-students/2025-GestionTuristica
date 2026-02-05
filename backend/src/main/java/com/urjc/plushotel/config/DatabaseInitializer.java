@@ -1,10 +1,10 @@
 package com.urjc.plushotel.config;
 
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Role;
 import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.repositories.HotelRepository;
 import com.urjc.plushotel.repositories.UserRepository;
-import com.urjc.plushotel.utils.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

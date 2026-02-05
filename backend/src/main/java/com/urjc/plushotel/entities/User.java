@@ -1,6 +1,5 @@
 package com.urjc.plushotel.entities;
 
-import com.urjc.plushotel.utils.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
