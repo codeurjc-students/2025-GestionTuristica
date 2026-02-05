@@ -95,8 +95,13 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public List<ReservationDTO> findReservationsByUser(Long userId) {
-        List<Reservation> userReservations = reservationRepository.findByUserId(userId);
+    public List<ReservationDTO> findReservationsByUser(Long userId, ReservationStatus status) {
+        List<Reservation> userReservations;
+        if (status == null) {
+            userReservations = reservationRepository.findByUserId(userId);
+        } else {
+            userReservations = reservationRepository.findByUserIdAndStatus(userId, status);
+        }
         return userReservations.stream().map(this::convertToDTO).toList();
     }
 
