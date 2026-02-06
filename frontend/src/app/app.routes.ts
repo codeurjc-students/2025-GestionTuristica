@@ -19,7 +19,7 @@ export const routes: Routes = [
     { path: 'hotels/detail/:slug', component: HotelDetail },
     { path: 'hotels/:slug/rooms/:roomId/detail', component: RoomDetail },
     { path: 'reservations', component: ReservationList, canActivate: [authGuard], data: {roles: ['ROLE_USER', 'ROLE_ADMIN']} },
-    { path: 'reservations/:reservationIdentifier', component: ReservationEdit, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} },
+    { path: 'reservations/:reservationIdentifier', component: ReservationEdit, canActivate: [authGuard] },
     { path: 'register', component: Register},
     { path: 'login', component: Login },
     { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} }
