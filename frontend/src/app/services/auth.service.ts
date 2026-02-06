@@ -68,6 +68,14 @@ export class AuthService {
         return payload.userId;
     }
 
+    getUserEmail(): string | null {
+        const token = this.getToken();
+        if(!token) return null;
+
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.sub;
+    }
+
     isAuthenticated(): boolean {
         return !!this.getToken();
     }
