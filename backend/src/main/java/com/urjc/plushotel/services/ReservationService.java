@@ -120,6 +120,8 @@ public class ReservationService {
                 reservation.getUser().getEmail(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
+                reservation.getStatus(),
+                reservation.isRequestedModification(),
                 reservation.getCreatedAt()
         );
     }
