@@ -8,6 +8,7 @@ import com.urjc.plushotel.entities.ReservationStatus;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
+import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -109,6 +110,15 @@ public class ReservationService {
         return reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
                 () -> new RuntimeException("This reservation doesn't exist")
         );
+    }
+
+    public void updateRequestedModificationState(Long reservationId, ReservationStatus status) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
+                () -> new ReservationNotFoundException("Reservation with id " + reservationId + " could not be found")
+        );
+
+        reservation.setStatus(status);
+        reservationRepository.save(reservation);
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {

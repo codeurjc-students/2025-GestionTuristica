@@ -71,6 +71,11 @@ public class ReservationChangeRequestService {
         if (request.getType().equals(RequestType.MODIFICATION)) {
             request.setRequestedStartDate(modificationRequest.getRequestedStartDate());
             request.setRequestedEndDate(modificationRequest.getRequestedEndDate());
+            reservationService.updateRequestedModificationState(reservation.getId(),
+                    ReservationStatus.MODIFICATION_REQUESTED);
+        } else {
+            reservationService.updateRequestedModificationState(reservation.getId(),
+                    ReservationStatus.CANCELLATION_REQUESTED);
         }
 
         reservationChangeRequestRepository.save(request);
@@ -92,10 +97,13 @@ public class ReservationChangeRequestService {
                     reservationChangeRequest.getRequestedEndDate()
             );
 
+            reservationService.updateRequestedModificationState(reservationChangeRequest.getReservation().getId(),
+                    ReservationStatus.ACTIVE);
             reservationService.updateReservation(reservationIdentifier, newDates);
         } else {
             reservationService.cancelReservation(reservationIdentifier);
         }
+
         reservationChangeRequest.setStatus(RequestStatus.APPROVED);
         reservationChangeRequestRepository.save(reservationChangeRequest);
     }
@@ -105,6 +113,9 @@ public class ReservationChangeRequestService {
                 reservationChangeRequestRepository.findById(requestId).orElseThrow(
                         () -> new RuntimeException("Reservation change request with such id doesn't exist")
                 );
+
+        reservationService.updateRequestedModificationState(reservationChangeRequest.getReservation().getId(),
+                ReservationStatus.ACTIVE);
 
         reservationChangeRequest.setStatus(RequestStatus.REJECTED);
         reservationChangeRequestRepository.save(reservationChangeRequest);
