@@ -21,6 +21,5 @@ public class ReservationDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private ReservationStatus status;
-    private boolean requestedModification;
     private LocalDateTime createdAt;
 }

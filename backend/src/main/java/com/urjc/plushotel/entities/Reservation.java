@@ -29,7 +29,6 @@ public class Reservation {
     private User user;
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
-    private boolean requestedModification;
     private LocalDateTime createdAt;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -38,6 +37,5 @@ public class Reservation {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.status = ReservationStatus.ACTIVE;
-        this.requestedModification = false;
     }
 }

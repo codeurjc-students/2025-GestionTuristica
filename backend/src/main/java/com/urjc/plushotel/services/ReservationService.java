@@ -121,7 +121,6 @@ public class ReservationService {
                 reservation.getStartDate(),
                 reservation.getEndDate(),
                 reservation.getStatus(),
-                reservation.isRequestedModification(),
                 reservation.getCreatedAt()
         );
     }
