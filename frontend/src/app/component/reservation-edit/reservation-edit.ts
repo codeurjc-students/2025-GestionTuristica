@@ -1,3 +1,4 @@
+import { ModificationRequestCreation, RequestService } from './../../services/request.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoomService } from '../../services/room.service';
 
 @Component({
   selector: 'app-reservation-edit',
@@ -21,6 +21,7 @@ import { RoomService } from '../../services/room.service';
 })
 export class ReservationEdit implements OnInit {
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
+  userAdmin: boolean = localStorage.getItem('userRole') == 'ROLE_ADMIN'
   reservationIdentifier!: string;
   reservation!: Reservation;
   roomId!: number;
@@ -51,9 +52,9 @@ export class ReservationEdit implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly roomService: RoomService,
     private readonly reservationService: ReservationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly requestService: RequestService
   ){};
 
   ngOnInit(): void {
@@ -125,6 +126,24 @@ export class ReservationEdit implements OnInit {
     const newEndDate = this.dateToString(this.dateRange.get('end')?.value!);
     const reservationRequest = {startDate: newStartDate, endDate: newEndDate} as Partial<ReservationRequest>;
     this.reservationService.updateReservation(this.reservation.reservationIdentifier, reservationRequest).subscribe({
+      next: () => void this.router.navigate(['/']),
+      error: (err) => console.error(err)
+    })
+  }
+
+  requestModification() {
+    const newStartDate = this.dateToString(this.dateRange.get('start')?.value!);
+    const newEndDate = this.dateToString(this.dateRange.get('end')?.value!);
+    const userEmail = this.reservation.userEmail;
+    const reservationIdentifier = this.reservation.reservationIdentifier;
+    const modificationRequest: ModificationRequestCreation = {
+      type: 'MODIFICATION',
+      requestedStartDate: newStartDate,
+      requestedEndDate: newEndDate,
+      userEmail: userEmail,
+      reservationIdentifier: reservationIdentifier
+    };
+    this.requestService.createRequest(modificationRequest).subscribe({
       next: () => void this.router.navigate(['/']),
       error: (err) => console.error(err)
     })

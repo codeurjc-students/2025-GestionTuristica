@@ -1,3 +1,4 @@
+import { RequestService, ModificationRequestCreation } from './../../services/request.service';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Reservation, ReservationService } from '../../services/reservation.service';
@@ -13,10 +14,12 @@ import { RouterLink } from "@angular/router";
 export class ReservationList implements OnInit{
 
   reservations: Reservation[] = [];
+  userAdmin!: boolean;
 
   constructor(
     private readonly reservationService: ReservationService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly requestService: RequestService
   ){}
 
   ngOnInit(): void {
@@ -24,6 +27,7 @@ export class ReservationList implements OnInit{
       this.reservationService.getReservations().subscribe({
         next: (data) => {
           this.reservations = data;
+          this.userAdmin = true;
         },
         error: (err) => console.error(err)
       });
@@ -33,6 +37,7 @@ export class ReservationList implements OnInit{
         this.reservationService.getReservationsByUserId(userId).subscribe({
           next: (data) => {
             this.reservations = data;
+            this.userAdmin = false;
           },
           error: (err) => console.error(err)
         });
@@ -51,6 +56,18 @@ export class ReservationList implements OnInit{
       next: () => {
         this.reservations = this.reservations.filter(reservation => reservation.reservationIdentifier !== reservationIdentifier);
       },
+      error: (err) => console.error(err)
+    });
+  }
+
+  requestCancellation(reservationIdentifier: string) {
+    const cancellationRequest: ModificationRequestCreation = {
+      type: 'CANCELLATION',
+      userEmail: this.authService.getUserEmail()!,
+      reservationIdentifier: reservationIdentifier
+    };
+
+    this.requestService.createRequest(cancellationRequest).subscribe({
       error: (err) => console.error(err)
     });
   }

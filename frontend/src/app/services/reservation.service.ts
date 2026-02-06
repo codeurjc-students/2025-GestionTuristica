@@ -15,6 +15,7 @@ export interface Reservation {
         userEmail: string;
         startDate: string;
         endDate: string;
+        status: string;
         createdAt: Date;
     };
 
