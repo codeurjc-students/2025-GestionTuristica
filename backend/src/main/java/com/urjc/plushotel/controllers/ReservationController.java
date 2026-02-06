@@ -3,7 +3,7 @@ package com.urjc.plushotel.controllers;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
-import com.urjc.plushotel.entities.ReservationStatus;
+import com.urjc.plushotel.entities.ReservationFilter;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class ReservationController {
     }
 
     @GetMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_BASE_URL)
-    public ResponseEntity<List<ReservationDTO>> getReservations(@RequestParam(required = false) ReservationStatus status) {
-        List<ReservationDTO> reservations = reservationService.getReservations(status);
+    public ResponseEntity<List<ReservationDTO>> getReservations(@RequestParam(defaultValue = "NON_CANCELLED") ReservationFilter filter) {
+        List<ReservationDTO> reservations = reservationService.getReservations(filter);
         return ResponseEntity.ok(reservations);
     }
 
@@ -76,8 +76,9 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_USER_ID)
     public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable Long userId,
-                                                                      @RequestParam(required = false) ReservationStatus status) {
-        List<ReservationDTO> reservationsByUser = reservationService.findReservationsByUser(userId, status);
+                                                                      @RequestParam(defaultValue =
+                                                                              "NON_CANCELLED") ReservationFilter filter) {
+        List<ReservationDTO> reservationsByUser = reservationService.getReservationsByUser(userId, filter);
         return ResponseEntity.ok(reservationsByUser);
     }
 }

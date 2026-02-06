@@ -1,5 +1,11 @@
 <h1>Reservas</h1>
 
+@if(showCancelled) {
+<button matButton="outlined" (click)="alterView()">Activas</button>
+} @else {
+<button matButton="outlined" (click)="alterView()">Canceladas</button>
+}
+
 <ul>
   @for (reservation of reservations; track reservation.id) {
   <li>

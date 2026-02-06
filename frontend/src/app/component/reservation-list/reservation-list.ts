@@ -1,20 +1,23 @@
+import { ReservationFilter } from './../../services/reservation.service';
 import { RequestService, ModificationRequestCreation } from './../../services/request.service';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Reservation, ReservationService } from '../../services/reservation.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, MatButtonModule, CommonModule],
   templateUrl: './reservation-list.html',
 })
 export class ReservationList implements OnInit{
 
   reservations: Reservation[] = [];
   userAdmin!: boolean;
+  showCancelled: boolean = false;
 
   constructor(
     private readonly reservationService: ReservationService,
@@ -23,8 +26,13 @@ export class ReservationList implements OnInit{
   ){}
 
   ngOnInit(): void {
+    this.loadReservations(this.showCancelled);
+  }
+
+  loadReservations(showCancelled: boolean) {
+    let filter: ReservationFilter = showCancelled ? 'CANCELLED' : 'NON_CANCELLED';
     if(this.authService.getRole() === 'ROLE_ADMIN'){
-      this.reservationService.getReservations().subscribe({
+      this.reservationService.getReservations(filter).subscribe({
         next: (data) => {
           this.reservations = data;
           this.userAdmin = true;
@@ -34,7 +42,7 @@ export class ReservationList implements OnInit{
     } else {
       const userId = this.authService.getUserId();
       if(userId) {
-        this.reservationService.getReservationsByUserId(userId).subscribe({
+        this.reservationService.getReservationsByUserId(userId, filter).subscribe({
           next: (data) => {
             this.reservations = data;
             this.userAdmin = false;
@@ -72,4 +80,8 @@ export class ReservationList implements OnInit{
     });
   }
 
+  alterView() {
+    this.showCancelled = !this.showCancelled;
+    this.loadReservations(this.showCancelled);
+  }
 }

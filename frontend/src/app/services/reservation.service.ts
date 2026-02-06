@@ -24,6 +24,8 @@ export interface ReservedRange {
     endDate: Date;
 }
 
+export type ReservationFilter = 'CANCELLED' | 'NON_CANCELLED';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -37,8 +39,10 @@ export class ReservationService {
         return this.http.post<Reservation>(this.apiUrl + "/reservations/" + roomId + "/reserve", reservation);
     };
 
-    getReservations(): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(this.apiUrl + "/reservations");
+    getReservations(filter: ReservationFilter): Observable<Reservation[]> {
+        return this.http.get<Reservation[]>(this.apiUrl + "/reservations", {
+                params: filter ? {filter: filter} : {}
+            });
     };
 
     getReservedDates(roomId: number): Observable<ReservedRange[]> {
@@ -49,8 +53,10 @@ export class ReservationService {
         return this.http.get<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier);
     }
 
-    getReservationsByUserId(userId: string): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(this.apiUrl + "/reservations/user/" + userId);
+    getReservationsByUserId(userId: string, filter: ReservationFilter): Observable<Reservation[]> {
+        return this.http.get<Reservation[]>(this.apiUrl + "/reservations/user/" + userId, {
+            params: filter ? {filter: filter} : {}
+         });
     }
 
     updateReservation(reservationIdentifier: string, reservationRequest: Partial<ReservationRequest>): Observable<Reservation> {

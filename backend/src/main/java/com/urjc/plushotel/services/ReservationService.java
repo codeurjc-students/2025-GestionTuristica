@@ -3,10 +3,7 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
-import com.urjc.plushotel.entities.Reservation;
-import com.urjc.plushotel.entities.ReservationStatus;
-import com.urjc.plushotel.entities.Room;
-import com.urjc.plushotel.entities.User;
+import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
 import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
@@ -32,12 +29,12 @@ public class ReservationService {
         this.userDetailsService = userDetailsService;
     }
 
-    public List<ReservationDTO> getReservations(ReservationStatus status) {
+    public List<ReservationDTO> getReservations(ReservationFilter filter) {
         List<Reservation> reservations;
-        if (status == null) {
-            reservations = reservationRepository.findAll();
+        if (filter == ReservationFilter.CANCELLED) {
+            reservations = reservationRepository.findByStatus(ReservationStatus.CANCELLED);
         } else {
-            reservations = reservationRepository.findByStatus(status);
+            reservations = reservationRepository.findByStatusNot(ReservationStatus.CANCELLED);
         }
         return reservations.stream().map(this::convertToDTO).toList();
 
@@ -96,12 +93,12 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public List<ReservationDTO> findReservationsByUser(Long userId, ReservationStatus status) {
+    public List<ReservationDTO> getReservationsByUser(Long userId, ReservationFilter filter) {
         List<Reservation> userReservations;
-        if (status == null) {
-            userReservations = reservationRepository.findByUserId(userId);
+        if (filter == ReservationFilter.CANCELLED) {
+            userReservations = reservationRepository.findByUserIdAndStatus(userId, ReservationStatus.CANCELLED);
         } else {
-            userReservations = reservationRepository.findByUserIdAndStatus(userId, status);
+            userReservations = reservationRepository.findByUserIdAndStatusNot(userId, ReservationStatus.CANCELLED);
         }
         return userReservations.stream().map(this::convertToDTO).toList();
     }
