@@ -5,12 +5,11 @@ import com.urjc.plushotel.dtos.request.RequestFilter;
 import com.urjc.plushotel.dtos.response.ModificationRequestDTO;
 import com.urjc.plushotel.services.ReservationChangeRequestService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1")
 public class ReservationChangeRequestController {
 
