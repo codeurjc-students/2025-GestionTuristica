@@ -3,6 +3,8 @@ package com.urjc.plushotel.controllers;
 import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
+import com.urjc.plushotel.entities.ReservationFilter;
+import com.urjc.plushotel.entities.ReservationStatus;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.ReservationService;
@@ -47,15 +49,16 @@ class ReservationControllerTest {
     @WithMockUser
     void getReservationsTest() throws Exception {
 
-        ReservationDTO reservation1 = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", LocalDate.now(),
-                LocalDate.now().plusDays(3), LocalDateTime.now());
+        ReservationDTO reservation1 = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", "john@email.com", LocalDate.now(),
+                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, LocalDateTime.now());
 
-        ReservationDTO reservation2 = new ReservationDTO(2L, "RSV-124L", 1L, "Room1", LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(6), LocalDateTime.now());
+        ReservationDTO reservation2 = new ReservationDTO(2L, "RSV-124L", 1L, "Room1", "john@email.com",
+                LocalDate.now().plusDays(3), LocalDate.now().plusDays(6), ReservationStatus.ACTIVE,
+                LocalDateTime.now());
 
         List<ReservationDTO> reservations = List.of(reservation1, reservation2);
 
-        when(reservationService.getAllReservations()).thenReturn(reservations);
+        when(reservationService.getReservations(ReservationFilter.NON_CANCELLED)).thenReturn(reservations);
 
         mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_BASE_URL))
                 .andExpect(status().isOk())
@@ -67,8 +70,8 @@ class ReservationControllerTest {
     @WithMockUser
     void getReservationByReservationIdentifierTest() throws Exception {
 
-        ReservationDTO reservation = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", LocalDate.now(),
-                LocalDate.now().plusDays(3), LocalDateTime.now());
+        ReservationDTO reservation = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", "john@email.com", LocalDate.now(),
+                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, LocalDateTime.now());
 
         when(reservationService.getReservationByIdentifier(anyString())).thenReturn(reservation);
 
@@ -110,10 +113,11 @@ class ReservationControllerTest {
                 }
                 """;
 
-        ReservationDTO reservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1", LocalDate.parse("2025-12-29"),
-                LocalDate.parse("2025-12-31"), LocalDateTime.now());
+        ReservationDTO reservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1", "john@email.com",
+                LocalDate.parse("2025-12-29"), LocalDate.parse("2025-12-31"), ReservationStatus.ACTIVE,
+                LocalDateTime.now());
 
-        when(reservationService.reserveRoom(any(), any())).thenReturn(reservation);
+        when(reservationService.reserveRoom(any(), any(), any())).thenReturn(reservation);
 
         mockMvc.perform(post("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_CREATE_URL, "1")
                         .content(reservationRequest)
@@ -135,8 +139,8 @@ class ReservationControllerTest {
                 }
                 """;
 
-        ReservationDTO updatedReservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1",
-                LocalDate.parse("2025-12-23"), LocalDate.parse("2025-12-25"),
+        ReservationDTO updatedReservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1", "john@email.com",
+                LocalDate.parse("2025-12-23"), LocalDate.parse("2025-12-25"), ReservationStatus.ACTIVE,
                 LocalDateTime.parse("2025-12-25T01:00:00")
         );
 

@@ -1,15 +1,16 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
-import com.urjc.plushotel.entities.Reservation;
-import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.repositories.ReservationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,29 +34,64 @@ class ReservationServiceTest {
     @Mock
     private RoomService roomService;
 
+    @Mock
+    Authentication authentication;
+
+    @Mock
+    CustomUserDetailsService userDetailsService;
+
     @Test
-    void getAllReservationsTest() {
+    void getNonCancelledTestReservations() {
 
         Room room = new Room();
 
-        Reservation reservation1 = new Reservation(1L, "RSV-123", room, LocalDateTime.now(),
-                LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+        User user = new User();
 
-        Reservation reservation2 = new Reservation(2L, "RSV-1234", room, LocalDateTime.now(),
-                LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+        Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.ACTIVE,
+                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
-        when(reservationRepository.findAll()).thenReturn(reservations);
+        when(reservationRepository.findByStatusNot(any())).thenReturn(reservations);
 
-        List<ReservationDTO> result = reservationService.getAllReservations();
+        List<ReservationDTO> result = reservationService.getReservations(null);
 
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
         assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
 
-        verify(reservationRepository, times(1)).findAll();
+        verify(reservationRepository, times(1)).findByStatusNot(any());
+    }
+
+    @Test
+    void getCancelledReservationsTest() {
+
+        Room room = new Room();
+
+        User user = new User();
+
+        Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.CANCELLED,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.CANCELLED,
+                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+
+        List<Reservation> reservations = List.of(reservation1, reservation2);
+
+        when(reservationRepository.findByStatus(ReservationStatus.CANCELLED)).thenReturn(reservations);
+
+        List<ReservationDTO> result = reservationService.getReservations(ReservationFilter.CANCELLED);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+
+        verify(reservationRepository, times(1)).findByStatus(ReservationStatus.CANCELLED);
     }
 
     @Test
@@ -83,10 +119,12 @@ class ReservationServiceTest {
     @Test
     void getReservationByIdentifierTest() {
 
+        User user = new User();
+
         Room room = Room.builder().id(1L).name("Room1").build();
 
-        Reservation reservation = new Reservation(1L, "RSV-123", room, LocalDateTime.now(),
-                LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findByReservationIdentifier(anyString())).thenReturn(Optional.of(reservation));
 
@@ -107,10 +145,14 @@ class ReservationServiceTest {
     @Test
     void reserveRoomTest() {
 
+        User user = new User();
         Room room = Room.builder().id(1L).name("Room1").build();
 
-        Reservation reservation = new Reservation(1L, "RSV-123", room, LocalDateTime.now(),
-                LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12-22"));
+        ReservationRequest request = new ReservationRequest(LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12" +
+                "-22"));
+
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE,
+                LocalDateTime.now(), LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12-22"));
 
         ReservedDatesDTO reservedDate1 = new ReservedDatesDTO(LocalDate.parse("2025-12-23"),
                 LocalDate.parse("2025-12-26"));
@@ -123,8 +165,10 @@ class ReservationServiceTest {
         when(reservationRepository.findReservedDatesByRoomId(any())).thenReturn(reservedDates);
         when(roomService.getRoomById(anyLong())).thenReturn(room);
         when(reservationRepository.save(any())).thenReturn(reservation);
+        when(authentication.getName()).thenReturn("john@test.com");
+        when(userDetailsService.loadUserByUsername("john@test.com")).thenReturn(user);
 
-        ReservationDTO result = reservationService.reserveRoom(1L, reservation);
+        ReservationDTO result = reservationService.reserveRoom(1L, request, authentication);
 
         assertEquals(reservation.getReservationIdentifier(), result.getReservationIdentifier());
         assertEquals(reservation.getStartDate(), result.getStartDate());
@@ -140,16 +184,17 @@ class ReservationServiceTest {
     @Test
     void cancelReservationTest() {
 
+        User user = new User();
         Room room = new Room();
 
-        Reservation reservation = new Reservation(1L, "RSV-123", room, LocalDateTime.now(),
-                LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findByReservationIdentifier(anyString())).thenReturn(Optional.of(reservation));
 
         reservationService.cancelReservation("RSV-123");
 
         verify(reservationRepository, times(1)).findByReservationIdentifier(anyString());
-        verify(reservationRepository, times(1)).delete(any());
+        verify(reservationRepository, times(1)).save(any());
     }
 }
