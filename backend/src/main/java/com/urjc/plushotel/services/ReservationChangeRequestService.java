@@ -6,6 +6,7 @@ import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ModificationRequestDTO;
 import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.NullModificationDatesException;
+import com.urjc.plushotel.exceptions.ReservationChangeRequestNotFoundException;
 import com.urjc.plushotel.repositories.ReservationChangeRequestRepository;
 import org.springframework.stereotype.Service;
 
@@ -84,13 +85,12 @@ public class ReservationChangeRequestService {
     public void approveRequest(Long requestId) {
         ReservationChangeRequest reservationChangeRequest =
                 reservationChangeRequestRepository.findById(requestId).orElseThrow(
-                        () -> new RuntimeException("Reservation change request with such id doesn't exist")
+                        () -> new ReservationChangeRequestNotFoundException("Reservation change request with such id " +
+                                "doesn't exist")
                 );
 
         String reservationIdentifier = reservationChangeRequest.getReservation().getReservationIdentifier();
-
-        reservationService.getReservationEntityByIdentifier(reservationIdentifier);
-
+        
         if (reservationChangeRequest.getType().equals(RequestType.MODIFICATION)) {
             ReservationRequest newDates = new ReservationRequest(
                     reservationChangeRequest.getRequestedStartDate(),
@@ -111,7 +111,8 @@ public class ReservationChangeRequestService {
     public void rejectRequest(Long requestId) {
         ReservationChangeRequest reservationChangeRequest =
                 reservationChangeRequestRepository.findById(requestId).orElseThrow(
-                        () -> new RuntimeException("Reservation change request with such id doesn't exist")
+                        () -> new ReservationChangeRequestNotFoundException("Reservation change request with such id " +
+                                "doesn't exist")
                 );
 
         reservationService.updateRequestedModificationState(reservationChangeRequest.getReservation().getId(),
