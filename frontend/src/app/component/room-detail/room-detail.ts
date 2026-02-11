@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class RoomDetail implements OnInit{
     private readonly route: ActivatedRoute,
     private readonly roomService: RoomService,
     private readonly reservationService: ReservationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly authService: AuthService
   ){};
 
   ngOnInit(): void {
@@ -100,9 +102,13 @@ export class RoomDetail implements OnInit{
   }
 
   reserveRoom() {
+    if(!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
     const startDate = this.dateToString(this.dateRange.get('start')?.value!);
     const endDate = this.dateToString(this.dateRange.get('end')?.value!);
-    const reservationRequest = {roomId: this.roomId, startDate: startDate, endDate: endDate}
+    const reservationRequest = {startDate: startDate, endDate: endDate}
     this.reservationService.reserveRoom(this.roomId, reservationRequest).subscribe({
       next: () => void this.router.navigate(['/']),
       error: (err) => console.error(err)

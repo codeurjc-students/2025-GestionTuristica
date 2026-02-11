@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class Navbar implements OnInit{
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly router: Router) {}
 
   userLoggedIn: boolean = false;
   private sub!: Subscription;
@@ -26,5 +26,6 @@ export class Navbar implements OnInit{
 
   logout() {
     this.authService.logout();
+    this.router.navigate(["/"])
   }
 }

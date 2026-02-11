@@ -5,8 +5,10 @@
     <li>
         <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a> - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
 
+        @if(adminUser){
         <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar </button>
         <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar </button>
+        }
     </li>
     }
 </ul>

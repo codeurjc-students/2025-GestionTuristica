@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { ReservationService } from '../../services/reservation.service';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 describe('RoomDetail', () => {
   let component: RoomDetail;
@@ -14,6 +16,7 @@ describe('RoomDetail', () => {
   let reservationServiceMock: any;
   let routerMock: any;
   let activatedRouteMock: any;
+  let authServiceMock: any;
 
   const mockRoom: Room = {
     id: 1,
@@ -50,13 +53,20 @@ describe('RoomDetail', () => {
         }
       }
     };
+
+    authServiceMock = {
+      isAuthenticated: jasmine.createSpy().and.returnValue(true)
+    };
+
     await TestBed.configureTestingModule({
       imports: [RoomDetail],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: RoomService, useValue: roomServiceMock },
         { provide: ReservationService, useValue: reservationServiceMock },
-        { provide: Router, useValue: routerMock }
+        { provide: Router, useValue: routerMock },
+        { provide: AuthService, useValue: authServiceMock},
+        provideHttpClient()
       ]
     }).compileComponents();
 

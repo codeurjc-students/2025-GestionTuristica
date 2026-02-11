@@ -1,0 +1,26 @@
+<h1>Peticiones</h1>
+<ul>
+    <button matButton="outlined" (click)="changeStatus('PENDING')">Pendientes</button>
+    <button matButton="outlined" (click)="changeStatus('APPROVED')">Aprobadas</button>
+    <button matButton="outlined" (click)="changeStatus('REJECTED')">Rechazadas</button>
+    <button matButton="outlined" (click)="changeStatus('RESOLVED')">Resueltas</button>
+    <button matButton="outlined" (click)="changeStatus('ALL')">Todas</button>
+    @for(request of requests; track request.id) {
+        <li>
+            <div class="request-card">
+                <p>{{request.type}}</p>
+                <p> Identificador de reserva: {{request.reservationIdentifier}}</p>
+                <p> Usuario: {{request.userEmail}}</p>
+                @if(request.type == 'MODIFICATION') {
+                    <p> Fecha entrada: {{request.requestedStartDate}}</p>
+                    <p> Fecha salida: {{request.requestedEndDate}}</p>
+                }
+                <p> Estado: {{request.status}}</p>
+                @if(request.status == 'PENDING') {
+                    <button class="action-button" type="button" (click)="approveRequest(request.id)">Aprobar</button>
+                    <button class="action-button" type="button" (click)="rejectRequest(request.id)">Rechazar</button>
+                }
+            </div>
+        </li>
+    }
+</ul>

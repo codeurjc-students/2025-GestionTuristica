@@ -3,33 +3,32 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 describe('Login', () => {
   let component: Login;
   let fixture: ComponentFixture<Login>;
   let authServiceMock: any;
-  let routerMock: any;
+  let router: Router;
 
   beforeEach(async () => {
     authServiceMock = {
       login: jasmine.createSpy('login').and.returnValue(of({}))
     };
 
-    routerMock = {
-      navigate: jasmine.createSpy('navigate')
-    };
-
     await TestBed.configureTestingModule({
       imports: [Login],
       providers: [
         {provide: AuthService, useValue: authServiceMock},
-        {provide: Router, useValue: routerMock}
+        provideRouter([]),
+        {provide: ActivatedRoute, useValue: {}}
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
@@ -42,6 +41,6 @@ describe('Login', () => {
     component.password = 'john';
     component.login();
     expect(authServiceMock.login).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/']);
+    expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 });

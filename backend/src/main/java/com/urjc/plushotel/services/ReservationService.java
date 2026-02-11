@@ -3,10 +3,11 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
-import com.urjc.plushotel.entities.Reservation;
-import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
+import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -17,17 +18,25 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomService roomService;
+    private final CustomUserDetailsService userDetailsService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public ReservationService(ReservationRepository reservationRepository, RoomService roomService) {
+    public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
+                              CustomUserDetailsService userDetailsService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
+        this.userDetailsService = userDetailsService;
     }
 
-    public List<ReservationDTO> getAllReservations() {
-        List<Reservation> allReservations = reservationRepository.findAll();
-        return allReservations.stream().map(this::convertToDTO).toList();
+    public List<ReservationDTO> getReservations(ReservationFilter filter) {
+        List<Reservation> reservations;
+        if (filter == ReservationFilter.CANCELLED) {
+            reservations = reservationRepository.findByStatus(ReservationStatus.CANCELLED);
+        } else {
+            reservations = reservationRepository.findByStatusNot(ReservationStatus.CANCELLED);
+        }
+        return reservations.stream().map(this::convertToDTO).toList();
 
     }
 
@@ -47,17 +56,19 @@ public class ReservationService {
         return "RSV-" + Long.toString(RANDOM.nextLong() & Long.MAX_VALUE, 36).toUpperCase();
     }
 
-    public ReservationDTO reserveRoom(Long roomId, Reservation reservation) {
+    public ReservationDTO reserveRoom(Long roomId, ReservationRequest request, Authentication authentication) {
         List<ReservedDatesDTO> reservedDates = getReservedDatesByRoomId(roomId);
         for (ReservedDatesDTO reservedRange : reservedDates) {
-            if (reservation.getStartDate().isBefore(reservedRange.getStartDate()) &&
-                    reservation.getEndDate().isAfter(reservedRange.getEndDate())) {
+            if (request.getStartDate().isBefore(reservedRange.getStartDate()) &&
+                    request.getEndDate().isAfter(reservedRange.getEndDate())) {
                 throw new InvalidReservationRangeException("The selected range includes already reserved dates");
             }
         }
+        User user = userDetailsService.loadUserByUsername(authentication.getName());
         Room room = roomService.getRoomById(roomId);
-        reservation.setRoom(room);
-        reservation.setReservationIdentifier(generateReservationCode());
+        Reservation reservation =
+                Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
+                        .room(room).reservationIdentifier(generateReservationCode()).build();
         return convertToDTO(reservationRepository.save(reservation));
     }
 
@@ -78,7 +89,33 @@ public class ReservationService {
                 () -> new RuntimeException("This reservation identifier doesn't correspond to any reservation")
         );
 
-        reservationRepository.delete(reservation);
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+    }
+
+    public List<ReservationDTO> getReservationsByUser(Long userId, ReservationFilter filter) {
+        List<Reservation> userReservations;
+        if (filter == ReservationFilter.CANCELLED) {
+            userReservations = reservationRepository.findByUserIdAndStatus(userId, ReservationStatus.CANCELLED);
+        } else {
+            userReservations = reservationRepository.findByUserIdAndStatusNot(userId, ReservationStatus.CANCELLED);
+        }
+        return userReservations.stream().map(this::convertToDTO).toList();
+    }
+
+    public Reservation getReservationEntityByIdentifier(String reservationIdentifier) {
+        return reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
+                () -> new RuntimeException("This reservation doesn't exist")
+        );
+    }
+
+    public void updateRequestedModificationState(Long reservationId, ReservationStatus status) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
+                () -> new ReservationNotFoundException("Reservation with id " + reservationId + " could not be found")
+        );
+
+        reservation.setStatus(status);
+        reservationRepository.save(reservation);
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {
@@ -87,8 +124,10 @@ public class ReservationService {
                 reservation.getReservationIdentifier(),
                 reservation.getRoom().getId(),
                 reservation.getRoom().getName(),
+                reservation.getUser().getEmail(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
+                reservation.getStatus(),
                 reservation.getCreatedAt()
         );
     }

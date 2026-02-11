@@ -17,7 +17,12 @@
 		
 		<div class="actions">
 			@if (nights > 0) {
-			<button class="action-button" type="button" (click)="updateReservation()">Guardar cambios</button>	
+				@if (userAdmin){
+				<button class="action-button" type="button" (click)="updateReservation()">Guardar cambios</button>
+				} @else {
+				<button class="action-button" type="button" (click)="requestModification()">Solicitar modificación</button>
+				}
+				
 			}
 			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
 		</div>

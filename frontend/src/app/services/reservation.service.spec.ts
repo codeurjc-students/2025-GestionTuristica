@@ -37,11 +37,11 @@ describe('ReservationService', () => {
             }
         ] as any;
 
-        service.getReservations().subscribe((reservations) => {
+        service.getReservations('NON_CANCELLED').subscribe((reservations) => {
             expect(reservations).toEqual(mockReservations);
         });
 
-        const request = httpMock.expectOne('http://localhost:8080/api/v1/reservations');
+        const request = httpMock.expectOne('http://localhost:8080/api/v1/reservations?filter=NON_CANCELLED');
         expect(request.request.method).toBe('GET');
         request.flush(mockReservations);
     });

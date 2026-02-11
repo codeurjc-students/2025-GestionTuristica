@@ -1,5 +1,6 @@
 package com.urjc.plushotel.dtos.response;
 
+import com.urjc.plushotel.entities.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,9 @@ public class ReservationDTO {
     private String reservationIdentifier;
     private Long roomId;
     private String roomName;
+    private String userEmail;
     private LocalDate startDate;
     private LocalDate endDate;
+    private ReservationStatus status;
     private LocalDateTime createdAt;
 }

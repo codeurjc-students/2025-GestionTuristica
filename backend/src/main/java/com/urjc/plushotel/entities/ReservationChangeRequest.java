@@ -14,28 +14,31 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Reservation {
+public class ReservationChangeRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String reservationIdentifier;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
+    @JoinColumn(name = "reservation_id", nullable = false)
+    private Reservation reservation;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ReservationStatus status;
+    private RequestType type;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
+    private LocalDate requestedStartDate;
+    private LocalDate requestedEndDate;
+    @Column(nullable = false)
     private LocalDateTime createdAt;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.status = ReservationStatus.ACTIVE;
+        this.status = RequestStatus.PENDING;
     }
 }

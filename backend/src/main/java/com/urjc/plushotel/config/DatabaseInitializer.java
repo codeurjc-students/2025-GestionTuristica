@@ -1,17 +1,38 @@
 package com.urjc.plushotel.config;
 
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Role;
+import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.repositories.HotelRepository;
+import com.urjc.plushotel.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!test")
 public class DatabaseInitializer implements CommandLineRunner {
 
     private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DatabaseInitializer(HotelRepository hotelRepository) {
+    @Value("${demo.users.admin-password}")
+    private String adminPassword;
+
+    @Value("${demo.users.user1-password}")
+    private String user1Password;
+
+    @Value("${demo.users.user2-password}")
+    private String user2Password;
+
+    public DatabaseInitializer(HotelRepository hotelRepository, UserRepository userRepository,
+                               PasswordEncoder passwordEncoder) {
         this.hotelRepository = hotelRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static final String COUNTRY_SPAIN = "España";
@@ -43,6 +64,21 @@ public class DatabaseInitializer implements CommandLineRunner {
             hotelRepository.save(spiritHotel);
 
             hotelRepository.save(lasFuentes);
+
+            User user1 =
+                    User.builder().name("John").email("john@email.com").password(passwordEncoder.encode(user1Password)).role(Role.USER).build();
+
+            User user2 =
+                    User.builder().name("Juan").email("juan@email.com").password(passwordEncoder.encode(user2Password)).role(Role.USER).build();
+
+            User userAdmin =
+                    User.builder().name("Admin").email("admin@email.com").password(passwordEncoder.encode(adminPassword)).role(Role.ADMIN).build();
+
+            userRepository.save(user1);
+
+            userRepository.save(user2);
+
+            userRepository.save(userAdmin);
         }
     }
 }

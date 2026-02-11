@@ -2,6 +2,7 @@ import { HotelService } from './../services/hotel.service';
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { of } from 'rxjs';
 import { HotelListComponent } from "./hotel-list.component";
+import { provideHttpClient } from '@angular/common/http';
 
 describe('HotelListComponent', () => {
     let component: HotelListComponent;
@@ -17,7 +18,8 @@ describe('HotelListComponent', () => {
         await TestBed.configureTestingModule({
             imports: [HotelListComponent],
             providers: [
-                {provide: HotelService, useValue: mockService}
+                {provide: HotelService, useValue: mockService},
+                provideHttpClient()
             ]
         }).compileComponents();
 
