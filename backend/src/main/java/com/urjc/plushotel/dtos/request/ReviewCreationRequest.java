@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewCreationRequest {
 
+    private String userEmail;
     private String message;
     private String reservationIdentifier;
     private Double rating;
