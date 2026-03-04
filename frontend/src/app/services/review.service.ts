@@ -44,7 +44,7 @@ export class ReviewService {
     };
 
     updateReview(reservationIdentifier: string, request: ReviewUpdateRequest): Observable<Review> {
-        return this.http.put<Review>(this.apiUrl + '/reviews/reservation/' + reservationIdentifier, request);
+        return this.http.patch<Review>(this.apiUrl + '/reviews/reservation/' + reservationIdentifier, request);
     }
 
     deleteReview(reservationIdentifier: string): Observable<void> {
