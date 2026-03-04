@@ -3,11 +3,12 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface Room {
-        id?: number;
+        id: number;
         name: string;
         description: string;
         price: number;
         available: boolean;
+        averageRating: number;
     };
 
 @Injectable({
@@ -21,5 +22,9 @@ export class RoomService {
 
     getRoomByRoomId(roomId: number): Observable<Room> {
         return this.http.get<Room>(this.apiUrl + "/rooms/" + roomId);
+    }
+
+    getRoomsByHotelId(hotelId: number): Observable<Room[]> {
+        return this.http.get<Room[]>(this.apiUrl + "/rooms/hotel/" + hotelId);
     }
 }
