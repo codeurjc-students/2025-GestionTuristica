@@ -12,6 +12,7 @@ import { Login } from './component/login/login';
 import { authGuard } from './auth.guard';
 import { Requests } from './component/requests/requests';
 import { Reviews } from './component/reviews/reviews';
+import { ReviewCreate } from './component/review-create/review-create';
 
 export const routes: Routes = [
     { path: 'hotels', component: HotelListComponent },
@@ -23,7 +24,7 @@ export const routes: Routes = [
     { path: 'reservations/:reservationIdentifier', component: ReservationEdit, canActivate: [authGuard] },
     { path: 'register', component: Register},
     { path: 'login', component: Login },
-    { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} }
     { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} },
     { path: 'reviews', component: Reviews, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
+    { path: 'reviews/create/:reservationIdentifier', component: ReviewCreate, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
 ];
