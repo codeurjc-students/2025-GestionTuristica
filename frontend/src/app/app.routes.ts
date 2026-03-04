@@ -11,6 +11,7 @@ import { Register } from './component/register/register';
 import { Login } from './component/login/login';
 import { authGuard } from './auth.guard';
 import { Requests } from './component/requests/requests';
+import { Reviews } from './component/reviews/reviews';
 
 export const routes: Routes = [
     { path: 'hotels', component: HotelListComponent },
@@ -23,4 +24,6 @@ export const routes: Routes = [
     { path: 'register', component: Register},
     { path: 'login', component: Login },
     { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} }
+    { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} },
+    { path: 'reviews', component: Reviews, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
 ];
