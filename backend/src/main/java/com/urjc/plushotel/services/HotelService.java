@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
@@ -20,8 +21,8 @@ public class HotelService {
         return hotelRepository.findAll();
     }
 
-    public Hotel getHotelBySlug(String slug) {
-        return hotelRepository.findBySlug(slug).orElseThrow(
+    public HotelAvgRatingDTO getHotelBySlug(String slug) {
+        return hotelRepository.findHotelsWithAverageRatingBySlug(slug).orElseThrow(
                 () -> new RuntimeException("This hotel doesn't exist")
         );
     }
