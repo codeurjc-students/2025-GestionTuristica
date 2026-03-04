@@ -1,30 +1,33 @@
-  @if (hotel){
-    <div>
-        <h1>{{hotel.name}} - {{hotel.stars}}* </h1>
-        
-        <p>{{hotel.description}}</p>
+@if (hotel){
+<div>
+  <h1>{{hotel.name}} - {{hotel.stars}}* </h1>
 
-        <p> {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</p>
-    </div>
+  <p>{{hotel.description}}</p>
 
-    <div class="rooms-list">
-      <h2> Habitaciones</h2>
-      <ul>
-        @for (room of hotel.rooms; track room.name) {
-        <li>
-          <h3>{{room.name}}</h3>
-          <p>{{room.description}}</p>
-          <p>{{room.price}}€/noche</p>
+  <p> {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</p>
 
-          <button type="button" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']"> Detalles </button>
-        </li>
-        }
-      </ul>
-    </div>
+  <p>Puntuación de los usuarios: {{hotel.averageRating}}</p>
+</div>
 
-    <div class="actions">
-      <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-    </div>
-  } @else {
-    <p>Cargando datos del hotel...</p>
-  }
+<div class="rooms-list">
+  <h2> Habitaciones</h2>
+  <ul>
+    @for (room of hotel.rooms; track room.name) {
+    <li>
+      <h3>{{room.name}}</h3>
+      <p>{{room.description}}</p>
+      <p>{{room.price}}€/noche</p>
+      <p>Puntuación: {{room.averageRating}}</p>
+
+      <button type="button" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']"> Detalles</button>
+    </li>
+    }
+  </ul>
+</div>
+
+<div class="actions">
+  <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+</div>
+} @else {
+<p>Cargando datos del hotel...</p>
+}
