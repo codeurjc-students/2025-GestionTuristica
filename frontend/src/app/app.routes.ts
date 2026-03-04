@@ -31,5 +31,4 @@ export const routes: Routes = [
     { path: 'reviews/create/:reservationIdentifier', component: ReviewCreate, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
     { path: 'reviews/detail/:reservationIdentifier', component: ReviewDetail, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
     { path: 'reviews/edit/:reservationIdentifier', component: ReviewEdit, canActivate: [authGuard], data: {roles: ['ROLE_USER']}}
-
 ];
