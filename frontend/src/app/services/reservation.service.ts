@@ -17,6 +17,7 @@ export interface Reservation {
         endDate: string;
         status: string;
         createdAt: Date;
+        reviewed: boolean;
     };
 
 export interface ReservedRange {
