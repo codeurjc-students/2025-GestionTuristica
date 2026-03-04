@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Review, ReviewService } from '../../services/review.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatAnchor } from "@angular/material/button";
 
 @Component({
   selector: 'app-review-detail',
-  imports: [],
+  imports: [MatAnchor],
   templateUrl: './review-detail.html',
 })
 export class ReviewDetail implements OnInit{
@@ -38,7 +39,7 @@ export class ReviewDetail implements OnInit{
 
   updateReview() {
     const reservationIdentifier = this.activatedRoute.snapshot.paramMap.get('reservationIdentifier');
-    this.router.navigate(['/reviws/edit', reservationIdentifier]);
+    this.router.navigate(['/reviews/edit', reservationIdentifier]);
   }
 
   deleteReview() {
