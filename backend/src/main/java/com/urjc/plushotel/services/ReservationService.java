@@ -65,10 +65,10 @@ public class ReservationService {
             }
         }
         User user = userDetailsService.loadUserByUsername(authentication.getName());
-        Room room = roomService.getRoomById(roomId);
+        Room room = roomService.getRoomEntityById(roomId);
         Reservation reservation =
                 Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
-                        .room(room).reservationIdentifier(generateReservationCode()).build();
+                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).build();
         return convertToDTO(reservationRepository.save(reservation));
     }
 
@@ -118,6 +118,12 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    public void updateReviewed(String reservationIdentifier, boolean reviewed) {
+        Reservation reservation = getReservationEntityByIdentifier(reservationIdentifier);
+        reservation.setReviewed(reviewed);
+        reservationRepository.save(reservation);
+    }
+
     private ReservationDTO convertToDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
@@ -128,6 +134,7 @@ public class ReservationService {
                 reservation.getStartDate(),
                 reservation.getEndDate(),
                 reservation.getStatus(),
+                reservation.isReviewed(),
                 reservation.getCreatedAt()
         );
     }
