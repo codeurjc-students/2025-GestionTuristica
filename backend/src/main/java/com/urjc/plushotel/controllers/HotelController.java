@@ -1,5 +1,6 @@
 package com.urjc.plushotel.controllers;
 
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.utils.EndpointConstants;
@@ -29,9 +30,9 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
-    public ResponseEntity<Hotel> getHotelBySlug(@PathVariable String slug) {
+    public ResponseEntity<HotelAvgRatingDTO> getHotelBySlug(@PathVariable String slug) {
 
-        Hotel hotel = hotelService.getHotelBySlug(slug);
+        HotelAvgRatingDTO hotel = hotelService.getHotelBySlug(slug);
         return ResponseEntity.ok(hotel);
     }
 
