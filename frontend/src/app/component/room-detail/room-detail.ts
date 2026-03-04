@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Review, ReviewService } from '../../services/review.service';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class RoomDetail implements OnInit{
   });
   minDate = new Date();
   reservedDates: ReservedRange[] = [];
+  reviews: Review[] = [];
 
   dateFilter = (date: Date | null): boolean => {
     if (!date) {
@@ -55,7 +57,8 @@ export class RoomDetail implements OnInit{
     private readonly roomService: RoomService,
     private readonly reservationService: ReservationService,
     private readonly router: Router,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly reviewService: ReviewService
   ){};
 
   ngOnInit(): void {
@@ -93,6 +96,11 @@ export class RoomDetail implements OnInit{
         this.calculatePrice(start, end);
       }
     });
+
+    this.reviewService.getReviewsByRoom(this.roomId).subscribe({
+      next: (data) => this.reviews = data,
+      error: (err) => console.log(err)
+    })
   }
 
   normalizeDate(date: Date): Date {
