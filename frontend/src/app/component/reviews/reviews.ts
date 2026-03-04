@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Reservation, ReservationFilter, ReservationService } from '../../services/reservation.service';
 import { AuthService } from '../../services/auth.service';
 import { DatePipe } from '@angular/common';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-reviews',
@@ -25,12 +26,12 @@ export class Reviews implements OnInit {
   ngOnInit(): void {
     const userId = this.authService.getUserId();
     if(userId) {
-      this.reservationService.getReservationsByUserId(userId, this.reservationsFilter).subscribe(
+      this.reservationService.getReservationsByUserId(userId, this.reservationsFilter).subscribe({
         next: (data) => {
           this.reservations = data;
         },
         error: (error) => console.error(error)
-      )
+      });
     }
   }
 
