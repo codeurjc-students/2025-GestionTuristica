@@ -3,14 +3,15 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface Room {
-        id?: number;
+        id: number;
         name: string;
         description: string;
         price: number;
         available: boolean;
+        averageRating: number;
     };
 export interface Hotel {
-    id?: number;
+    id: number;
     name: string;
     description: string;
     country: string;
@@ -19,6 +20,24 @@ export interface Hotel {
     stars: number;
     slug: string;
     rooms: Room[];
+    averageRating: number;
+}
+
+export interface HotelRequest {
+    name: string;
+    description: string;
+    country: string;
+    city: string;
+    address: string;
+    stars: number;
+    slug: string;
+    rooms: RoomRequest[];
+}
+
+export interface RoomRequest {
+    name: string;
+    description: string;
+    price: number;
 }
 
 @Injectable({
@@ -38,11 +57,11 @@ export class HotelService {
         return this.http.get<Hotel>(this.apiUrl + "/hotels/" + slug);
     }
 
-    create(hotel: Partial<Hotel>): Observable<Hotel> {
+    create(hotel: HotelRequest): Observable<Hotel> {
         return this.http.post<Hotel>(this.apiUrl + "/hotels", hotel);
     }
 
-    updateHotel(hotel: Partial<Hotel>, oldSlug: string): Observable<Hotel> {
+    updateHotel(hotel: HotelRequest, oldSlug: string): Observable<Hotel> {
         return this.http.put<Hotel>(this.apiUrl + "/hotels/" + oldSlug, hotel);
     }
 
