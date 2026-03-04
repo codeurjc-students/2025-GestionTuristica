@@ -1,29 +1,14 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.request.ReviewCreationRequest;
-import com.urjc.plushotel.dtos.request.ReviewUpdateRequest;
-import com.urjc.plushotel.dtos.response.ReviewDTO;
-import com.urjc.plushotel.entities.Reservation;
-import com.urjc.plushotel.entities.Review;
-import com.urjc.plushotel.entities.User;
-import com.urjc.plushotel.exceptions.ReviewNotFoundException;
 import com.urjc.plushotel.repositories.ReviewRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final CustomUserDetailsService userDetailsService;
-    private final ReservationService reservationService;
 
-    public ReviewService(ReviewRepository reviewRepository,
-                         CustomUserDetailsService userDetailsService,
-                         ReservationService reservationService) {
+    public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
         this.userDetailsService = userDetailsService;
         this.reservationService = reservationService;
