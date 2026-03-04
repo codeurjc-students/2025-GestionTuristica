@@ -32,10 +32,20 @@ public final class EndpointConstants {
         public static final String LOGIN_URL = "/login";
     }
 
-    public final class RoomsEndpoints {
+    public static class RoomsEndpoints {
         private RoomsEndpoints() {
         }
 
         public static final String ROOMS_ID_URL = "/rooms/{roomId}";
+        public static final String ROOMS_HOTEL_ID_URL = "/rooms/hotel/{hotelId}";
+    }
+
+    public static class ReviewsEndpoints {
+        private ReviewsEndpoints() {
+        }
+
+        public static final String REVIEWS_BASE_URL = "/reviews";
+        public static final String REVIEWS_ROOM_URL = "/reviews/room/{roomId}";
+        public static final String REVIEW_RESERVATION_IDENTIFIER_URL = "/reviews/reservation/{reservationIdentifier}";
     }
 }
