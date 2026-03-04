@@ -1,14 +1,16 @@
 <h2> Hoteles </h2>
 
 <ul>
-    @for (hotel of hotels; track hotel.id) {
-    <li>
-        <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a> - {{hotel.city}}, {{hotel.country}}  {{hotel.stars}}* - Dirección: {{hotel.address}} <br> {{hotel.description}}
+  @for (hotel of hotels; track hotel.id) {
+  <li>
+    <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
+    - {{hotel.city}}, {{hotel.country}} {{hotel.stars}}* - Dirección: {{hotel.address}}
+    <br> {{hotel.description}} - Puntuación de los usuarios: {{hotel.averageRating}}
 
-        @if(adminUser){
-        <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar </button>
-        <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar </button>
-        }
-    </li>
+    @if(adminUser){
+    <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar</button>
+    <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
     }
+  </li>
+  }
 </ul>

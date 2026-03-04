@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { HotelService, Hotel, Room } from "../services/hotel.service";
+import { HotelService, HotelRequest, RoomRequest } from "../services/hotel.service";
 
 @Component({
     selector: 'hotel-create',
@@ -12,7 +12,7 @@ import { HotelService, Hotel, Room } from "../services/hotel.service";
 })
 export class HotelCreateComponent {
 
-    hotelModel: Hotel = {
+    hotelModel: HotelRequest = {
         name: '',
         description: '',
         country: '',
@@ -20,15 +20,14 @@ export class HotelCreateComponent {
         address: '',
         stars: 1,
         slug: '',
-        rooms: [] as Room[]
+        rooms: [] as RoomRequest[]
     };
 
 
-    roomModel: Room = {
+    roomModel: RoomRequest = {
         name: '',
         description: '',
         price: 0,
-        available: true,
     }
 
     showForm: boolean = false;
@@ -58,7 +57,7 @@ export class HotelCreateComponent {
         this.toggleRoomFormVisibility();
     }
 
-    removeRoom(room: Room) {
+    removeRoom(room: RoomRequest) {
         this.hotelModel.rooms = this.hotelModel.rooms.filter(r => r !== room);
     }
 
@@ -67,7 +66,6 @@ export class HotelCreateComponent {
             name: '',
             description: '',
             price: 0,
-            available: true,
         };
     }
 

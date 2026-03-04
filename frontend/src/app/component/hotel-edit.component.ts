@@ -1,9 +1,10 @@
-import { HotelService, Room } from './../services/hotel.service';
+import { HotelRequest, HotelService, RoomRequest } from './../services/hotel.service';
 import { Component, OnInit } from '@angular/core';
 import { Hotel } from '../services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RoomService } from '../services/room.service';
 
 @Component({
   selector: 'hotel-edit',
@@ -15,7 +16,7 @@ export class HotelEdit implements OnInit{
   slug!: string;
   hotel!: Hotel;
 
-  hotelModel: Hotel = {
+  hotelModel: HotelRequest = {
     name: '',
     description: '',
     country: '',
@@ -23,18 +24,19 @@ export class HotelEdit implements OnInit{
     address: '',
     stars: 1,
     slug: '',
-    rooms: [] as Room[]
+    rooms: [] as RoomRequest[]
   };
 
   selectedRoomIndex: number = -1;
   creatingRoom = false;
   showForm = false;
   updatingRoom = false;
-  roomModel: Room = { name: '', description: '', price: 0, available: true };
+  roomModel: RoomRequest = { name: '', description: '', price: 0 };
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly hotelService: HotelService,
+    private readonly roomService: RoomService,
     private readonly router: Router
   ){};
 
@@ -45,6 +47,7 @@ export class HotelEdit implements OnInit{
       next: (data) => {
         this.hotel = data;
         this.hotelModel = this.hotel;
+        this.loadRooms();
       }
 
     })
@@ -91,7 +94,7 @@ export class HotelEdit implements OnInit{
     this.toggleRoomFormVisibility();
   }
 
-  startRoomUpdate(room: Room, index: number) {
+  startRoomUpdate(room: RoomRequest, index: number) {
     this.selectedRoomIndex = index;
     this.showRoomUpdateForm();
     this.roomModel = { ...room };
@@ -100,31 +103,44 @@ export class HotelEdit implements OnInit{
   addRoom() {
     this.hotelModel.rooms = this.hotelModel.rooms || [];
     this.hotelModel.rooms.push({ ...this.roomModel });
-    this.roomModel = { name: '', description: '', price: 0, available: true };
+    this.resetRoomForm();
     this.toggleRoomFormVisibility();
   }
 
   updateRoom() {
     Object.assign(this.hotelModel.rooms[this.selectedRoomIndex], this.roomModel)
-    this.roomModel = { name: '', description: '', price: 0, available: true };
+    this.resetRoomForm();
     this.toggleRoomFormVisibility();
     this.resetSelectedRoomIndex();
   }
 
   cancelRoomCreation() {
     this.creatingRoom = false;
-    this.roomModel = { name: '', description: '', price: 0, available: true };
+    this.resetRoomForm();
     this.toggleRoomFormVisibility();
   }
 
   cancelRoomUpdate() {
     this.updatingRoom = false;
-    this.roomModel = { name: '', description: '', price: 0, available: true };
+
     this.toggleRoomFormVisibility();
     this.resetSelectedRoomIndex();
   }
 
-  removeRoom(room: Room) {
+  removeRoom(room: RoomRequest) {
     this.hotelModel.rooms = this.hotelModel.rooms.filter(r => r !== room);
+  }
+
+  loadRooms() {
+    this.roomService.getRoomsByHotelId(this.hotel.id).subscribe({
+      next: (data) => {
+        this.hotelModel.rooms = data;
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  resetRoomForm() {
+    this.roomModel = { name: '', description: '', price: 0};
   }
 }
