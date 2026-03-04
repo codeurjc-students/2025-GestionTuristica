@@ -1,0 +1,16 @@
+@if (reservations.length > 0) {
+    @for (reservation of reservations; track reservation.id) {
+        <div class="reservation">
+            {{reservation.reservationIdentifier}}
+            {{reservation.roomName}}
+            {{reservation.startDate | date: 'dd/MM/yyyy'}} - {{reservation.endDate | date: 'dd/MM/yyyy'}}
+            @if(canBeReviewed(reservation)) {
+            <button (click)="goToReviewCreation(reservation.reservationIdentifier)">Escribir reseña</button>
+            } @else if (reservation.reviewed) {
+                <button (click)="viewReview(reservation.reservationIdentifier)">Ver reseña</button>
+            }
+        </div>
+    }
+} @else {
+    <p>No tienes ninguna reserva sobre la que escribir una reseña</p>
+}
