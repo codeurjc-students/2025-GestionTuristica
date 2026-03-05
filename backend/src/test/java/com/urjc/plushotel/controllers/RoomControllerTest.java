@@ -1,6 +1,6 @@
 package com.urjc.plushotel.controllers;
 
-import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.RoomService;
@@ -39,7 +39,8 @@ class RoomControllerTest {
     @WithMockUser
     void getRoomByRoomIdTest() throws Exception {
 
-        Room room = Room.builder().id(1L).name("Room1").description("Small room").price(BigDecimal.TEN).build();
+        RoomAvgRatingDTO room =
+                new RoomAvgRatingDTO(1L, "Room1", "Small room", BigDecimal.TEN, 4.3);
 
         when(roomService.getRoomById(anyLong())).thenReturn(room);
 
