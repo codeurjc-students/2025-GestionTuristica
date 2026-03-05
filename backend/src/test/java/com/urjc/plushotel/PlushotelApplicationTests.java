@@ -1,9 +1,6 @@
 package com.urjc.plushotel;
 
-import com.urjc.plushotel.repositories.HotelRepository;
-import com.urjc.plushotel.repositories.ReservationChangeRequestRepository;
-import com.urjc.plushotel.repositories.ReservationRepository;
-import com.urjc.plushotel.repositories.RoomRepository;
+import com.urjc.plushotel.repositories.*;
 import com.urjc.plushotel.services.AuthService;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
@@ -40,6 +37,9 @@ class PlushotelApplicationTests {
 
     @MockitoBean
     private ReservationChangeRequestRepository reservationChangeRequestRepository;
+
+    @MockitoBean
+    private ReviewRepository reviewRepository;
 
     @Test
     void contextLoads() {

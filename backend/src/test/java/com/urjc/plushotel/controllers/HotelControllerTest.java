@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urjc.plushotel.config.SecurityConfig;
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelService;
@@ -63,8 +64,8 @@ class HotelControllerTest {
     @Test
     void findHotelBySlugTest() throws Exception {
 
-        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
-                " Example 4, Madrid").stars(3).slug("h1").build();
+        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 1.2);
 
         when(hotelService.getHotelBySlug(anyString())).thenReturn(h1);
 

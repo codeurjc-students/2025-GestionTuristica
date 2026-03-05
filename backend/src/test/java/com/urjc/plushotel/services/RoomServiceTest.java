@@ -1,6 +1,6 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.repositories.RoomRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,12 +27,15 @@ class RoomServiceTest {
 
     @Test
     void getRoomById() {
-        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.TEN).build();
-        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(room));
+        RoomAvgRatingDTO roomDTO = new RoomAvgRatingDTO(1L, "room", "desc", BigDecimal.TEN, 3.3);
+        when(roomRepository.findRoomWithAverageRatingById(anyLong())).thenReturn(Optional.of(roomDTO));
 
-        Room resultRoom = roomService.getRoomById(1L);
+        RoomAvgRatingDTO resultRoom = roomService.getRoomById(1L);
 
         assertNotNull(resultRoom);
-        assertEquals(room, resultRoom);
+        assertEquals(roomDTO.getId(), resultRoom.getId());
+        assertEquals(roomDTO.getName(), resultRoom.getName());
+        assertEquals(roomDTO.getDescription(), resultRoom.getDescription());
+        assertEquals(roomDTO.getPrice(), resultRoom.getPrice());
     }
 }
