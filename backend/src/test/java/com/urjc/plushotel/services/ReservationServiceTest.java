@@ -197,4 +197,22 @@ class ReservationServiceTest {
         verify(reservationRepository, times(1)).findByReservationIdentifier(anyString());
         verify(reservationRepository, times(1)).save(any());
     }
+
+    @Test
+    void updateReviewed() {
+
+        User user = new User();
+        Room room = new Room();
+
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        when(reservationRepository.findByReservationIdentifier("RSV-123")).thenReturn(Optional.of(reservation));
+
+        reservationService.updateReviewed("RSV-123", false);
+
+        verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
+        verify(reservationRepository, times(1)).save(any(Reservation.class));
+
+    }
 }
