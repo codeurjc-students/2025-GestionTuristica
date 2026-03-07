@@ -3,6 +3,7 @@ import { of } from 'rxjs'
 import { HotelDetail } from './hotel-detail';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotelService } from '../../services/hotel.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('HotelDetail', () => {
   let component: HotelDetail;
@@ -51,7 +52,8 @@ describe('HotelDetail', () => {
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: HotelService, useValue: hotelServiceMock },
-        { provide: Router, useValue: routerMock }
+        { provide: Router, useValue: routerMock },
+        provideHttpClient()
       ]
     }).compileComponents();
 

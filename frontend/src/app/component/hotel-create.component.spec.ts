@@ -50,7 +50,7 @@ describe('HotelCreateComponent', () => {
     });
 
     it('Room should be added when addRoom is called', () => {
-        const room: Room = {name: 'Room 1', description: '', price: 30, available: true};
+        const room: Room = {id: 1, name: 'Room 1', description: '', price: 30, available: true, averageRating: 4};
         component.roomModel = room;
         component.addRoom();
         expect(component.hotelModel.rooms.length).toBe(1);
@@ -58,8 +58,8 @@ describe('HotelCreateComponent', () => {
     });
 
     it('Room should be removed when removeRoom is called', () => {
-        const room1: Room = {name: 'Room 1', description: '', price: 30, available: true};
-        const room2: Room = {name: 'Room 2', description: '', price: 50, available: true};
+        const room1: Room = {id: 1, name: 'Room 1', description: '', price: 30, available: true, averageRating: 4};
+        const room2: Room = {id: 1, name: 'Room 2', description: '', price: 50, available: true, averageRating: 5};
         component.hotelModel.rooms = [room1, room2];
         component.removeRoom(room1);
         expect(component.hotelModel.rooms.length).toBe(1);

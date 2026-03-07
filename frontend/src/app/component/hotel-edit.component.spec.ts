@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { HotelEdit } from './hotel-edit.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('HotelEdit', () => {
   
@@ -54,6 +55,7 @@ describe('HotelEdit', () => {
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: HotelService, useValue: hotelServiceMock },
         { provide: Router, useValue: routerMock },
+        provideHttpClient()
       ]
     }).compileComponents();
 
