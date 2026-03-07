@@ -23,7 +23,8 @@ describe('RoomDetail', () => {
     name: 'Room Test',
     description: 'Test room',
     price: 30,
-    available: true
+    available: true,
+    averageRating: 4
   }
 
   const mockReservedRanges = [
