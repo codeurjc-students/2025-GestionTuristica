@@ -52,14 +52,6 @@ public class ReviewService {
         return reviews.stream().map(this::convertToDTO).toList();
     }
 
-    public Double getAverageRatingByHotel(Long hotelId) {
-        return reviewRepository.findAverageRatingByHotelId(hotelId);
-    }
-
-    public Double getAverageRatingByRoom(Long roomId) {
-        return reviewRepository.findAverageRatingByRoomId(roomId);
-    }
-
     public ReviewDTO getReviewByReservationIdentifier(String reservationIdentifier) {
         Review review = reviewRepository.findByReservationReservationIdentifier(reservationIdentifier).orElseThrow(
                 () -> new ReviewNotFoundException("There's no review linked to that reservation, or there's no" +
