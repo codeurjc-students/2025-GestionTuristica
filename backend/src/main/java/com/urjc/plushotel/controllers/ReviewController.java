@@ -6,6 +6,7 @@ import com.urjc.plushotel.dtos.response.ReviewDTO;
 import com.urjc.plushotel.services.ReviewService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,6 +24,7 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(EndpointConstants.ReviewsEndpoints.REVIEWS_BASE_URL)
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewCreationRequest request,
                                                   Authentication authentication) {
@@ -41,12 +43,14 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL)
     public ResponseEntity<ReviewDTO> getReviewByReservationIdentifier(@PathVariable String reservationIdentifier) {
         ReviewDTO review = reviewService.getReviewByReservationIdentifier(reservationIdentifier);
         return ResponseEntity.ok(review);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping(EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL)
     public ResponseEntity<ReviewDTO> updateReview(@PathVariable String reservationIdentifier,
                                                   @RequestBody ReviewUpdateRequest request) {
@@ -54,6 +58,7 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping(EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL)
     public ResponseEntity<ReviewDTO> deleteReview(@PathVariable String reservationIdentifier) {
         reviewService.deleteReview(reservationIdentifier);
