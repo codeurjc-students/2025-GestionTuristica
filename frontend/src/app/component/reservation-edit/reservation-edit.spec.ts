@@ -30,7 +30,8 @@ describe('ReservationEdit', () => {
     endDate: '2025-12-31',
     createdAt: new Date(),
     status: 'ACTIVE',
-    userEmail: 'john@test.com'
+    userEmail: 'john@test.com', 
+    reviewed: false
   }
 
   beforeEach(async () => {
