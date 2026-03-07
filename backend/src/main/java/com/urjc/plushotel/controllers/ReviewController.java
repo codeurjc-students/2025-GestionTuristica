@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -29,8 +29,9 @@ public class ReviewController {
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewCreationRequest request,
                                                   Authentication authentication) {
         ReviewDTO review = reviewService.createReview(request, authentication);
-        URI location = UriComponentsBuilder
-                .fromPath(EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL)
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/reservation/{reservationIdentifier}")
                 .buildAndExpand(review.getReservationIdentifier())
                 .toUri();
 
