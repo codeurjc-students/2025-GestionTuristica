@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Reservation, ReservationFilter, ReservationService } from '../../services/reservation.service';
 import { AuthService } from '../../services/auth.service';
 import { DatePipe } from '@angular/common';
-import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-reviews',
