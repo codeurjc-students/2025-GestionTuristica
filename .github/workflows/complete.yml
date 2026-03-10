@@ -37,7 +37,7 @@ jobs:
         working-directory: backend
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-        run: mvn -B verify sonar:sonar -Dsonar.organization=plushotel -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=plushotel_codeurjc
+        run: mvn -B verify sonar:sonar -Dsonar.organization=plushotel -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=plushotel_codeurjc -Dsonar.qualitygate.wait=true
 
   frontend:
     name: frontend complete check
