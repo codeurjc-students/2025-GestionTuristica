@@ -48,4 +48,8 @@ export class ReviewEdit implements OnInit{
       error: (err) => console.error(err)
     });
   }
+
+  cancelEdit() {
+    this.router.navigate(['/reviews']);
+  }
 }

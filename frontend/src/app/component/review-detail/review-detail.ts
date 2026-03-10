@@ -51,4 +51,8 @@ export class ReviewDetail implements OnInit{
       error: (err) => console.error(err)
     });
   }
+
+  cancel() {
+    this.router.navigate(['/reviews']);
+  }
 }
