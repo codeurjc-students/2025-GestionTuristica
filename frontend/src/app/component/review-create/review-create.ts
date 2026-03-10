@@ -34,4 +34,8 @@ export class ReviewCreate {
       error: (error) => console.error(error)
     })
   }
+
+  cancel() {
+    this.router.navigate(['/reviews']);
+  }
 }
