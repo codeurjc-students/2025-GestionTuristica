@@ -52,8 +52,8 @@ class HotelServiceTest {
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
 
 
-        Room room1 = Room.builder().name("Room 1").description("").price(BigDecimal.ONE).available(true).build();
-        Room room2 = Room.builder().name("Room 2").description("").price(BigDecimal.TWO).available(true).build();
+        Room room1 = Room.builder().name("Room 1").description("").price(BigDecimal.ONE).build();
+        Room room2 = Room.builder().name("Room 2").description("").price(BigDecimal.TWO).build();
 
         h1.getRooms().add(room1);
         h1.getRooms().add(room2);
