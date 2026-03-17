@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urjc.plushotel.config.SecurityConfig;
+import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.CustomUserDetailsService;
@@ -78,17 +79,18 @@ class HotelControllerTest {
     @WithMockUser(roles = "ADMIN")
     void createHotelTest() throws Exception {
 
-        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+        HotelRequest request = HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city(
+                "Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").build();
 
         Hotel savedH1 = Hotel.builder().id(1L).name("H1").description("Hotel1 desc").country("España").city("Madrid")
                 .address("C/ Example 4, Madrid").stars(3).slug("h1").build();
 
-        when(hotelService.createHotel(h1)).thenReturn(savedH1);
+        when(hotelService.createHotel(any())).thenReturn(savedH1);
 
         mockMvc.perform(post("/api/v1/hotels")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(h1))).andExpect(status().isCreated())
+                        .content(objectMapper.writeValueAsString(request))).andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/v1/hotels/h1"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("H1"));
@@ -98,8 +100,9 @@ class HotelControllerTest {
     @WithMockUser(roles = "ADMIN")
     void updateHotelTest() throws Exception {
 
-        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
-                " Example 4, Madrid").stars(3).slug("h1").build();
+        HotelRequest request =
+                HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+                        " Example 4, Madrid").stars(3).slug("h1").build();
 
         Hotel updatedH1 = Hotel.builder().name("Updated H1").description("Hotel1 desc").country("España").city("Madrid")
                 .address("C/ Example 4, Madrid").stars(3).slug("updated-h1").build();
@@ -108,7 +111,7 @@ class HotelControllerTest {
 
         mockMvc.perform(put("/api/v1/hotels/{}", "h1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(h1)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(updatedH1.getName()));
     }

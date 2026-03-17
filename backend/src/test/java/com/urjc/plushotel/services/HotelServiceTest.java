@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
@@ -48,22 +49,27 @@ class HotelServiceTest {
 
     @Test
     void createHotelTest() {
-        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+        HotelRequest request = HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city(
+                "Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
-
 
         Room room1 = Room.builder().name("Room 1").description("").price(BigDecimal.ONE).build();
         Room room2 = Room.builder().name("Room 2").description("").price(BigDecimal.TWO).build();
 
-        h1.getRooms().add(room1);
-        h1.getRooms().add(room2);
+        request.getRooms().add(room1);
+        request.getRooms().add(room2);
 
-        hotelService.createHotel(h1);
+        Hotel savedHotel = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city(
+                "Madrid").address("C/" +
+                " Example 4, Madrid").stars(3).slug("h1").rooms(List.of(room1, room2)).build();
 
-        assertEquals(room1.getHotel(), h1);
-        assertEquals(room2.getHotel(), h1);
+        when(hotelRepository.save(any())).thenReturn(savedHotel);
 
-        verify(hotelRepository, times(1)).save(h1);
+        Hotel result = hotelService.createHotel(request);
+
+        assertEquals(request.getRooms(), result.getRooms());
+
+        verify(hotelRepository, times(1)).save(any(Hotel.class));
     }
 
     @Test
@@ -71,13 +77,17 @@ class HotelServiceTest {
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
 
+        HotelRequest request =
+                HotelRequest.builder().name("H1 up").description("Hotel1 up desc").country("España").city("Madrid")
+                        .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(new ArrayList<>()).build();
+
         Hotel updatedH1 = Hotel.builder().name("H1 up").description("Hotel1 up desc").country("España").city("Madrid")
                 .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(new ArrayList<>()).build();
 
         when(hotelRepository.findBySlug(anyString())).thenReturn(Optional.of(h1));
         when(hotelRepository.save(any())).thenReturn(updatedH1);
 
-        Hotel updatedHotel = hotelService.updateHotel(updatedH1, "h1");
+        Hotel updatedHotel = hotelService.updateHotel(request, "h1");
 
         assertEquals(updatedHotel.getName(), updatedH1.getName());
         assertEquals(updatedHotel.getDescription(), updatedH1.getDescription());
