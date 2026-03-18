@@ -59,8 +59,8 @@ public class ReservationService {
     public ReservationDTO reserveRoom(Long roomId, ReservationRequest request, Authentication authentication) {
         List<ReservedDatesDTO> reservedDates = getReservedDatesByRoomId(roomId);
         for (ReservedDatesDTO reservedRange : reservedDates) {
-            if (request.getStartDate().isBefore(reservedRange.getStartDate()) &&
-                    request.getEndDate().isAfter(reservedRange.getEndDate())) {
+            if (request.getStartDate().isBefore(reservedRange.getEndDate()) &&
+                    request.getEndDate().isAfter(reservedRange.getStartDate())) {
                 throw new InvalidReservationRangeException("The selected range includes already reserved dates");
             }
         }
@@ -75,7 +75,8 @@ public class ReservationService {
     public ReservationDTO updateReservation(String reservationIdentifier, ReservationRequest request) {
         Reservation reservationToUpdate = reservationRepository.findByReservationIdentifier(reservationIdentifier)
                 .orElseThrow(
-                        () -> new RuntimeException("There's no reservation with such reservation identifier")
+                        () -> new ReservationNotFoundException("There's no reservation with such reservation " +
+                                "identifier")
                 );
         reservationToUpdate.setStartDate(request.getStartDate());
         reservationToUpdate.setEndDate(request.getEndDate());
@@ -86,7 +87,8 @@ public class ReservationService {
 
     public void cancelReservation(String reservationIdentifier) {
         Reservation reservation = reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
-                () -> new RuntimeException("This reservation identifier doesn't correspond to any reservation")
+                () -> new ReservationNotFoundException("This reservation identifier doesn't correspond to any " +
+                        "reservation")
         );
 
         reservation.setStatus(ReservationStatus.CANCELLED);
@@ -105,7 +107,7 @@ public class ReservationService {
 
     public Reservation getReservationEntityByIdentifier(String reservationIdentifier) {
         return reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
-                () -> new RuntimeException("This reservation doesn't exist")
+                () -> new ReservationNotFoundException("This reservation doesn't exist")
         );
     }
 
