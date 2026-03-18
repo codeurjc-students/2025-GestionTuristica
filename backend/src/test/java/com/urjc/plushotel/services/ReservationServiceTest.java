@@ -4,6 +4,8 @@ import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.*;
+import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
+import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -182,6 +183,28 @@ class ReservationServiceTest {
     }
 
     @Test
+    void reserveRoomInvalidDateRangeTest() {
+
+        ReservationRequest request = new ReservationRequest(LocalDate.parse("2025-12-22"), LocalDate.parse("2025-12" +
+                "-25"));
+
+        ReservedDatesDTO reservedDate1 = new ReservedDatesDTO(LocalDate.parse("2025-12-23"),
+                LocalDate.parse("2025-12-26"));
+
+        ReservedDatesDTO reservedDate2 = new ReservedDatesDTO(LocalDate.parse("2025-12-27"),
+                LocalDate.parse("2025-12-31"));
+
+        List<ReservedDatesDTO> reservedDates = List.of(reservedDate1, reservedDate2);
+
+        when(reservationRepository.findReservedDatesByRoomId(any())).thenReturn(reservedDates);
+
+        assertThrows(InvalidReservationRangeException.class, () -> reservationService.reserveRoom(1L, request,
+                authentication));
+
+        verify(reservationRepository, times(1)).findReservedDatesByRoomId(any());
+    }
+
+    @Test
     void cancelReservationTest() {
 
         User user = new User();
@@ -199,7 +222,45 @@ class ReservationServiceTest {
     }
 
     @Test
-    void updateReviewed() {
+    void cancelReservationNotFoundTest() {
+        when(reservationRepository.findByReservationIdentifier(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> reservationService.cancelReservation("RSV-123"));
+
+        verify(reservationRepository, times(1)).findByReservationIdentifier(anyString());
+        verify(reservationRepository, times(0)).save(any());
+    }
+
+    @Test
+    void updateRequestedModificationStateTest() {
+
+        User user = new User();
+        Room room = new Room();
+
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        reservationService.updateRequestedModificationState(1L, ReservationStatus.MODIFICATION_REQUESTED);
+
+        verify(reservationRepository, times(1)).findById(1L);
+        verify(reservationRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updateRequestedModificationStateNotFoundTest() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> reservationService.updateRequestedModificationState(
+                1L, ReservationStatus.MODIFICATION_REQUESTED));
+
+        verify(reservationRepository, times(1)).findById(1L);
+        verify(reservationRepository, times(0)).save(any());
+    }
+
+    @Test
+    void updateReviewedTest() {
 
         User user = new User();
         Room room = new Room();
@@ -214,5 +275,108 @@ class ReservationServiceTest {
         verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
         verify(reservationRepository, times(1)).save(any(Reservation.class));
 
+    }
+
+    @Test
+    void updateReviewedNotFoundTest() {
+
+        when(reservationRepository.findByReservationIdentifier("RSV-123")).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> reservationService.updateReviewed("RSV-123", false));
+
+        verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
+        verify(reservationRepository, times(0)).save(any(Reservation.class));
+
+    }
+
+    @Test
+    void updateReservationTest() {
+
+        User user = new User();
+        Room room = new Room();
+
+        Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        ReservationRequest request =
+                new ReservationRequest(LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        when(reservationRepository.findByReservationIdentifier("RSV-123")).thenReturn(Optional.of(reservation));
+
+        ReservationDTO result = reservationService.updateReservation("RSV-123", request);
+
+        assertEquals(request.getStartDate(), result.getStartDate());
+        assertEquals(request.getEndDate(), result.getEndDate());
+
+        verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
+        verify(reservationRepository, times(1)).save(any(Reservation.class));
+    }
+
+    @Test
+    void updateReservationNotFoundTest() {
+        ReservationRequest request =
+                new ReservationRequest(LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        when(reservationRepository.findByReservationIdentifier("RSV-123")).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> reservationService.updateReservation("RSV-123",
+                request));
+
+        verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
+        verify(reservationRepository, times(0)).save(any(Reservation.class));
+    }
+
+    @Test
+    void getNonCancelledReservationsByUser() {
+
+        Room room = new Room();
+
+        User user = new User();
+
+        Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.ACTIVE, false,
+                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+
+        List<Reservation> reservations = List.of(reservation1, reservation2);
+
+        when(reservationRepository.findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED)).thenReturn(reservations);
+
+        List<ReservationDTO> result = reservationService.getReservationsByUser(1L, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+
+        verify(reservationRepository, times(1)).findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED);
+    }
+
+    @Test
+    void getCancelledReservationsByUser() {
+
+        Room room = new Room();
+
+        User user = new User();
+
+        Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.CANCELLED, false,
+                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+
+        Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.CANCELLED, false,
+                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+
+        List<Reservation> reservations = List.of(reservation1, reservation2);
+
+        when(reservationRepository.findByUserIdAndStatus(1L, ReservationStatus.CANCELLED)).thenReturn(reservations);
+
+        List<ReservationDTO> result = reservationService.getReservationsByUser(1L, ReservationFilter.CANCELLED);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+
+        verify(reservationRepository, times(1)).findByUserIdAndStatus(1L, ReservationStatus.CANCELLED);
     }
 }
