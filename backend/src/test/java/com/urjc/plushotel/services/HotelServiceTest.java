@@ -1,6 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.request.HotelRequest;
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -101,6 +103,19 @@ class HotelServiceTest {
     }
 
     @Test
+    void updateHotelNotFoundTest() {
+        HotelRequest request =
+                HotelRequest.builder().name("H1 up").description("Hotel1 up desc").country("España").city("Madrid")
+                        .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(new ArrayList<>()).build();
+
+        when(hotelRepository.findBySlug("h1")).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> hotelService.updateHotel(request, "h1"));
+
+        verify(hotelRepository, times(1)).findBySlug("h1");
+    }
+
+    @Test
     void removeHotelTest() {
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
@@ -110,5 +125,46 @@ class HotelServiceTest {
         hotelService.removeHotel("h1");
 
         verify(hotelRepository, times(1)).delete(any());
+    }
+
+    @Test
+    void removeHotelNotFoundTest() {
+        when(hotelRepository.findBySlug("h1")).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> hotelService.removeHotel("h1"));
+
+        verify(hotelRepository, times(1)).findBySlug("h1");
+    }
+
+    @Test
+    void findHotelBySlugSuccessTest() {
+        HotelAvgRatingDTO hotel = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, " +
+                "Madrid", 3, "h1", 3.6);
+
+
+        when(hotelRepository.findHotelsWithAverageRatingBySlug("h1")).thenReturn(Optional.of(hotel));
+
+        HotelAvgRatingDTO result = hotelService.getHotelBySlug("h1");
+
+        assertEquals(hotel.getName(), result.getName());
+        assertEquals(hotel.getSlug(), result.getSlug());
+        assertEquals(hotel.getDescription(), result.getDescription());
+        assertEquals(hotel.getCountry(), result.getCountry());
+        assertEquals(hotel.getCity(), result.getCity());
+        assertEquals(hotel.getAddress(), result.getAddress());
+        assertEquals(hotel.getStars(), result.getStars());
+        assertEquals(hotel.getAverageRating(), result.getAverageRating());
+        assertEquals(hotel.getId(), result.getId());
+
+        verify(hotelRepository, times(1)).findHotelsWithAverageRatingBySlug("h1");
+    }
+
+    @Test
+    void findHotelBySlugNotFoundTest() {
+        when(hotelRepository.findHotelsWithAverageRatingBySlug("h1")).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> hotelService.getHotelBySlug("h1"));
+
+        verify(hotelRepository, times(1)).findHotelsWithAverageRatingBySlug("h1");
     }
 }
