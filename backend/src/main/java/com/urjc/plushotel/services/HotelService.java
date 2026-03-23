@@ -1,5 +1,7 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelRequest;
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
@@ -20,22 +22,23 @@ public class HotelService {
         return hotelRepository.findAll();
     }
 
-    public Hotel getHotelBySlug(String slug) {
-        return hotelRepository.findBySlug(slug).orElseThrow(
+    public HotelAvgRatingDTO getHotelBySlug(String slug) {
+        return hotelRepository.findHotelsWithAverageRatingBySlug(slug).orElseThrow(
                 () -> new RuntimeException("This hotel doesn't exist")
         );
     }
 
-    public Hotel createHotel(Hotel hotel) {
+    public Hotel createHotel(HotelRequest hotelRequest) {
+        Hotel hotel = requestToHotel(hotelRequest);
         if (hotel.getRooms() != null) {
-            for (Room room : hotel.getRooms()) {
+            for (Room room : hotelRequest.getRooms()) {
                 room.setHotel(hotel);
             }
         }
         return hotelRepository.save(hotel);
     }
 
-    public Hotel updateHotel(Hotel hotel, String slug) {
+    public Hotel updateHotel(HotelRequest hotel, String slug) {
         Hotel savedHotel = hotelRepository.findBySlug(slug).orElseThrow(
                 () -> new RuntimeException("This hotel doesn't exist")
         );
@@ -63,5 +66,18 @@ public class HotelService {
         );
 
         hotelRepository.delete(hotelToRemove);
+    }
+
+    private Hotel requestToHotel(HotelRequest request) {
+        return Hotel.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .country(request.getCountry())
+                .city(request.getCity())
+                .address(request.getAddress())
+                .stars(request.getStars())
+                .slug(request.getSlug())
+                .rooms(request.getRooms())
+                .build();
     }
 }

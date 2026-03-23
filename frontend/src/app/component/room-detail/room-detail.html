@@ -5,6 +5,8 @@
 				<p>{{room.description}}</p>
 
 				<p> {{room.price}}€/noche</p>
+
+				<p>Puntuación: {{room.averageRating}}</p>
 		</div>
 
 		<p>Seleccionar fechas de reserva</p>
@@ -33,6 +35,15 @@
 			<button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>	
 			}
 			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+		</div>
+
+		<div class="reviews">
+			<h2>Reseñas</h2>
+			@for (review of reviews; track $index) {
+				<p>{{review.userEmail}} - {{review.creationTime}}</p>
+				<p>{{review.message}}</p>
+				<p>{{review.rating}}</p>
+			}
 		</div>
 	} @else {
 		<p>Cargando datos de la habitación...</p>

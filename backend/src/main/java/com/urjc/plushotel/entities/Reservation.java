@@ -29,6 +29,8 @@ public class Reservation {
     private User user;
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+    @Column(nullable = false)
+    private boolean reviewed;
     private LocalDateTime createdAt;
     private LocalDate startDate;
     private LocalDate endDate;

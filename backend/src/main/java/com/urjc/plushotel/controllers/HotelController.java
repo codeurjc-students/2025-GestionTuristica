@@ -1,5 +1,7 @@
 package com.urjc.plushotel.controllers;
 
+import com.urjc.plushotel.dtos.request.HotelRequest;
+import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.utils.EndpointConstants;
@@ -29,15 +31,15 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
-    public ResponseEntity<Hotel> getHotelBySlug(@PathVariable String slug) {
+    public ResponseEntity<HotelAvgRatingDTO> getHotelBySlug(@PathVariable String slug) {
 
-        Hotel hotel = hotelService.getHotelBySlug(slug);
+        HotelAvgRatingDTO hotel = hotelService.getHotelBySlug(slug);
         return ResponseEntity.ok(hotel);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
-    public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
+    public ResponseEntity<Hotel> createHotel(@RequestBody HotelRequest hotel) {
         Hotel savedHotel = hotelService.createHotel(hotel);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -49,7 +51,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
-    public ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel, @PathVariable String slug) {
+    public ResponseEntity<Hotel> updateHotel(@RequestBody HotelRequest hotel, @PathVariable String slug) {
         Hotel updatedHotel = hotelService.updateHotel(hotel, slug);
         return ResponseEntity.ok(updatedHotel);
     }
