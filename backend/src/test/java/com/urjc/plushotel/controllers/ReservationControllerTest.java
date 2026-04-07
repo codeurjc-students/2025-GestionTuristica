@@ -17,6 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,11 +51,11 @@ class ReservationControllerTest {
     void getReservationsTest() throws Exception {
 
         ReservationDTO reservation1 = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", "john@email.com", LocalDate.now(),
-                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, false, LocalDateTime.now());
+                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, false, BigDecimal.TEN, LocalDateTime.now());
 
         ReservationDTO reservation2 = new ReservationDTO(2L, "RSV-124L", 1L, "Room1", "john@email.com",
                 LocalDate.now().plusDays(3), LocalDate.now().plusDays(6), ReservationStatus.ACTIVE,
-                false, LocalDateTime.now());
+                false, BigDecimal.TEN, LocalDateTime.now());
 
         List<ReservationDTO> reservations = List.of(reservation1, reservation2);
 
@@ -71,7 +72,7 @@ class ReservationControllerTest {
     void getReservationByReservationIdentifierTest() throws Exception {
 
         ReservationDTO reservation = new ReservationDTO(1L, "RSV-123L", 1L, "Room1", "john@email.com", LocalDate.now(),
-                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, false, LocalDateTime.now());
+                LocalDate.now().plusDays(3), ReservationStatus.ACTIVE, false, BigDecimal.TEN, LocalDateTime.now());
 
         when(reservationService.getReservationByIdentifier(anyString())).thenReturn(reservation);
 
@@ -115,7 +116,7 @@ class ReservationControllerTest {
 
         ReservationDTO reservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1", "john@email.com",
                 LocalDate.parse("2025-12-29"), LocalDate.parse("2025-12-31"), ReservationStatus.ACTIVE,
-                false, LocalDateTime.now());
+                false, BigDecimal.TEN, LocalDateTime.now());
 
         when(reservationService.reserveRoom(any(), any(), any())).thenReturn(reservation);
 
@@ -141,7 +142,7 @@ class ReservationControllerTest {
 
         ReservationDTO updatedReservation = new ReservationDTO(1L, "RSV-123", 1L, "Room1", "john@email.com",
                 LocalDate.parse("2025-12-23"), LocalDate.parse("2025-12-25"), ReservationStatus.ACTIVE,
-                false, LocalDateTime.parse("2025-12-25T01:00:00")
+                false, BigDecimal.TEN, LocalDateTime.parse("2025-12-25T01:00:00")
         );
 
         when(reservationService.updateReservation(anyString(), any())).thenReturn(updatedReservation);

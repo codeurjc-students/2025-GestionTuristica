@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +48,7 @@ class ReviewServiceTest {
         Room room = Room.builder().name("Room1").build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         ReviewCreationRequest request = new ReviewCreationRequest("message", "RSV-123", 4.5);
 
@@ -76,10 +77,10 @@ class ReviewServiceTest {
         Room room = Room.builder().name("Room1").build();
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user1, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user1, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Review review1 = new Review(1L, user1, reservation1, "message1", 4.5, LocalDateTime.now());
         Review review2 = new Review(2L, user2, reservation2, "message2", 4.0, LocalDateTime.now());
@@ -111,7 +112,7 @@ class ReviewServiceTest {
         Room room = Room.builder().name("Room1").build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Review review = new Review(1L, user, reservation, "message", 4.5, LocalDateTime.now());
 
@@ -145,7 +146,7 @@ class ReviewServiceTest {
         Room room = Room.builder().name("Room1").build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Review review = new Review(1L, user, reservation, "Old message", 4.5, LocalDateTime.now());
 
@@ -184,7 +185,7 @@ class ReviewServiceTest {
         Room room = Room.builder().name("Room1").build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Review review = new Review(1L, user, reservation, "message", 4.5, LocalDateTime.now());
 
