@@ -84,4 +84,19 @@ export class ReservationList implements OnInit{
     this.showCancelled = !this.showCancelled;
     this.loadReservations(this.showCancelled);
   }
+
+  downloadPdf(reservationIdentifier: string) {
+    this.reservationService.downloadReservationPdf(reservationIdentifier).subscribe({
+      next: (blob): void => {
+        const url = globalThis.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = reservationIdentifier + '.pdf';
+        a.click();
+
+        globalThis.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error(err)
+    });
+  }
 }

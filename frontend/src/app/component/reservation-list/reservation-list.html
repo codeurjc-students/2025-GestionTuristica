@@ -40,6 +40,7 @@
         Solicitar cancelación
       </button>
       }
+      <button class="action-button" type="button" (click)="downloadPdf(reservation.reservationIdentifier)">Descargar pdf</button>
     } @else if (reservation.status == 'MODIFICATION_REQUESTED') {
       <p>Modificación de reserva solicitada</p>
     } @else if (reservation.status == 'CANCELLATION_REQUESTED') {
