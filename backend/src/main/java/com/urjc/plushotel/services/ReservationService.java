@@ -7,9 +7,11 @@ import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
 import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
@@ -21,14 +23,16 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomService roomService;
     private final CustomUserDetailsService userDetailsService;
+    private final PdfGenerationService pdfGenerationService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
     public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
-                              CustomUserDetailsService userDetailsService) {
+                              CustomUserDetailsService userDetailsService, PdfGenerationService pdfGenerationService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
         this.userDetailsService = userDetailsService;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
     public List<ReservationDTO> getReservations(ReservationFilter filter) {
@@ -131,6 +135,14 @@ public class ReservationService {
         Reservation reservation = getReservationEntityByIdentifier(reservationIdentifier);
         reservation.setReviewed(reviewed);
         reservationRepository.save(reservation);
+    }
+
+    public void generatePdf(String reservationIdentifier, HttpServletResponse response) throws IOException {
+        Reservation reservation = reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
+                () -> new ReservationNotFoundException("This reservation doesn't exist")
+        );
+
+        pdfGenerationService.generateReservationPdf(reservation, response.getOutputStream());
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {
