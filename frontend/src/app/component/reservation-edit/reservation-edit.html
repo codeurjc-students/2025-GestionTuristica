@@ -22,7 +22,11 @@
 				} @else {
 				<button class="action-button" type="button" (click)="requestModification()">Solicitar modificación</button>
 				}
-				
+				@if (priceDifference > 0) {
+					<p>La nueva reserva tendrá un coste adicional de {{priceDifference}} €</p>
+				} @else if (priceDifference < 0) {
+					<p>Se le reembolsarán {{priceDifference * -1}} €</p>
+				}
 			}
 			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
 		</div>

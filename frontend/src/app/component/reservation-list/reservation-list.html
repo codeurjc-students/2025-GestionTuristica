@@ -16,6 +16,7 @@
       <p><strong>Fecha de entrada:</strong> {{reservation.startDate | date: 'dd/MM/yyyy'}}</p>
       <p><strong>Fecha de salida:</strong> {{reservation.endDate | date: 'dd/MM/yyyy'}}</p>
       <p><strong>Fecha de reserva:</strong> {{reservation.createdAt | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+      <p><strong>Precio:</strong>{{reservation.price}} €</p>
       @if(reservation.status == 'CANCELLED'){
         <p><strong>Reserva cancelada</strong></p>
       }
