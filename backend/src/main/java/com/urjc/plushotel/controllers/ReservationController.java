@@ -6,12 +6,14 @@ import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.ReservationFilter;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -80,5 +82,13 @@ public class ReservationController {
                                                                               "NON_CANCELLED") ReservationFilter filter) {
         List<ReservationDTO> reservationsByUser = reservationService.getReservationsByUser(userId, filter);
         return ResponseEntity.ok(reservationsByUser);
+    }
+
+    @GetMapping("reservations/download/summary/{reservationIdentifier}")
+    public void generateBill(@PathVariable String reservationIdentifier, HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + reservationIdentifier + ".pdf");
+
+        reservationService.generatePdf(reservationIdentifier, response);
     }
 }
