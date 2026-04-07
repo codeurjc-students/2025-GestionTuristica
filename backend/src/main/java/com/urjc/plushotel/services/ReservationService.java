@@ -10,7 +10,9 @@ import com.urjc.plushotel.repositories.ReservationRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -66,9 +68,11 @@ public class ReservationService {
         }
         User user = userDetailsService.loadUserByUsername(authentication.getName());
         Room room = roomService.getRoomEntityById(roomId);
+        long days = request.getStartDate().until(request.getEndDate(), ChronoUnit.DAYS);
+        BigDecimal reservationPrice = room.getPrice().multiply(BigDecimal.valueOf(days));
         Reservation reservation =
                 Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
-                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).build();
+                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).price(reservationPrice).build();
         return convertToDTO(reservationRepository.save(reservation));
     }
 
@@ -80,6 +84,9 @@ public class ReservationService {
                 );
         reservationToUpdate.setStartDate(request.getStartDate());
         reservationToUpdate.setEndDate(request.getEndDate());
+        long days = request.getStartDate().until(request.getEndDate(), ChronoUnit.DAYS);
+        BigDecimal reservationNewPrice = reservationToUpdate.getRoom().getPrice().multiply(BigDecimal.valueOf(days));
+        reservationToUpdate.setPrice(reservationNewPrice);
         reservationRepository.save(reservationToUpdate);
 
         return convertToDTO(reservationToUpdate);
@@ -137,6 +144,7 @@ public class ReservationService {
                 reservation.getEndDate(),
                 reservation.getStatus(),
                 reservation.isReviewed(),
+                reservation.getPrice(),
                 reservation.getCreatedAt()
         );
     }

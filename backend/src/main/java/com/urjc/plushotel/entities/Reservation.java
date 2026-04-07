@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,6 +32,8 @@ public class Reservation {
     private ReservationStatus status;
     @Column(nullable = false)
     private boolean reviewed;
+    @Column(nullable = false)
+    private BigDecimal price;
     private LocalDateTime createdAt;
     private LocalDate startDate;
     private LocalDate endDate;
