@@ -7,6 +7,7 @@ import org.openpdf.text.pdf.draw.LineSeparator;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 
@@ -43,7 +44,8 @@ public class PdfGenerationService {
     }
 
     private static void addLogo(Document document) throws IOException {
-        Image logo = Image.getInstance("backend/src/main/resources/logo.jpg");
+        InputStream inputStream = PdfGenerationService.class.getClassLoader().getResourceAsStream("logo.jpg");
+        Image logo = Image.getInstance(inputStream.readAllBytes());
         logo.scaleToFit(200, 100);
         logo.setAlignment(Element.ALIGN_LEFT);
         document.add(logo);
