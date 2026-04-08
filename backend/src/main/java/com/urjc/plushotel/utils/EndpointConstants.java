@@ -22,6 +22,7 @@ public final class EndpointConstants {
         public static final String RESERVATIONS_CREATE_URL = "/reservations/{roomId}/reserve";
         public static final String RESERVED_DATES_BY_ROOM_ID = "/reservations/{roomId}/reserved-dates";
         public static final String RESERVATIONS_USER_ID = "/reservations/user/{userId}";
+        public static final String GENERATE_PDF_URL = "/reservations/download/summary/{reservationIdentifier}";
     }
 
     public static class AuthorizationEndpoints {

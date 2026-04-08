@@ -84,8 +84,8 @@ public class ReservationController {
         return ResponseEntity.ok(reservationsByUser);
     }
 
-    @GetMapping("reservations/download/summary/{reservationIdentifier}")
-    public void generateBill(@PathVariable String reservationIdentifier, HttpServletResponse response) throws IOException {
+    @GetMapping(EndpointConstants.ReservationsEndpoints.GENERATE_PDF_URL)
+    public void generatePdf(@PathVariable String reservationIdentifier, HttpServletResponse response) throws IOException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=" + reservationIdentifier + ".pdf");
 
