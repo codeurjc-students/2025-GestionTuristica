@@ -162,4 +162,14 @@ class ReservationControllerTest {
                         "RSV-123"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void generatePdf() throws Exception {
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.GENERATE_PDF_URL,
+                        "RSV-123"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/pdf"));
+    }
 }
