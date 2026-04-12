@@ -12,6 +12,7 @@ import org.openpdf.text.pdf.draw.LineSeparator;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,8 +59,13 @@ public class PdfGenerationService {
     private void addLogoAndDate(Document document) throws IOException {
         PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(100);
-        InputStream inputStream = PdfGenerationService.class.getClassLoader().getResourceAsStream("logo.jpg");
-        Image logo = Image.getInstance(inputStream.readAllBytes());
+        Image logo;
+        try (InputStream inputStream = PdfGenerationService.class.getClassLoader().getResourceAsStream("logo.jpg")) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("Logo no encontrado");
+            }
+            logo = Image.getInstance(inputStream.readAllBytes());
+        }
         logo.scaleToFit(200, 100);
 
         PdfPCell logoCell = new PdfPCell(logo);
