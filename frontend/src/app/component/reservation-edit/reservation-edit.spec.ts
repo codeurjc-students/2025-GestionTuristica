@@ -6,6 +6,7 @@ import { RoomService } from '../../services/room.service';
 import { ReservationService } from '../../services/reservation.service';
 import { provideHttpClient } from '@angular/common/http';
 import { RequestService } from '../../services/request.service';
+import { Room } from '../../services/hotel.service';
 
 describe('ReservationEdit', () => {
   let component: ReservationEdit;
@@ -31,12 +32,22 @@ describe('ReservationEdit', () => {
     createdAt: new Date(),
     status: 'ACTIVE',
     userEmail: 'john@test.com', 
-    reviewed: false
+    reviewed: false,
+    price: 30
   }
+
+  const mockRoom: Room = {
+      id: 1,
+      name: 'Room Test',
+      description: 'Test room',
+      price: 30,
+      available: true,
+      averageRating: 4,
+    }
 
   beforeEach(async () => {
     roomServiceMock = {
-
+        getRoomByRoomId: jasmine.createSpy('getRoomByRoomId').and.returnValue(of(mockRoom))
     };
 
     reservationServiceMock = {
