@@ -18,6 +18,7 @@ export interface Reservation {
         status: string;
         createdAt: Date;
         reviewed: boolean;
+        price: number;
     };
 
 export interface ReservedRange {
@@ -66,5 +67,9 @@ export class ReservationService {
 
     cancelReservation(reservationIdentifier: string): Observable<void> {
         return this.http.delete<void>(this.apiUrl + "/reservations/" + reservationIdentifier);
+    }
+
+    downloadReservationPdf(reservationIdentifier: string): Observable<Blob> {
+        return this.http.get(this.apiUrl + "/reservations/download/summary/" + reservationIdentifier, {responseType: 'blob'});
     }
 }

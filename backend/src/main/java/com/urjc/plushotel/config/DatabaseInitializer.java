@@ -73,9 +73,9 @@ public class DatabaseInitializer implements CommandLineRunner {
                             " una persona, incluye todas las comodidades básicas").hotel(lasFuentes)
                     .price(BigDecimal.valueOf(15)).build();
 
-            Room lasFuentesPremiumRoom = Room.builder().name("Habitación básica").description("Habitación premium " +
+            Room lasFuentesPremiumRoom = Room.builder().name("Habitación prémium").description("Habitación premium " +
                             "para hasta dos personas, incluye comodidades premium y acceso al spa y gimnasio")
-                    .hotel(lasFuentes).price(BigDecimal.valueOf(15)).build();
+                    .hotel(lasFuentes).price(BigDecimal.valueOf(20)).build();
 
             lasFuentes.addRoom(lasFuentesBasicRoom);
             lasFuentes.addRoom(lasFuentesPremiumRoom);
@@ -104,13 +104,13 @@ public class DatabaseInitializer implements CommandLineRunner {
             Reservation res1 = Reservation.builder().reservationIdentifier("RSV-12L125H7BF1E").room(lasFuentesBasicRoom)
                     .startDate(LocalDate.parse("2026-03-02")).endDate(LocalDate.parse("2026-03-05"))
                     .createdAt(LocalDateTime.parse("2026-02-28T10:37:31")).reviewed(true).user(user1)
-                    .status(ReservationStatus.ACTIVE).build();
+                    .status(ReservationStatus.ACTIVE).price(BigDecimal.valueOf(45)).build();
 
             Reservation res2 =
                     Reservation.builder().reservationIdentifier("RSV-K176J49N2N1N2").room(lasFuentesPremiumRoom)
                             .startDate(LocalDate.parse("2026-02-21")).endDate(LocalDate.parse("2026-02-28"))
                             .createdAt(LocalDateTime.parse("2026-01-26T11:45:37")).reviewed(false).user(user1)
-                            .status(ReservationStatus.ACTIVE).build();
+                            .status(ReservationStatus.ACTIVE).price(BigDecimal.valueOf(140)).build();
 
             reservationRepository.save(res1);
             reservationRepository.save(res2);

@@ -25,7 +25,8 @@ describe('Reviews', () => {
       createdAt: new Date('2026-01-01'),
       userEmail: 'john@example.com',
       status: 'ACTIVE',
-      reviewed: false
+      reviewed: false,
+      price: 20
     },
     {
       id: 2,
@@ -37,7 +38,8 @@ describe('Reviews', () => {
       createdAt: new Date('2026-01-01'),
       userEmail: 'john@email.com',
       status: 'ACTIVE',
-      reviewed: true
+      reviewed: true,
+      price: 10
     }
   ];
 

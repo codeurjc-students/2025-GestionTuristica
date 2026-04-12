@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RoomService } from '../../services/room.service';
+import { Room } from '../../services/hotel.service';
 
 @Component({
   selector: 'app-reservation-edit',
@@ -25,6 +27,7 @@ export class ReservationEdit implements OnInit {
   reservationIdentifier!: string;
   reservation!: Reservation;
   roomId!: number;
+  room!: Room;
   reservationStartDate?: Date;
   reservationEndDate?: Date;
   nights: number = 0;
@@ -35,6 +38,7 @@ export class ReservationEdit implements OnInit {
   actualReservedRange!: ReservedRange;
   minDate = new Date();
   reservedDates: ReservedRange[] = [];
+  priceDifference: number = 0;
 
   dateFilter = (date: Date | null): boolean => {
     if (!date) {
@@ -54,18 +58,25 @@ export class ReservationEdit implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly reservationService: ReservationService,
     private readonly router: Router,
-    private readonly requestService: RequestService
+    private readonly requestService: RequestService,
+    private readonly roomService: RoomService
   ){};
 
   ngOnInit(): void {
     this.reservationIdentifier = this.route.snapshot.paramMap.get('reservationIdentifier') as string;
-
+    
     this.reservationService.getReservationByIdentifier(this.reservationIdentifier).subscribe({
       next: (data) => {
         this.reservation = data;
         this.roomId = this.reservation.roomId;
         this.actualReservedRange = {startDate: this.normalizeDate(new Date(this.reservation.startDate)), endDate: this.normalizeDate(new Date(this.reservation.endDate))}
         this.loadReservedDates();
+
+        this.roomService.getRoomByRoomId(this.roomId).subscribe({
+          next: (data) => {
+          this.room = data;
+          }
+        });
       }
     });
 
@@ -82,7 +93,7 @@ export class ReservationEdit implements OnInit {
           return;
         }
 
-        this.calculateNights(start, end);
+        this.calculatePrice(start, end);
       }
     });
   }
@@ -149,10 +160,11 @@ export class ReservationEdit implements OnInit {
     })
   }
 
-  private calculateNights(start: Date, end: Date) {
+  private calculatePrice(start: Date, end: Date) {
     if(start && end) {
       const diffMs = end.getTime() - start.getTime();
       this.nights = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      this.priceDifference = (this.nights * this.room.price) - this.reservation.price;
     }
   }
 

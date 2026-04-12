@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,10 +50,10 @@ class ReservationServiceTest {
         User user = new User();
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
@@ -76,10 +77,10 @@ class ReservationServiceTest {
         User user = new User();
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.CANCELLED, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.CANCELLED, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
@@ -125,7 +126,7 @@ class ReservationServiceTest {
         Room room = Room.builder().id(1L).name("Room1").build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findByReservationIdentifier(anyString())).thenReturn(Optional.of(reservation));
 
@@ -147,13 +148,13 @@ class ReservationServiceTest {
     void reserveRoomTest() {
 
         User user = new User();
-        Room room = Room.builder().id(1L).name("Room1").build();
+        Room room = Room.builder().id(1L).name("Room1").price(BigDecimal.TEN).build();
 
         ReservationRequest request = new ReservationRequest(LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12" +
                 "-22"));
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
-                LocalDateTime.now(), LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12-22"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12-22"));
 
         ReservedDatesDTO reservedDate1 = new ReservedDatesDTO(LocalDate.parse("2025-12-23"),
                 LocalDate.parse("2025-12-26"));
@@ -211,7 +212,7 @@ class ReservationServiceTest {
         Room room = new Room();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findByReservationIdentifier(anyString())).thenReturn(Optional.of(reservation));
 
@@ -238,7 +239,7 @@ class ReservationServiceTest {
         Room room = new Room();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
@@ -266,7 +267,7 @@ class ReservationServiceTest {
         Room room = new Room();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         when(reservationRepository.findByReservationIdentifier("RSV-123")).thenReturn(Optional.of(reservation));
 
@@ -293,10 +294,10 @@ class ReservationServiceTest {
     void updateReservationTest() {
 
         User user = new User();
-        Room room = new Room();
+        Room room = Room.builder().price(BigDecimal.TEN).build();
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         ReservationRequest request =
                 new ReservationRequest(LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -334,10 +335,10 @@ class ReservationServiceTest {
         User user = new User();
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.ACTIVE, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
@@ -361,10 +362,10 @@ class ReservationServiceTest {
         User user = new User();
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user, ReservationStatus.CANCELLED, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
         Reservation reservation2 = new Reservation(2L, "RSV-1234", room, user, ReservationStatus.CANCELLED, false,
-                LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
+                BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-26"), LocalDate.parse("2025-12-29"));
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 

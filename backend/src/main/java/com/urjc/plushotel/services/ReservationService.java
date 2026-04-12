@@ -7,10 +7,14 @@ import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
 import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,14 +23,16 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomService roomService;
     private final CustomUserDetailsService userDetailsService;
+    private final PdfGenerationService pdfGenerationService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
     public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
-                              CustomUserDetailsService userDetailsService) {
+                              CustomUserDetailsService userDetailsService, PdfGenerationService pdfGenerationService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
         this.userDetailsService = userDetailsService;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
     public List<ReservationDTO> getReservations(ReservationFilter filter) {
@@ -66,9 +72,11 @@ public class ReservationService {
         }
         User user = userDetailsService.loadUserByUsername(authentication.getName());
         Room room = roomService.getRoomEntityById(roomId);
+        long days = request.getStartDate().until(request.getEndDate(), ChronoUnit.DAYS);
+        BigDecimal reservationPrice = room.getPrice().multiply(BigDecimal.valueOf(days));
         Reservation reservation =
                 Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
-                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).build();
+                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).price(reservationPrice).build();
         return convertToDTO(reservationRepository.save(reservation));
     }
 
@@ -80,6 +88,9 @@ public class ReservationService {
                 );
         reservationToUpdate.setStartDate(request.getStartDate());
         reservationToUpdate.setEndDate(request.getEndDate());
+        long days = request.getStartDate().until(request.getEndDate(), ChronoUnit.DAYS);
+        BigDecimal reservationNewPrice = reservationToUpdate.getRoom().getPrice().multiply(BigDecimal.valueOf(days));
+        reservationToUpdate.setPrice(reservationNewPrice);
         reservationRepository.save(reservationToUpdate);
 
         return convertToDTO(reservationToUpdate);
@@ -126,6 +137,14 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    public void generatePdf(String reservationIdentifier, HttpServletResponse response) throws IOException {
+        Reservation reservation = reservationRepository.findByReservationIdentifier(reservationIdentifier).orElseThrow(
+                () -> new ReservationNotFoundException("This reservation doesn't exist")
+        );
+
+        pdfGenerationService.generateReservationPdf(reservation, response.getOutputStream());
+    }
+
     private ReservationDTO convertToDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
@@ -137,6 +156,7 @@ public class ReservationService {
                 reservation.getEndDate(),
                 reservation.getStatus(),
                 reservation.isReviewed(),
+                reservation.getPrice(),
                 reservation.getCreatedAt()
         );
     }
