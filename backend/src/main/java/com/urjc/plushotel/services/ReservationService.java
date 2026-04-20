@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.internal.ReservationEmailDTO;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
@@ -24,15 +25,18 @@ public class ReservationService {
     private final RoomService roomService;
     private final CustomUserDetailsService userDetailsService;
     private final PdfGenerationService pdfGenerationService;
+    private final EmailService emailService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
     public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
-                              CustomUserDetailsService userDetailsService, PdfGenerationService pdfGenerationService) {
+                              CustomUserDetailsService userDetailsService, PdfGenerationService pdfGenerationService,
+                              EmailService emailService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
         this.userDetailsService = userDetailsService;
         this.pdfGenerationService = pdfGenerationService;
+        this.emailService = emailService;
     }
 
     public List<ReservationDTO> getReservations(ReservationFilter filter) {
@@ -77,6 +81,9 @@ public class ReservationService {
         Reservation reservation =
                 Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
                         .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).price(reservationPrice).build();
+
+        emailService.sendReservationConfirmation(convertToEmailDTO(reservation));
+
         return convertToDTO(reservationRepository.save(reservation));
     }
 
@@ -93,6 +100,8 @@ public class ReservationService {
         reservationToUpdate.setPrice(reservationNewPrice);
         reservationRepository.save(reservationToUpdate);
 
+        emailService.sendModificationConfirmation(convertToEmailDTO(reservationToUpdate));
+
         return convertToDTO(reservationToUpdate);
     }
 
@@ -103,6 +112,9 @@ public class ReservationService {
         );
 
         reservation.setStatus(ReservationStatus.CANCELLED);
+
+        emailService.sendCancellationConfirmation(convertToEmailDTO(reservation));
+
         reservationRepository.save(reservation);
     }
 
@@ -158,6 +170,15 @@ public class ReservationService {
                 reservation.isReviewed(),
                 reservation.getPrice(),
                 reservation.getCreatedAt()
+        );
+    }
+
+    private ReservationEmailDTO convertToEmailDTO(Reservation reservation) {
+        return new ReservationEmailDTO(
+                reservation.getUser().getEmail(),
+                reservation.getUser().getName(),
+                reservation.getReservationIdentifier(),
+                reservation.getRoom().getHotel().getName()
         );
     }
 }
