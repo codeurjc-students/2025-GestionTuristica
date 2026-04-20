@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,9 @@ class ReservationServiceTest {
 
     @Mock
     CustomUserDetailsService userDetailsService;
+
+    @Mock
+    EmailService emailService;
 
     @Test
     void getNonCancelledTestReservations() {
@@ -149,6 +153,8 @@ class ReservationServiceTest {
 
         User user = new User();
         Room room = Room.builder().id(1L).name("Room1").price(BigDecimal.TEN).build();
+        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        hotel.addRoom(room);
 
         ReservationRequest request = new ReservationRequest(LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12" +
                 "-22"));
@@ -181,6 +187,7 @@ class ReservationServiceTest {
         verify(reservationRepository, times(1)).findReservedDatesByRoomId(any());
         verify(roomService, times(1)).getRoomEntityById(any());
         verify(reservationRepository, times(1)).save(any());
+        verify(emailService, times(1)).sendReservationConfirmation(any());
     }
 
     @Test
@@ -210,6 +217,8 @@ class ReservationServiceTest {
 
         User user = new User();
         Room room = new Room();
+        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -220,6 +229,7 @@ class ReservationServiceTest {
 
         verify(reservationRepository, times(1)).findByReservationIdentifier(anyString());
         verify(reservationRepository, times(1)).save(any());
+        verify(emailService, times(1)).sendCancellationConfirmation(any());
     }
 
     @Test
@@ -295,6 +305,8 @@ class ReservationServiceTest {
 
         User user = new User();
         Room room = Room.builder().price(BigDecimal.TEN).build();
+        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -311,6 +323,7 @@ class ReservationServiceTest {
 
         verify(reservationRepository, times(1)).findByReservationIdentifier("RSV-123");
         verify(reservationRepository, times(1)).save(any(Reservation.class));
+        verify(emailService, times(1)).sendModificationConfirmation(any());
     }
 
     @Test
