@@ -1,0 +1,5 @@
+Hola [[${username}]],
+
+Su reserva con identificador [[${reservationIdentifier}]] en el hotel [[${hotelName}]] ha sido modificada, puede revisar las nuevas fechas en la página web de Plushotel.
+
+Muchas gracias por confirmar en nosotros.

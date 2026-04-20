@@ -1,0 +1,5 @@
+Hola [[${username}]],
+
+Su reserva con identificador [[${reservationIdentifier}]] en el hotel [[${hotelName}]] ha sido cancelada.
+
+Muchas gracias por confirmar en nosotros.
