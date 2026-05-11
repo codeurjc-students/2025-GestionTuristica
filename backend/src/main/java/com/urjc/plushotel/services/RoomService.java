@@ -33,6 +33,10 @@ public class RoomService {
         return roomRepository.findRoomsWithAverageRating(hotelId);
     }
 
+    public List<RoomAvgRatingDTO> getRoomsByHotelSlug(String hotelSlug) {
+        return roomRepository.findRoomsByHotelSlugWithAverageRating(hotelSlug);
+    }
+
     public void deleteRoom(Long roomId) {
         Room room = getRoomEntityById(roomId);
 
