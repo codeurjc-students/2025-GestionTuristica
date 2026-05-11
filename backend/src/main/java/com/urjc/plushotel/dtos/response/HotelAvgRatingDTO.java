@@ -17,5 +17,19 @@ public class HotelAvgRatingDTO {
     private String address;
     private Integer stars;
     private String slug;
+    private String mainImageUrl;
     private Double averageRating;
+
+    public HotelAvgRatingDTO(Long id, String name, String description, String country, String city, String address,
+                             Integer stars, String slug, Double averageRating) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.country = country;
+        this.city = city;
+        this.address = address;
+        this.stars = stars;
+        this.slug = slug;
+        this.averageRating = averageRating;
+    }
 }
