@@ -1,0 +1,51 @@
+package com.urjc.plushotel.services;
+
+import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.HotelImage;
+import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.repositories.ImageRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class ImageService {
+
+    private final ImageRepository imageRepository;
+    private final MinioService minioService;
+    private final HotelService hotelService;
+    private final RoomService roomService;
+
+    public ImageService(ImageRepository imageRepository, MinioService minioService, HotelService hotelService,
+                        RoomService roomService) {
+        this.imageRepository = imageRepository;
+        this.minioService = minioService;
+        this.hotelService = hotelService;
+        this.roomService = roomService;
+    }
+
+    public HotelImage uploadImage(MultipartFile file, String slug, int position) {
+
+        Hotel hotel = hotelService.findBySlug(slug);
+
+        String fileName = minioService.uploadImage(file);
+
+        HotelImage image = new HotelImage(fileName, hotel, position);
+
+        image = imageRepository.save(image);
+
+        return image;
+    }
+
+    public HotelImage uploadImage(MultipartFile file, Long roomId, int position) {
+
+        Room room = roomService.getRoomEntityById(roomId);
+
+        String fileName = minioService.uploadImage(file);
+
+        HotelImage image = new HotelImage(fileName, room.getHotel(), room, position);
+
+        image = imageRepository.save(image);
+
+        return image;
+    }
+}
