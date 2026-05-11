@@ -3,6 +3,7 @@ package com.urjc.plushotel.controllers;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class HotelController {
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
     public ResponseEntity<List<HotelAvgRatingDTO>> getAllHotels() {
 
-        return ResponseEntity.ok(hotelService.getAll());
+        return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo());
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
