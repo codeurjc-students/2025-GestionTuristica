@@ -38,7 +38,7 @@ public final class EndpointConstants {
         }
 
         public static final String ROOMS_ID_URL = "/rooms/{roomId}";
-        public static final String ROOMS_HOTEL_ID_URL = "/rooms/hotel/{hotelId}";
+        public static final String ROOMS_HOTEL_SLUG_URL = "/rooms/hotel/{slug}";
     }
 
     public static class ReviewsEndpoints {
