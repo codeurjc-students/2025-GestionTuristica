@@ -49,4 +49,12 @@ public final class EndpointConstants {
         public static final String REVIEWS_ROOM_URL = "/reviews/room/{roomId}";
         public static final String REVIEW_RESERVATION_IDENTIFIER_URL = "/reviews/reservation/{reservationIdentifier}";
     }
+
+    public static class ImageEndpoints {
+        private ImageEndpoints() {
+        }
+
+        public static final String HOTEL_IMAGES_URL = "/images/hotel/{slug}";
+        public static final String ROOM_IMAGES_URL = "/images/room/{roomId}";
+    }
 }
