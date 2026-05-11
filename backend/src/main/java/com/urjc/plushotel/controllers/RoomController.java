@@ -1,6 +1,7 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.RoomService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final HotelRoomCardService hotelRoomCardService;
 
-    public RoomController(RoomService roomService) {
+    public RoomController(RoomService roomService, HotelRoomCardService hotelRoomCardService) {
         this.roomService = roomService;
+        this.hotelRoomCardService = hotelRoomCardService;
     }
 
     @GetMapping(EndpointConstants.RoomsEndpoints.ROOMS_ID_URL)
@@ -25,9 +28,9 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
-    @GetMapping(EndpointConstants.RoomsEndpoints.ROOMS_HOTEL_ID_URL)
-    public ResponseEntity<List<RoomAvgRatingDTO>> getRoomsByHotelId(@PathVariable Long hotelId) {
-        List<RoomAvgRatingDTO> rooms = roomService.getRoomsByHotelId(hotelId);
+    @GetMapping(EndpointConstants.RoomsEndpoints.ROOMS_HOTEL_SLUG_URL)
+    public ResponseEntity<List<RoomAvgRatingDTO>> getRoomsByHotelSlug(@PathVariable String slug) {
+        List<RoomAvgRatingDTO> rooms = hotelRoomCardService.getHotelRoomsInfo(slug);
         return ResponseEntity.ok(rooms);
     }
 }
