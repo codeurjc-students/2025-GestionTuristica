@@ -47,4 +47,20 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             GROUP BY ro.id, ro.name, ro.description, ro.price
             """)
     Optional<RoomAvgRatingDTO> findRoomWithAverageRatingById(@Param("roomId") Long roomId);
+
+    @Query("""
+            SELECT new com.urjc.plushotel.dtos.response.RoomAvgRatingDTO(
+                ro.id,
+                ro.name,
+                ro.description,
+                ro.price,
+                AVG(r.rating)
+            )
+            FROM Room ro
+            LEFT JOIN Reservation res ON res.room = ro
+            LEFT JOIN Review r ON r.reservation = res
+            WHERE ro.hotel.slug = :hotelSlug
+            GROUP BY ro.id, ro.name, ro.description, ro.price
+            """)
+    List<RoomAvgRatingDTO> findRoomsByHotelSlugWithAverageRating(String hotelSlug);
 }
