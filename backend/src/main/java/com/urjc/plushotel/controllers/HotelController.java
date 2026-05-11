@@ -20,9 +20,11 @@ import java.util.List;
 public class HotelController {
 
     private final HotelService hotelService;
+    private final HotelRoomCardService hotelRoomCardService;
 
-    public HotelController(HotelService hotelService) {
+    public HotelController(HotelService hotelService, HotelRoomCardService hotelRoomCardService) {
         this.hotelService = hotelService;
+        this.hotelRoomCardService = hotelRoomCardService;
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
