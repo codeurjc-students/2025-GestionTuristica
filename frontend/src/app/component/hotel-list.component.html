@@ -3,6 +3,7 @@
 <ul>
   @for (hotel of hotels; track hotel.id) {
   <li>
+    <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl"/>
     <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
     - {{hotel.city}}, {{hotel.country}} {{hotel.stars}}* - Dirección: {{hotel.address}}
     <br> {{hotel.description}} - Puntuación de los usuarios: {{hotel.averageRating}}
@@ -12,5 +13,9 @@
     <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
     }
   </li>
+  }
+
+  @if(adminUser) {
+  <button type="button" [routerLink]="['/hotels/create']"> Crear hotel</button>
   }
 </ul>
