@@ -9,6 +9,7 @@ export interface Room {
         price: number;
         available: boolean;
         averageRating: number;
+        mainImageUrl?: string;
     };
 export interface Hotel {
     id: number;
@@ -21,6 +22,7 @@ export interface Hotel {
     slug: string;
     rooms: Room[];
     averageRating: number;
+    mainImageUrl?: string;
 }
 
 export interface HotelRequest {
