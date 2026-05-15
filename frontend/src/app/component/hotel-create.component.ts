@@ -38,7 +38,7 @@ export class HotelCreateComponent {
         this.hotelModel.slug = this.hotelModel.name.toLowerCase().replaceAll(' ', '-').replaceAll('ñ', 'n').replaceAll(/[^\w-]+/g, '');
         if (this.hotelService.create) {
             this.hotelService.create(this.hotelModel).subscribe({
-                next: () => void this.router.navigate(['/']),
+                next: () => void this.router.navigate(['/hotels/' + this.hotelModel.slug + '/images']),
                 error: (err) => console.error(err)
             });
         } else {
