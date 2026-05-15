@@ -9,12 +9,17 @@
   <p>Puntuación de los usuarios: {{hotel.averageRating}}</p>
 </div>
 
+@for(image of images; track $index) {
+<img alt="Hotel preview" class="hotel-image" [src]="image.url"/>
+}
+
 <div class="rooms-list">
   <h2> Habitaciones</h2>
   <ul>
     @for (room of hotel.rooms; track room.name) {
     <li>
       <h3>{{room.name}}</h3>
+      <img alt="Room main" class="main-image" [src]="room.mainImageUrl"/>
       <p>{{room.description}}</p>
       <p>{{room.price}}€/noche</p>
       <p>Puntuación: {{room.averageRating}}</p>
