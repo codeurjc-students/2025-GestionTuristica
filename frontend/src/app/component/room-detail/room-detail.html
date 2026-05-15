@@ -1,50 +1,54 @@
-	@if (room){
-		<div>
-				<h1>{{room.name}}</h1>
-				
-				<p>{{room.description}}</p>
+@if (room){
+<div>
+  <h1>{{room.name}}</h1>
 
-				<p> {{room.price}}€/noche</p>
+  <p>{{room.description}}</p>
 
-				<p>Puntuación: {{room.averageRating}}</p>
-		</div>
+  <p> {{room.price}}€/noche</p>
 
-		<p>Seleccionar fechas de reserva</p>
+  <p>Puntuación: {{room.averageRating}}</p>
+</div>
 
-		<div [formGroup]="dateRange">
-			<mat-form-field appearance="fill">
-				<mat-label>Fechas reserva</mat-label>
-				<mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
-						<input matStartDate formControlName="start" placeholder="Fecha entrada">
-						<input matEndDate formControlName="end" placeholder="Fecha salida">
-				</mat-date-range-input>
-				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-				<mat-date-range-picker #picker></mat-date-range-picker>
-			</mat-form-field>
-		</div>
+@for(image of images; track $index) {
+<img alt="Room preview" class="room-image" [src]="image.url"/>
+}
 
-		@if (nights > 0) {
-		<div>
-			<p> Noches: {{nights}}</p>
-			<p> Precio total: {{totalPrice}}€</p>
-		</div>
-		}
-		
-		<div class="actions">
-			@if (nights > 0) {
-			<button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>	
-			}
-			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-		</div>
+<p>Seleccionar fechas de reserva</p>
 
-		<div class="reviews">
-			<h2>Reseñas</h2>
-			@for (review of reviews; track $index) {
-				<p>{{review.userEmail}} - {{review.creationTime}}</p>
-				<p>{{review.message}}</p>
-				<p>{{review.rating}}</p>
-			}
-		</div>
-	} @else {
-		<p>Cargando datos de la habitación...</p>
-	}
+<div [formGroup]="dateRange">
+  <mat-form-field appearance="fill">
+    <mat-label>Fechas reserva</mat-label>
+    <mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
+      <input matStartDate formControlName="start" placeholder="Fecha entrada">
+      <input matEndDate formControlName="end" placeholder="Fecha salida">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+</div>
+
+@if (nights > 0) {
+<div>
+  <p> Noches: {{nights}}</p>
+  <p> Precio total: {{totalPrice}}€</p>
+</div>
+}
+
+<div class="actions">
+  @if (nights > 0) {
+  <button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>
+  }
+  <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+</div>
+
+<div class="reviews">
+  <h2>Reseñas</h2>
+  @for (review of reviews; track $index) {
+  <p>{{review.userEmail}} - {{review.creationTime}}</p>
+  <p>{{review.message}}</p>
+  <p>{{review.rating}}</p>
+  }
+</div>
+} @else {
+<p>Cargando datos de la habitación...</p>
+}
