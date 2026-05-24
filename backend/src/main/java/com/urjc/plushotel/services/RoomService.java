@@ -31,4 +31,14 @@ public class RoomService {
     public List<RoomAvgRatingDTO> getRoomsByHotelId(Long hotelId) {
         return roomRepository.findRoomsWithAverageRating(hotelId);
     }
+
+    public void deleteRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new RuntimeException("There is no room with such id")
+        );
+
+        room.setDeleted(true);
+
+        roomRepository.save(room);
+    }
 }

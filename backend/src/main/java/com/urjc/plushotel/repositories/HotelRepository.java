@@ -31,6 +31,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             LEFT JOIN Reservation res ON res.room = ro
             LEFT JOIN Review r ON r.reservation = res
             WHERE h.slug = :slug
+            AND h.deleted = false
             GROUP BY h.id
             """)
     Optional<HotelAvgRatingDTO> findHotelsWithAverageRatingBySlug(String slug);
@@ -51,6 +52,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             LEFT JOIN h.rooms ro
             LEFT JOIN Reservation res ON res.room = ro
             LEFT JOIN Review r ON r.reservation = res
+            WHERE h.deleted = false
             GROUP BY h.id
             """)
     List<HotelAvgRatingDTO> findHotelsWithAverageRating();

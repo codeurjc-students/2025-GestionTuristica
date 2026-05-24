@@ -26,6 +26,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             LEFT JOIN Reservation res ON res.room = ro
             LEFT JOIN Review r ON r.reservation = res
             WHERE ro.hotel.id = :hotelId
+            AND ro.deleted = false
             GROUP BY ro.id, ro.name, ro.description, ro.price
             """)
     List<RoomAvgRatingDTO> findRoomsWithAverageRating(@Param("hotelId") Long hotelId);
@@ -42,6 +43,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             LEFT JOIN Reservation res ON res.room = ro
             LEFT JOIN Review r ON r.reservation = res
             WHERE ro.id = :roomId
+            AND ro.deleted = false
             GROUP BY ro.id, ro.name, ro.description, ro.price
             """)
     Optional<RoomAvgRatingDTO> findRoomWithAverageRatingById(@Param("roomId") Long roomId);

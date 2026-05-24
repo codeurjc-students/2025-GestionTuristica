@@ -3,23 +3,34 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class HotelService {
 
     private final HotelRepository hotelRepository;
+    private final RoomService roomService;
+    private final ReservationService reservationService;
+    private final ReservationChangeRequestService reservationChangeRequestService;
 
-    public HotelService(HotelRepository hotelRepository) {
+    public HotelService(HotelRepository hotelRepository, RoomService roomService,
+                        ReservationService reservationService,
+                        ReservationChangeRequestService reservationChangeRequestService) {
         this.hotelRepository = hotelRepository;
+        this.roomService = roomService;
+        this.reservationService = reservationService;
+        this.reservationChangeRequestService = reservationChangeRequestService;
     }
 
-    public List<Hotel> getAll() {
-        return hotelRepository.findAll();
+    public List<HotelAvgRatingDTO> getAll() {
+        return hotelRepository.findHotelsWithAverageRating();
     }
 
     public HotelAvgRatingDTO getHotelBySlug(String slug) {
@@ -43,12 +54,6 @@ public class HotelService {
                 () -> new RuntimeException("This hotel doesn't exist")
         );
 
-        savedHotel.getRooms().clear();
-
-        for (Room room : hotel.getRooms()) {
-            savedHotel.addRoom(room);
-        }
-
         savedHotel.setName(hotel.getName());
         savedHotel.setDescription(hotel.getDescription());
         savedHotel.setCountry(hotel.getCountry());
@@ -56,6 +61,28 @@ public class HotelService {
         savedHotel.setAddress(hotel.getAddress());
         savedHotel.setStars(hotel.getStars());
         savedHotel.setSlug(hotel.getSlug());
+
+        Set<Long> updatedRoomIds = new HashSet<>();
+
+        for (Room roomRequest : hotel.getRooms()) {
+            if (roomRequest.getId() == null) {
+                savedHotel.addRoom(roomRequest);
+            } else {
+                Room existingRoom = roomService.getRoomEntityById(roomRequest.getId());
+
+                existingRoom.setName(roomRequest.getName());
+                existingRoom.setDescription(roomRequest.getDescription());
+                existingRoom.setPrice(roomRequest.getPrice());
+
+                updatedRoomIds.add(existingRoom.getId());
+            }
+        }
+
+        for (Room room : savedHotel.getRooms()) {
+            if (room.getId() != null && !updatedRoomIds.contains(room.getId())) {
+                deleteRoom(room);
+            }
+        }
 
         return hotelRepository.save(savedHotel);
     }
@@ -65,7 +92,20 @@ public class HotelService {
                 () -> new RuntimeException("Hotel not found")
         );
 
-        hotelRepository.delete(hotelToRemove);
+        hotelToRemove.setDeleted(true);
+        for (Room room : hotelToRemove.getRooms()) {
+            deleteRoom(room);
+        }
+        hotelRepository.save(hotelToRemove);
+    }
+
+    private void deleteRoom(Room room) {
+        roomService.deleteRoom(room.getId());
+        for (Reservation reservation : room.getReservations()) {
+            reservationService.cancelReservation(reservation.getReservationIdentifier());
+        }
+
+        reservationChangeRequestService.deleteChangeRequestsFromRoom(room.getId());
     }
 
     private Hotel requestToHotel(HotelRequest request) {
