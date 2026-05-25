@@ -5,6 +5,7 @@ import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.services.JwtService;
@@ -17,6 +18,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -102,10 +105,22 @@ class HotelControllerTest {
 
         HotelRequest request =
                 HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
-                        " Example 4, Madrid").stars(3).slug("h1").build();
+                        " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
+
+        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).build();
+        Room deletedRoom = Room.builder().id(3L).name("Deleted room").description("").price(BigDecimal.ONE).build();
+
+        request.getRooms().add(room);
+        request.getRooms().add(deletedRoom);
+
+        Room updatedRoom = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).build();
+        Room newRoom = Room.builder().name("Room 2").description("").price(BigDecimal.ONE).build();
 
         Hotel updatedH1 = Hotel.builder().name("Updated H1").description("Hotel1 desc").country("España").city("Madrid")
-                .address("C/ Example 4, Madrid").stars(3).slug("updated-h1").build();
+                .address("C/ Example 4, Madrid").stars(3).slug("updated-h1").rooms(new ArrayList<>()).build();
+
+        updatedH1.addRoom(updatedRoom);
+        updatedH1.addRoom(newRoom);
 
         when(hotelService.updateHotel(any(), anyString())).thenReturn(updatedH1);
 

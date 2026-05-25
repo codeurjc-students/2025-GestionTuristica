@@ -2,6 +2,7 @@ package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.repositories.RoomRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RoomServiceTest {
@@ -44,7 +45,7 @@ class RoomServiceTest {
     void getRoomByIdNotFound() {
         when(roomRepository.findRoomWithAverageRatingById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> roomService.getRoomById(1L));
+        assertThrows(RoomNotFoundException.class, () -> roomService.getRoomById(1L));
     }
 
     @Test
@@ -65,7 +66,7 @@ class RoomServiceTest {
     void getRoomEntityByIdNotFound() {
         when(roomRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> roomService.getRoomEntityById(1L));
+        assertThrows(RoomNotFoundException.class, () -> roomService.getRoomEntityById(1L));
     }
 
     @Test
@@ -85,5 +86,26 @@ class RoomServiceTest {
         assertEquals(roomDTO2.getDescription(), result.getLast().getDescription());
         assertEquals(roomDTO1.getPrice(), result.getFirst().getPrice());
         assertEquals(roomDTO2.getPrice(), result.getLast().getPrice());
+    }
+
+    @Test
+    void deleteRoomSuccessfulTest() {
+        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).deleted(false).build();
+
+        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
+
+        roomService.deleteRoom(1L);
+
+        assertTrue(room.isDeleted());
+        verify(roomRepository, times(1)).save(room);
+    }
+
+    @Test
+    void deleteRoomNotFoundTest() {
+        when(roomRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(RoomNotFoundException.class, () -> roomService.deleteRoom(1L));
+
+        verify(roomRepository, times(0)).save(any());
     }
 }
