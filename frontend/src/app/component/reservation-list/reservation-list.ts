@@ -68,11 +68,14 @@ export class ReservationList implements OnInit{
     });
   }
 
-  requestCancellation(reservationIdentifier: string) {
+  requestCancellation(reservation: Reservation) {
+    
+    reservation.status = 'CANCELLATION_REQUESTED';
+
     const cancellationRequest: ModificationRequestCreation = {
       type: 'CANCELLATION',
       userEmail: this.authService.getUserEmail()!,
-      reservationIdentifier: reservationIdentifier
+      reservationIdentifier: reservation.reservationIdentifier
     };
 
     this.requestService.createRequest(cancellationRequest).subscribe({
