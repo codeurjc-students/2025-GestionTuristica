@@ -2,6 +2,7 @@ package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.repositories.RoomRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +19,25 @@ public class RoomService {
 
     public RoomAvgRatingDTO getRoomById(Long id) {
         return roomRepository.findRoomWithAverageRatingById(id).orElseThrow(
-                () -> new RuntimeException("There is no room with such id")
+                () -> new RoomNotFoundException("There is no room with such id")
         );
     }
 
     public Room getRoomEntityById(Long id) {
         return roomRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("There is no room with such id")
+                () -> new RoomNotFoundException("There is no room with such id")
         );
     }
 
     public List<RoomAvgRatingDTO> getRoomsByHotelId(Long hotelId) {
         return roomRepository.findRoomsWithAverageRating(hotelId);
+    }
+
+    public void deleteRoom(Long roomId) {
+        Room room = getRoomEntityById(roomId);
+
+        room.setDeleted(true);
+
+        roomRepository.save(room);
     }
 }

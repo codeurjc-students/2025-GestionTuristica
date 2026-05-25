@@ -3,6 +3,7 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
+import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
 import org.junit.jupiter.api.Test;
@@ -29,24 +30,33 @@ class HotelServiceTest {
     @Mock
     HotelRepository hotelRepository;
 
+    @Mock
+    RoomService roomService;
+
+    @Mock
+    ReservationService reservationService;
+
+    @Mock
+    ReservationChangeRequestService reservationChangeRequestService;
+
     @Test
     void findAllTest() {
-        Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
-                " Example 4, Madrid").stars(3).slug("h1").build();
-        Hotel h2 = Hotel.builder().name("H2").description("Hotel2 desc").country("España").city("Barcelona").address(
-                "C/ Example 3, Barcelona").stars(4).slug("h2").build();
+        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6);
+        HotelAvgRatingDTO h2 = new HotelAvgRatingDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
+                " Example 3, Barcelona", 4, "h2", 4.2);
 
-        List<Hotel> hotels = List.of(h1, h2);
+        List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
 
-        when(hotelRepository.findAll()).thenReturn(hotels);
+        when(hotelRepository.findHotelsWithAverageRating()).thenReturn(hotels);
 
-        List<Hotel> result = hotelService.getAll();
+        List<HotelAvgRatingDTO> result = hotelService.getAll();
 
         assertEquals(2, result.size());
         assertEquals(h1, result.getFirst());
         assertEquals(h2, result.getLast());
 
-        verify(hotelRepository, times(1)).findAll();
+        verify(hotelRepository, times(1)).findHotelsWithAverageRating();
     }
 
     @Test
@@ -79,15 +89,31 @@ class HotelServiceTest {
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
 
+        Reservation reservation = Reservation.builder().reservationIdentifier("RSV-123").build();
+
+        Room r1 = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE)
+                .reservations(List.of(reservation)).build();
+
+        Room r2 = Room.builder().id(2L).name("Room 2").description("room2").price(BigDecimal.TWO).build();
+
+        h1.addRoom(r1);
+        h1.addRoom(r2);
+
+        Room updatedR2 =
+                Room.builder().id(2L).name("Updated Room 2").description("Updated room2").price(BigDecimal.TWO).build();
+
+        Room newRoom = Room.builder().name("New Room").description("new room").price(BigDecimal.TEN).build();
+
         HotelRequest request =
                 HotelRequest.builder().name("H1 up").description("Hotel1 up desc").country("España").city("Madrid")
-                        .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(new ArrayList<>()).build();
+                        .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(List.of(updatedR2, newRoom)).build();
 
         Hotel updatedH1 = Hotel.builder().name("H1 up").description("Hotel1 up desc").country("España").city("Madrid")
-                .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(new ArrayList<>()).build();
+                .address("C/ Example 4, Madrid").stars(3).slug("h1-up").rooms(List.of(updatedR2, newRoom)).build();
 
         when(hotelRepository.findBySlug(anyString())).thenReturn(Optional.of(h1));
         when(hotelRepository.save(any())).thenReturn(updatedH1);
+        when(roomService.getRoomEntityById(2L)).thenReturn(r2);
 
         Hotel updatedHotel = hotelService.updateHotel(request, "h1");
 
@@ -120,11 +146,19 @@ class HotelServiceTest {
         Hotel h1 = Hotel.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
 
+        Reservation reservation = Reservation.builder().reservationIdentifier("RSV-123").build();
+
+        Room room = Room.builder().id(1L).reservations(List.of(reservation)).build();
+
+        h1.addRoom(room);
+
         when(hotelRepository.findBySlug(any())).thenReturn(Optional.of(h1));
 
         hotelService.removeHotel("h1");
 
-        verify(hotelRepository, times(1)).delete(any());
+        verify(roomService, times(1)).deleteRoom(1L);
+        verify(reservationService, times(1)).cancelReservation("RSV-123");
+        verify(reservationChangeRequestService, times(1)).deleteChangeRequestsFromRoom(1L);
     }
 
     @Test

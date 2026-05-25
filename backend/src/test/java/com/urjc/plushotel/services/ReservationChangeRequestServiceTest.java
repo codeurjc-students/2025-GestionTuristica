@@ -37,7 +37,7 @@ class ReservationChangeRequestServiceTest {
     private ReservationService reservationService;
 
     @Test
-    void findReservationChangeRequestsPendingSuccess() {
+    void findReservationChangeRequestsPendingSuccessTest() {
 
         User user = new User();
 
@@ -72,7 +72,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void findReservationChangeRequestsResolvedSuccess() {
+    void findReservationChangeRequestsResolvedSuccessTest() {
 
         User user = new User();
 
@@ -109,7 +109,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void findReservationChangeRequestsApprovedSuccess() {
+    void findReservationChangeRequestsApprovedSuccessTest() {
 
         User user = new User();
 
@@ -144,7 +144,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void findReservationChangeRequestsRejectedSuccess() {
+    void findReservationChangeRequestsRejectedSuccessTest() {
 
         User user = new User();
 
@@ -179,7 +179,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void findReservationChangeRequestsAllSuccess() {
+    void findReservationChangeRequestsAllSuccessTest() {
 
         User user = new User();
 
@@ -266,7 +266,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void approveRequestCancellationSuccess() {
+    void approveRequestCancellationSuccessTest() {
 
         Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
 
@@ -282,7 +282,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void approveRequestModificationSuccess() {
+    void approveRequestModificationSuccessTest() {
 
         Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
 
@@ -300,7 +300,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void approveRequestModificationNotFound() {
+    void approveRequestModificationNotFoundTest() {
 
         when(reservationChangeRequestRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -310,7 +310,7 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void rejectRequestSuccess() {
+    void rejectRequestSuccessTest() {
 
         Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
 
@@ -326,12 +326,20 @@ class ReservationChangeRequestServiceTest {
     }
 
     @Test
-    void rejectRequestModificationNotFound() {
+    void rejectRequestModificationNotFoundTest() {
 
         when(reservationChangeRequestRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ReservationChangeRequestNotFoundException.class,
                 () -> reservationChangeRequestService.rejectRequest(1L)
         );
+    }
+
+    @Test
+    void deleteChangeRequestsFromRoomTest() {
+
+        reservationChangeRequestService.deleteChangeRequestsFromRoom(1L);
+
+        verify(reservationChangeRequestRepository, times(1)).deleteByRoomId(1L);
     }
 }

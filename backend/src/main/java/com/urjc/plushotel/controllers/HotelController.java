@@ -25,7 +25,7 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
-    public ResponseEntity<List<Hotel>> getAllHotels() {
+    public ResponseEntity<List<HotelAvgRatingDTO>> getAllHotels() {
 
         return ResponseEntity.ok(hotelService.getAll());
     }

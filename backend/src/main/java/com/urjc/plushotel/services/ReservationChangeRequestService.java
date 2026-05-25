@@ -90,7 +90,7 @@ public class ReservationChangeRequestService {
                 );
 
         String reservationIdentifier = reservationChangeRequest.getReservation().getReservationIdentifier();
-        
+
         if (reservationChangeRequest.getType().equals(RequestType.MODIFICATION)) {
             ReservationRequest newDates = new ReservationRequest(
                     reservationChangeRequest.getRequestedStartDate(),
@@ -120,6 +120,10 @@ public class ReservationChangeRequestService {
 
         reservationChangeRequest.setStatus(RequestStatus.REJECTED);
         reservationChangeRequestRepository.save(reservationChangeRequest);
+    }
+
+    public void deleteChangeRequestsFromRoom(Long roomId) {
+        reservationChangeRequestRepository.deleteByRoomId(roomId);
     }
 
     private ModificationRequestDTO convertToDTO(ReservationChangeRequest request) {

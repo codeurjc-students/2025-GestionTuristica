@@ -38,6 +38,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Room> rooms = new ArrayList<>();
+    private boolean deleted;
 
     public void addRoom(Room room) {
         rooms.add(room);
