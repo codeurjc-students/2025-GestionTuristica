@@ -9,6 +9,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { Room } from '../../services/hotel.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-reservation-edit',
@@ -23,7 +24,7 @@ import { Room } from '../../services/hotel.service';
 })
 export class ReservationEdit implements OnInit {
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
-  userAdmin: boolean = localStorage.getItem('userRole') == 'ROLE_ADMIN'
+  userAdmin!: boolean;
   reservationIdentifier!: string;
   reservation!: Reservation;
   roomId!: number;
@@ -59,10 +60,13 @@ export class ReservationEdit implements OnInit {
     private readonly reservationService: ReservationService,
     private readonly router: Router,
     private readonly requestService: RequestService,
-    private readonly roomService: RoomService
+    private readonly roomService: RoomService,
+    private readonly authService: AuthService
   ){};
 
   ngOnInit(): void {
+    this.userAdmin = this.authService.getRole() === 'ROLE_ADMIN';
+
     this.reservationIdentifier = this.route.snapshot.paramMap.get('reservationIdentifier') as string;
     
     this.reservationService.getReservationByIdentifier(this.reservationIdentifier).subscribe({

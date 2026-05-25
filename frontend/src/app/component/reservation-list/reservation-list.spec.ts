@@ -23,7 +23,11 @@ describe('ReservationList', () => {
       roomName: 'Room Test',
       startDate: '2025-12-28',
       endDate: '2025-12-31',
-      createdAt: new Date()
+      createdAt: new Date(),
+      userEmail: 'john@test.com',
+      status: 'ACTIVE',
+      reviewed: false,
+      price: 30
     },
     {
       id: 2,
@@ -32,7 +36,11 @@ describe('ReservationList', () => {
       roomName: 'Room Test',
       startDate: '2026-01-02',
       endDate: '2026-01-05',
-      createdAt: new Date()
+      createdAt: new Date(),
+      userEmail: 'john@test.com',
+      status: 'ACTIVE',
+      reviewed: false,
+      price: 50
     }
   ];
 
@@ -80,7 +88,7 @@ describe('ReservationList', () => {
 
   it('should create request on cancellation by user', () => {
     component.userAdmin = false;
-    component.requestCancellation('RSV-123');
+    component.requestCancellation(mockReservations[0]);
     expect(requestServiceMock.createRequest).toHaveBeenCalled();
   });
 });
