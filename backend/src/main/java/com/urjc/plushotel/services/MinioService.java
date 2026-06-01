@@ -1,10 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.exceptions.MinioErrorException;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.Http;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.errors.MinioException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +60,19 @@ public class MinioService {
         } catch (MinioException e) {
             log.error("Error Minio: ", e);
             throw new MinioErrorException("Error generating url for " + fileName);
+        }
+    }
+
+    public void deleteImage(String fileName) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(fileName)
+                            .build());
+        } catch (MinioException e) {
+            log.error("Error Minio: ", e);
+            throw new MinioErrorException("Error removing image with fileName " + fileName);
         }
     }
 }

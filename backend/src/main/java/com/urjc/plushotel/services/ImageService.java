@@ -94,6 +94,17 @@ public class ImageService {
         ).toList();
     }
 
+    public void deleteImage(Long imageId) {
+
+        HotelImage image = imageRepository.findById(imageId).orElseThrow(
+                () -> new ImageNotFoundException("No image found")
+        );
+
+        minioService.deleteImage(image.getFileName());
+
+        imageRepository.deleteById(imageId);
+    }
+
     public HotelImageDTO updateImage(Long imageId, HotelImageUpdateRequest updatedImage) {
 
         HotelImage image = imageRepository.findById(imageId).orElseThrow(
