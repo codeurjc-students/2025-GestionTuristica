@@ -56,5 +56,6 @@ public final class EndpointConstants {
 
         public static final String HOTEL_IMAGES_URL = "/images/hotel/{slug}";
         public static final String ROOM_IMAGES_URL = "/images/room/{roomId}";
+        public static final String IMAGE_URL = "/images/{imageId}";
     }
 }
