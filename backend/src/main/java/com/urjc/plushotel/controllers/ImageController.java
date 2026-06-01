@@ -33,7 +33,7 @@ public class ImageController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/images/{id}")
+                .path("/api/v1" + EndpointConstants.ImageEndpoints.IMAGE_URL)
                 .buildAndExpand(image.getId())
                 .toUri();
 
@@ -49,7 +49,7 @@ public class ImageController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/images/{id}")
+                .path("/api/v1" + EndpointConstants.ImageEndpoints.IMAGE_URL)
                 .buildAndExpand(image.getId())
                 .toUri();
 
