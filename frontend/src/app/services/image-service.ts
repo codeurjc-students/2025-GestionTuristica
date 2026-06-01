@@ -2,9 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 export interface Image {
-        id: number;
+        id?: number;
         url: string;
-        index: number;
+        type: 'HOTEL' | 'ROOM';
+        hotelId?: number;
+        roomId?: number;
+        position: number;
     };
 
 export interface ImagePreview {
@@ -14,6 +17,19 @@ export interface ImagePreview {
         roomId?: number;
         position: number;
     };
+
+export interface EditableImage {
+        id?: number;
+        url?: string;
+        hotelId?: number;
+        roomId?: number;
+
+        file?: File;
+        previewUrl?: string;
+
+        type: 'HOTEL' | 'ROOM';
+        position: number;
+}
 
 @Injectable({
     providedIn: 'root',
@@ -38,5 +54,13 @@ export class ImageService {
 
     getImagesByRoomId(roomId: number) {
         return this.http.get<Image[]>(this.apiUrl + "/images/room/" + roomId);
+    }
+
+    updateImage(imageId: number, image: EditableImage) {
+        return this.http.put<Image>(this.apiUrl + "/images/" + imageId, image);
+    }
+
+    deleteImage(imageId: number) {
+        return this.http.delete(this.apiUrl + "/images/" + imageId);
     }
 }
