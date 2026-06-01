@@ -1,5 +1,6 @@
 package com.urjc.plushotel.controllers;
 
+import com.urjc.plushotel.dtos.request.HotelImageUpdateRequest;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.entities.HotelImage;
 import com.urjc.plushotel.services.ImageService;
@@ -66,5 +67,14 @@ public class ImageController {
         List<HotelImageDTO> hotelImages = imageService.getImagesByRoomId(roomId);
 
         return ResponseEntity.ok(hotelImages);
+    }
+
+    @PutMapping(EndpointConstants.ImageEndpoints.IMAGE_URL)
+    public ResponseEntity<HotelImageDTO> updateImage(@PathVariable Long imageId,
+                                                     @RequestBody HotelImageUpdateRequest request) {
+
+        HotelImageDTO image = imageService.updateImage(imageId, request);
+
+        return ResponseEntity.ok(image);
     }
 }

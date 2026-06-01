@@ -1,9 +1,11 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelImageUpdateRequest;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.HotelImage;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.ImageNotFoundException;
 import com.urjc.plushotel.repositories.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,5 +92,27 @@ public class ImageService {
                 img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
                         img.getHotel().getId(), img.getPosition())
         ).toList();
+    }
+
+    public HotelImageDTO updateImage(Long imageId, HotelImageUpdateRequest updatedImage) {
+
+        HotelImage image = imageRepository.findById(imageId).orElseThrow(
+                () -> new ImageNotFoundException("No image found")
+        );
+
+        if (updatedImage.getRoomId() != null) {
+            Room room = roomService.getRoomEntityById(updatedImage.getRoomId());
+            image.setRoom(room);
+        } else {
+            image.setRoom(null);
+        }
+        image.setPosition(updatedImage.getPosition());
+        image.setType(updatedImage.getType());
+        HotelImage savedImage = imageRepository.save(image);
+
+        Long roomId = savedImage.getRoom() != null ? savedImage.getRoom().getId() : null;
+
+        return new HotelImageDTO(savedImage.getId(), minioService.getImageUrl(savedImage.getFileName()),
+                savedImage.getHotel().getId(), roomId, savedImage.getPosition());
     }
 }
