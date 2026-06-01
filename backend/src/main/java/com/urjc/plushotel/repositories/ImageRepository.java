@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ImageRepository extends JpaRepository<HotelImage, Long> {
 
-    List<HotelImage> findByHotel_SlugOrderByPosition(String slug);
-
     List<HotelImage> findByRoom_IdOrderByPosition(Long roomId);
 
     List<HotelImage> findByRoomIsNullAndPosition(int position);
 
     List<HotelImage> findByHotel_SlugAndRoomIsNotNullAndPosition(String slug, int position);
+
+    List<HotelImage> findByHotel_SlugAndRoomIsNullOrderByPosition(String slug);
 }
