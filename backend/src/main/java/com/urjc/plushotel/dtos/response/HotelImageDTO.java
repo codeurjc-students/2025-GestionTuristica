@@ -7,19 +7,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HotelImageDTO {
 
+    private Long id;
     private String url;
     private Long hotelId;
     private Long roomId;
     private int position;
 
-    public HotelImageDTO(String url, Long hotelId) {
+    public HotelImageDTO(Long id, String url, Long hotelId, int position) {
+        this.id = id;
         this.url = url;
         this.hotelId = hotelId;
+        this.position = position;
     }
 
-    public HotelImageDTO(String url, Long hotelId, Long roomId) {
+    public HotelImageDTO(Long id, String url, Long hotelId, Long roomId, int position) {
+        this.id = id;
         this.url = url;
         this.hotelId = hotelId;
         this.roomId = roomId;
+        this.position = position;
     }
 }

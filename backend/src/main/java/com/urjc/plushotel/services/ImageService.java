@@ -66,7 +66,8 @@ public class ImageService {
         List<HotelImage> images = imageRepository.findByRoom_IdOrderByPosition(roomId);
 
         return images.stream().map(
-                img -> new HotelImageDTO(minioService.getImageUrl(img.getFileName()), img.getRoom().getId())
+                img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
+                        img.getHotel().getId(), img.getRoom().getId(), img.getPosition())
         ).toList();
     }
 
@@ -75,7 +76,8 @@ public class ImageService {
         List<HotelImage> images = imageRepository.findByRoomIsNullAndPosition(0);
 
         return images.stream().map(
-                img -> new HotelImageDTO(minioService.getImageUrl(img.getFileName()), img.getHotel().getId())
+                img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
+                        img.getHotel().getId(), img.getPosition())
         ).toList();
     }
 
@@ -86,6 +88,8 @@ public class ImageService {
         return images.stream().map(
                 img -> new HotelImageDTO(minioService.getImageUrl(img.getFileName()), img.getHotel().getId(),
                         img.getRoom().getId())
+                img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
+                        img.getHotel().getId(), img.getRoom().getId(), img.getPosition())
         ).toList();
     }
 }
