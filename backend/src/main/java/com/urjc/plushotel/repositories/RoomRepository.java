@@ -60,6 +60,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             LEFT JOIN Reservation res ON res.room = ro
             LEFT JOIN Review r ON r.reservation = res
             WHERE ro.hotel.slug = :hotelSlug
+            AND ro.deleted = false
             GROUP BY ro.id, ro.name, ro.description, ro.price
             """)
     List<RoomAvgRatingDTO> findRoomsByHotelSlugWithAverageRating(String hotelSlug);
