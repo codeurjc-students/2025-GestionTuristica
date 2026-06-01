@@ -80,7 +80,7 @@ describe('HotelEdit', () => {
 
     expect(hotelSent.slug).toBe('hotel-test-name');
     expect(slugSent).toBe('hotel-test');
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/hotels/hotel-test-name/images']);
   });
 
   it('should create', () => {

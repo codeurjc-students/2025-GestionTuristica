@@ -41,7 +41,6 @@ describe('ReservationEdit', () => {
       name: 'Room Test',
       description: 'Test room',
       price: 30,
-      available: true,
       averageRating: 4,
     }
 
