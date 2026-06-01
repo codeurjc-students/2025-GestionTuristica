@@ -3,12 +3,11 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface Room {
-        id: number;
+        id?: number;
         name: string;
         description: string;
         price: number;
-        available: boolean;
-        averageRating: number;
+        averageRating?: number;
         mainImageUrl?: string;
     };
 
