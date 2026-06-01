@@ -52,15 +52,6 @@ public class ImageService {
         return image;
     }
 
-    public List<HotelImageDTO> getImagesByHotelSlug(String slug) {
-
-        List<HotelImage> images = imageRepository.findByHotel_SlugOrderByPosition(slug);
-
-        return images.stream().map(
-                img -> new HotelImageDTO(minioService.getImageUrl(img.getFileName()), img.getHotel().getId())
-        ).toList();
-    }
-
     public List<HotelImageDTO> getImagesByRoomId(Long roomId) {
 
         List<HotelImage> images = imageRepository.findByRoom_IdOrderByPosition(roomId);
@@ -86,10 +77,18 @@ public class ImageService {
         List<HotelImage> images = imageRepository.findByHotel_SlugAndRoomIsNotNullAndPosition(slug, 0);
 
         return images.stream().map(
-                img -> new HotelImageDTO(minioService.getImageUrl(img.getFileName()), img.getHotel().getId(),
-                        img.getRoom().getId())
                 img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
                         img.getHotel().getId(), img.getRoom().getId(), img.getPosition())
+        ).toList();
+    }
+
+    public List<HotelImageDTO> getHotelImages(String slug) {
+
+        List<HotelImage> images = imageRepository.findByHotel_SlugAndRoomIsNullOrderByPosition(slug);
+
+        return images.stream().map(
+                img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
+                        img.getHotel().getId(), img.getPosition())
         ).toList();
     }
 }

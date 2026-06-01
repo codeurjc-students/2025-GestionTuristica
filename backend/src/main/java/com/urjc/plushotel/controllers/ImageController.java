@@ -55,7 +55,7 @@ public class ImageController {
     @GetMapping(EndpointConstants.ImageEndpoints.HOTEL_IMAGES_URL)
     public ResponseEntity<List<HotelImageDTO>> getHotelImages(@PathVariable String slug) {
 
-        List<HotelImageDTO> hotelImages = imageService.getImagesByHotelSlug(slug);
+        List<HotelImageDTO> hotelImages = imageService.getHotelImages(slug);
 
         return ResponseEntity.ok(hotelImages);
     }
