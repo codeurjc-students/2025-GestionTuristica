@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.services.CustomUserDetailsService;
+import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.RoomService;
 import com.urjc.plushotel.utils.EndpointConstants;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,6 +37,9 @@ class RoomControllerTest {
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
+
+    @MockitoBean
+    private HotelRoomCardService hotelRoomCardService;
 
     @Test
     @WithMockUser
@@ -65,9 +70,9 @@ class RoomControllerTest {
 
         List<RoomAvgRatingDTO> rooms = List.of(room1, room2);
 
-        when(roomService.getRoomsByHotelId(anyLong())).thenReturn(rooms);
+        when(hotelRoomCardService.getHotelRoomsInfo(anyString())).thenReturn(rooms);
 
-        mockMvc.perform(get("/api/v1" + EndpointConstants.RoomsEndpoints.ROOMS_HOTEL_ID_URL, "1"))
+        mockMvc.perform(get("/api/v1" + EndpointConstants.RoomsEndpoints.ROOMS_HOTEL_SLUG_URL, "hotel-test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Room1"))

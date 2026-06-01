@@ -7,6 +7,7 @@ import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.services.CustomUserDetailsService;
+import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.services.JwtService;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,9 @@ class HotelControllerTest {
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
+    @MockitoBean
+    private HotelRoomCardService hotelRoomCardService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
@@ -56,7 +60,7 @@ class HotelControllerTest {
 
         List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
 
-        when(hotelService.getAll()).thenReturn(hotels);
+        when(hotelRoomCardService.getHotelsInfo()).thenReturn(hotels);
 
         mockMvc.perform(get("/api/v1/hotels"))
                 .andExpect(status().isOk())

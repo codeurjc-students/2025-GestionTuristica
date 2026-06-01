@@ -41,6 +41,9 @@ class PlushotelApplicationTests {
     @MockitoBean
     private ReviewRepository reviewRepository;
 
+    @MockitoBean
+    private ImageRepository imageRepository;
+
     @Test
     void contextLoads() {
     }
