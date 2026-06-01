@@ -6,6 +6,7 @@ import com.urjc.plushotel.entities.HotelImage;
 import com.urjc.plushotel.services.ImageService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,6 +24,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(EndpointConstants.ImageEndpoints.HOTEL_IMAGES_URL)
     public ResponseEntity<Void> uploadImage(@PathVariable String slug, @RequestParam("file") MultipartFile file,
                                             @RequestParam(name = "position") int postion) {
@@ -38,6 +40,7 @@ public class ImageController {
         return ResponseEntity.created(location).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(EndpointConstants.ImageEndpoints.ROOM_IMAGES_URL)
     public ResponseEntity<Void> uploadRoomImage(@PathVariable Long roomId, @RequestParam("file") MultipartFile file,
                                                 @RequestParam(name = "position") int position) {
@@ -69,6 +72,7 @@ public class ImageController {
         return ResponseEntity.ok(hotelImages);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(EndpointConstants.ImageEndpoints.IMAGE_URL)
     public ResponseEntity<HotelImageDTO> updateImage(@PathVariable Long imageId,
                                                      @RequestBody HotelImageUpdateRequest request) {
@@ -78,6 +82,7 @@ public class ImageController {
         return ResponseEntity.ok(image);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(EndpointConstants.ImageEndpoints.IMAGE_URL)
     public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
 
