@@ -5,7 +5,7 @@
     <div class="image-list" cdkDropList id="hotel" cdkDropListOrientation="horizontal" [cdkDropListData]="hotelImages" (cdkDropListDropped)="drop($event)">
         @for (image of hotelImages; track $index) {
             <div cdkDrag>
-                <img alt="Hotel preview" class="image-preview" [src]="image.previewUrl">
+                <img alt="Hotel preview" class="image-preview" [src]="image.previewUrl || image.url">
             </div>
             <button (click)="removeImage(hotelImages, image)">X</button>
         }
@@ -17,7 +17,7 @@
         <div class="image-list" cdkDropList id="room-{{room.id}}" cdkDropListOrientation="horizontal" [cdkDropListData]="roomImages[room.id]" (cdkDropListDropped)="drop($event)">
             @for (image of roomImages[room.id]; track $index) {
                 <div cdkDrag>
-                    <img alt="Room preview" class="image-preview" [src] = "image.previewUrl">
+                    <img alt="Room preview" class="image-preview" [src] = "image.previewUrl || image.url">
                 </div>
                 <button (click)="removeImage(roomImages[room.id], image)">X</button>
             }
@@ -25,4 +25,4 @@
     }
 </div>
 
-<button (click)="uploadImages()">Subir imágenes</button>
+<button (click)="updateImages()">Subir imágenes</button>
