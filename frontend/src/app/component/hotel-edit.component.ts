@@ -1,4 +1,4 @@
-import { HotelRequest, HotelService, Room } from './../services/hotel.service';
+import { HotelRequest, HotelService, RoomRequest } from './../services/hotel.service';
 import { Component, OnInit } from '@angular/core';
 import { Hotel } from '../services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,14 +24,14 @@ export class HotelEdit implements OnInit{
     address: '',
     stars: 1,
     slug: '',
-    rooms: [] as Room[]
+    rooms: [] as RoomRequest[]
   };
 
   selectedRoomIndex: number = -1;
   creatingRoom = false;
   showForm = false;
   updatingRoom = false;
-  roomModel: Room = { name: '', description: '', price: 0 };
+  roomModel: RoomRequest = { name: '', description: '', price: 0 };
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -96,7 +96,7 @@ export class HotelEdit implements OnInit{
     this.toggleRoomFormVisibility();
   }
 
-  startRoomUpdate(room: Room, index: number) {
+  startRoomUpdate(room: RoomRequest, index: number) {
     this.selectedRoomIndex = index;
     this.showRoomUpdateForm();
     this.roomModel = { ...room };
@@ -129,7 +129,7 @@ export class HotelEdit implements OnInit{
     this.resetSelectedRoomIndex();
   }
 
-  removeRoom(room: Room) {
+  removeRoom(room: RoomRequest) {
     this.hotelModel.rooms = this.hotelModel.rooms.filter(r => r !== room);
   }
 

@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface Room {
-        id?: number;
+        id: number;
         name: string;
         description: string;
         price: number;
@@ -36,6 +36,7 @@ export interface HotelRequest {
 }
 
 export interface RoomRequest {
+    id?: number;
     name: string;
     description: string;
     price: number;
