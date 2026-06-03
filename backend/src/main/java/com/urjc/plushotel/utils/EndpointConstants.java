@@ -38,7 +38,7 @@ public final class EndpointConstants {
         }
 
         public static final String ROOMS_ID_URL = "/rooms/{roomId}";
-        public static final String ROOMS_HOTEL_ID_URL = "/rooms/hotel/{hotelId}";
+        public static final String ROOMS_HOTEL_SLUG_URL = "/rooms/hotel/{slug}";
     }
 
     public static class ReviewsEndpoints {
@@ -48,5 +48,14 @@ public final class EndpointConstants {
         public static final String REVIEWS_BASE_URL = "/reviews";
         public static final String REVIEWS_ROOM_URL = "/reviews/room/{roomId}";
         public static final String REVIEW_RESERVATION_IDENTIFIER_URL = "/reviews/reservation/{reservationIdentifier}";
+    }
+
+    public static class ImageEndpoints {
+        private ImageEndpoints() {
+        }
+
+        public static final String HOTEL_IMAGES_URL = "/images/hotel/{slug}";
+        public static final String ROOM_IMAGES_URL = "/images/room/{roomId}";
+        public static final String IMAGE_URL = "/images/{imageId}";
     }
 }

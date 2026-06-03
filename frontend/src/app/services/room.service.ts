@@ -7,8 +7,8 @@ export interface Room {
         name: string;
         description: string;
         price: number;
-        available: boolean;
-        averageRating: number;
+        averageRating?: number;
+        mainImageUrl?: string;
     };
 
 @Injectable({
@@ -24,7 +24,7 @@ export class RoomService {
         return this.http.get<Room>(this.apiUrl + "/rooms/" + roomId);
     }
 
-    getRoomsByHotelId(hotelId: number): Observable<Room[]> {
-        return this.http.get<Room[]>(this.apiUrl + "/rooms/hotel/" + hotelId);
+    getRoomsByHotelSlug(hotelSlug: string): Observable<Room[]> {
+        return this.http.get<Room[]>(this.apiUrl + "/rooms/hotel/" + hotelSlug);
     }
 }

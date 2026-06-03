@@ -57,7 +57,9 @@ export class HotelEdit implements OnInit{
     let oldSlug = this.hotelModel.slug;
     this.hotelModel.slug = this.hotelModel.name.toLowerCase().replaceAll(' ', '-').replaceAll('ñ', 'n').replaceAll(/[^\w-]+/g, '');
     this.hotelService.updateHotel(this.hotelModel, oldSlug).subscribe({
-      next: () => void this.router.navigate(['/']),
+      next: () => {
+        this.router.navigate(['/hotels/' + this.hotelModel.slug + '/images']);
+      },
       error: (err) => console.error(err)
     });
   }
@@ -132,7 +134,7 @@ export class HotelEdit implements OnInit{
   }
 
   loadRooms() {
-    this.roomService.getRoomsByHotelId(this.hotel.id).subscribe({
+    this.roomService.getRoomsByHotelSlug(this.hotel.slug).subscribe({
       next: (data) => {
         this.hotelModel.rooms = data;
       },

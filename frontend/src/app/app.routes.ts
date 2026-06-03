@@ -15,6 +15,7 @@ import { Reviews } from './component/reviews/reviews';
 import { ReviewCreate } from './component/review-create/review-create';
 import { ReviewDetail } from './component/review-detail/review-detail';
 import { ReviewEdit } from './component/review-edit/review-edit';
+import { HotelImages } from './component/hotel-images/hotel-images';
 
 export const routes: Routes = [
     { path: 'hotels', component: HotelListComponent },
@@ -27,8 +28,9 @@ export const routes: Routes = [
     { path: 'register', component: Register},
     { path: 'login', component: Login },
     { path: 'requests', component: Requests, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} },
-    { path: 'reviews', component: Reviews, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
-    { path: 'reviews/create/:reservationIdentifier', component: ReviewCreate, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
-    { path: 'reviews/detail/:reservationIdentifier', component: ReviewDetail, canActivate: [authGuard], data: {roles: ['ROLE_USER']}},
-    { path: 'reviews/edit/:reservationIdentifier', component: ReviewEdit, canActivate: [authGuard], data: {roles: ['ROLE_USER']}}
+    { path: 'reviews', component: Reviews, canActivate: [authGuard], data: {roles: ['ROLE_USER']} },
+    { path: 'reviews/create/:reservationIdentifier', component: ReviewCreate, canActivate: [authGuard], data: {roles: ['ROLE_USER']} },
+    { path: 'reviews/detail/:reservationIdentifier', component: ReviewDetail, canActivate: [authGuard], data: {roles: ['ROLE_USER']} },
+    { path: 'reviews/edit/:reservationIdentifier', component: ReviewEdit, canActivate: [authGuard], data: {roles: ['ROLE_USER']} },
+    { path: 'hotels/:slug/images', component: HotelImages, canActivate: [roleGuard], data: {roles: ['ROLE_ADMIN']} }
 ];

@@ -1,3 +1,4 @@
+import { ImageService } from './../../services/image-service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Room, RoomService } from '../../services/room.service';
 import { ReservationService, ReservedRange } from '../../services/reservation.service';
@@ -9,6 +10,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Review, ReviewService } from '../../services/review.service';
+import { Image } from '../../services/image-service';
 
 
 @Component({
@@ -21,6 +23,7 @@ import { Review, ReviewService } from '../../services/review.service';
     MatNativeDateModule
   ],
   templateUrl: './room-detail.html',
+  styleUrl: './room-detail.scss'
 })
 export class RoomDetail implements OnInit{
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
@@ -37,6 +40,7 @@ export class RoomDetail implements OnInit{
   minDate = new Date();
   reservedDates: ReservedRange[] = [];
   reviews: Review[] = [];
+  images: Image[] = [];
 
   dateFilter = (date: Date | null): boolean => {
     if (!date) {
@@ -58,7 +62,8 @@ export class RoomDetail implements OnInit{
     private readonly reservationService: ReservationService,
     private readonly router: Router,
     private readonly authService: AuthService,
-    private readonly reviewService: ReviewService
+    private readonly reviewService: ReviewService,
+    private readonly imageService: ImageService
   ){};
 
   ngOnInit(): void {
@@ -67,6 +72,10 @@ export class RoomDetail implements OnInit{
     this.roomService.getRoomByRoomId(this.roomId).subscribe({
       next: (data) => {
         this.room = data;
+        this.imageService.getImagesByRoomId(this.roomId).subscribe({
+          next: (data) => this.images = data,
+          error: (err) => console.error(err)
+        });
       }
     });
 

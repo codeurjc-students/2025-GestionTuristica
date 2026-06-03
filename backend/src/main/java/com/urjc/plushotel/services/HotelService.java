@@ -39,6 +39,12 @@ public class HotelService {
         );
     }
 
+    public Hotel findBySlug(String slug) {
+        return hotelRepository.findBySlug(slug).orElseThrow(
+                () -> new RuntimeException("This hotel doesn't exist")
+        );
+    }
+
     public Hotel createHotel(HotelRequest hotelRequest) {
         Hotel hotel = requestToHotel(hotelRequest);
         if (hotel.getRooms() != null) {

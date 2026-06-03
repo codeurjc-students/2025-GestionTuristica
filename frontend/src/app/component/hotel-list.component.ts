@@ -9,7 +9,8 @@ import { AuthService } from "../services/auth.service";
     selector: 'hotel-list',
     standalone: true,
     imports: [CommonModule, RouterLink],
-    templateUrl: './hotel-list.component.html'
+    templateUrl: './hotel-list.component.html',
+    styleUrl: './hotel-list.component.scss'
 })
 export class HotelListComponent implements OnInit{
 
