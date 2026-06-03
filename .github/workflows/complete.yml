@@ -12,10 +12,10 @@ jobs:
     name: backend complete check
     runs-on: ubuntu-latest
     env:
-      MINIO_URL = ${{ secrets.MINIO_URL }}
-      MINIO_ACCESS_KEY = ${{ secrets.MINIO_ACCESS_KEY }}
-      MINIO_SECRET_KEY = ${{ secrets.MINIO_SECRET_KEY }}
-      MINIO_BUCKET = ${{ secrets.MINIO_BUCKET }}
+      MINIO_URL: ${{ secrets.MINIO_URL }}
+      MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+      MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+      MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
     steps:
       - uses: actions/checkout@v4
         with:
