@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
 import java.math.BigDecimal;
@@ -86,23 +89,27 @@ class ReviewServiceTest {
         Review review2 = new Review(2L, user2, reservation2, "message2", 4.0, LocalDateTime.now());
         List<Review> reviews = List.of(review1, review2);
 
-        when(reviewRepository.findByReservationRoomId(1L)).thenReturn(reviews);
+        PageImpl<Review> paginatedReviews = new PageImpl<>(reviews);
 
-        List<ReviewDTO> reviewsByRoom = reviewService.getReviewsByRoom(1L);
+        when(reviewRepository.findByReservationRoomId(1L, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedReviews);
+
+        Page<ReviewDTO> reviewsByRoom = reviewService.getReviewsByRoom(1L, 0);
+
+        List<ReviewDTO> reviewsByRoomContent = reviewsByRoom.getContent();
 
         assertNotNull(reviewsByRoom);
         assertEquals(review1.getReservation().getReservationIdentifier(),
-                reviewsByRoom.getFirst().getReservationIdentifier());
+                reviewsByRoomContent.getFirst().getReservationIdentifier());
         assertEquals(review2.getReservation().getReservationIdentifier(),
-                reviewsByRoom.getLast().getReservationIdentifier());
+                reviewsByRoomContent.getLast().getReservationIdentifier());
         assertEquals(review1.getReservation().getRoom().getName(),
-                reviewsByRoom.getFirst().getRoomName());
+                reviewsByRoomContent.getFirst().getRoomName());
         assertEquals(review2.getReservation().getRoom().getName(),
-                reviewsByRoom.getLast().getRoomName());
+                reviewsByRoomContent.getLast().getRoomName());
         assertEquals(review1.getUser().getEmail(),
-                reviewsByRoom.getFirst().getUserEmail());
+                reviewsByRoomContent.getFirst().getUserEmail());
         assertEquals(review2.getUser().getEmail(),
-                reviewsByRoom.getLast().getUserEmail());
+                reviewsByRoomContent.getLast().getUserEmail());
     }
 
     @Test

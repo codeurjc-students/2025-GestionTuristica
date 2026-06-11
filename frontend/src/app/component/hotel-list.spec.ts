@@ -9,9 +9,19 @@ describe('HotelListComponent', () => {
     let fixture: ComponentFixture<HotelListComponent>;
     let mockService: any;
 
+    
+    const mockPage = {
+    content: [],
+    number: 0,
+    first: true,
+    last: true,
+    totalElements: 2,
+    totalPages: 1
+  }
+
     beforeEach(async () => {
         mockService = {
-            getHotels: jasmine.createSpy('getHotels').and.returnValue(of([])),
+            getHotels: jasmine.createSpy('getHotels').and.returnValue(of(mockPage)),
             removeHotel: jasmine.createSpy('removeHotel').and.returnValue(of({}))
         };
 

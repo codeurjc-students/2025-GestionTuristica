@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { Page } from "../shared/pagination/page";
 
 export interface Room {
         id: number;
@@ -51,8 +52,8 @@ export class HotelService {
 
     constructor(private readonly http: HttpClient){}
 
-    getHotels(): Observable<Hotel[]> {
-        return this.http.get<Hotel[]>(this.apiUrl + "/hotels")
+    getHotels(pageNumber: number): Observable<Page<Hotel>> {
+        return this.http.get<Page<Hotel>>(this.apiUrl + "/hotels", {params: {page: pageNumber}});
     }
 
     getHotelBySlug(slug: string): Observable<Hotel> {

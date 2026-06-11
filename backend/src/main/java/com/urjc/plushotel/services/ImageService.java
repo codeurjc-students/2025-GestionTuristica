@@ -64,9 +64,9 @@ public class ImageService {
         ).toList();
     }
 
-    public List<HotelImageDTO> getHotelsMainImages() {
+    public List<HotelImageDTO> getHotelsMainImages(List<Long> hotelIds) {
 
-        List<HotelImage> images = imageRepository.findByRoomIsNullAndPosition(0);
+        List<HotelImage> images = imageRepository.findByPositionAndHotel_IdIn(0, hotelIds);
 
         return images.stream().map(
                 img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),
@@ -74,9 +74,9 @@ public class ImageService {
         ).toList();
     }
 
-    public List<HotelImageDTO> getHotelRoomsMainImages(String slug) {
+    public List<HotelImageDTO> getHotelRoomsMainImages(List<Long> roomIds) {
 
-        List<HotelImage> images = imageRepository.findByHotel_SlugAndRoomIsNotNullAndPosition(slug, 0);
+        List<HotelImage> images = imageRepository.findByPositionAndRoom_IdIn(0, roomIds);
 
         return images.stream().map(
                 img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),

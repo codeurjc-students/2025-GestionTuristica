@@ -11,6 +11,12 @@
             }
         </div>
     }
+
+    <div class="pagination">
+        <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+        Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
+        <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+    </div>
 } @else {
     <p>No tienes ninguna reserva sobre la que escribir una reseña</p>
 }

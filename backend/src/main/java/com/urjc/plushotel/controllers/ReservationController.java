@@ -7,6 +7,7 @@ import com.urjc.plushotel.entities.ReservationFilter;
 import com.urjc.plushotel.services.ReservationService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,8 +30,9 @@ public class ReservationController {
     }
 
     @GetMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_BASE_URL)
-    public ResponseEntity<List<ReservationDTO>> getReservations(@RequestParam(defaultValue = "NON_CANCELLED") ReservationFilter filter) {
-        List<ReservationDTO> reservations = reservationService.getReservations(filter);
+    public ResponseEntity<Page<ReservationDTO>> getReservations(@RequestParam(defaultValue = "NON_CANCELLED") ReservationFilter filter,
+                                                                @RequestParam int page) {
+        Page<ReservationDTO> reservations = reservationService.getReservations(filter, page);
         return ResponseEntity.ok(reservations);
     }
 
@@ -77,10 +79,11 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping(EndpointConstants.ReservationsEndpoints.RESERVATIONS_USER_ID)
-    public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable Long userId,
+    public ResponseEntity<Page<ReservationDTO>> getReservationsByUser(@PathVariable Long userId,
                                                                       @RequestParam(defaultValue =
-                                                                              "NON_CANCELLED") ReservationFilter filter) {
-        List<ReservationDTO> reservationsByUser = reservationService.getReservationsByUser(userId, filter);
+                                                                              "NON_CANCELLED") ReservationFilter filter,
+                                                                      @RequestParam int page) {
+        Page<ReservationDTO> reservationsByUser = reservationService.getReservationsByUser(userId, filter, page);
         return ResponseEntity.ok(reservationsByUser);
     }
 

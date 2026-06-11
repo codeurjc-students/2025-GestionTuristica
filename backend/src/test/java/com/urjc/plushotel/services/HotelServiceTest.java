@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,15 +51,19 @@ class HotelServiceTest {
 
         List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
 
-        when(hotelRepository.findHotelsWithAverageRating()).thenReturn(hotels);
+        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
 
-        List<HotelAvgRatingDTO> result = hotelService.getAll();
+        when(hotelRepository.findHotelsWithAverageRating(Pageable.ofSize(5).withPage(0))).thenReturn(paginatedHotels);
 
-        assertEquals(2, result.size());
-        assertEquals(h1, result.getFirst());
-        assertEquals(h2, result.getLast());
+        Page<HotelAvgRatingDTO> result = hotelService.getAll(0);
 
-        verify(hotelRepository, times(1)).findHotelsWithAverageRating();
+        List<HotelAvgRatingDTO> resultContent = result.getContent();
+
+        assertEquals(2, resultContent.size());
+        assertEquals(h1, resultContent.getFirst());
+        assertEquals(h2, resultContent.getLast());
+
+        verify(hotelRepository, times(1)).findHotelsWithAverageRating(Pageable.ofSize(5).withPage(0));
     }
 
     @Test

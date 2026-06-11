@@ -3,6 +3,8 @@ package com.urjc.plushotel.repositories;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.ReservationStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,13 +27,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             """)
     List<ReservedDatesDTO> findReservedDatesByRoomId(Long roomId);
 
-    List<Reservation> findByUserId(Long userId);
+    Page<Reservation> findByUserId(Long userId, Pageable pageable);
 
-    List<Reservation> findByStatus(ReservationStatus status);
+    Page<Reservation> findByStatus(ReservationStatus status, Pageable pageable);
 
-    List<Reservation> findByStatusNot(ReservationStatus status);
+    Page<Reservation> findByStatusNot(ReservationStatus status, Pageable pageable);
 
-    List<Reservation> findByUserIdAndStatus(Long userId, ReservationStatus status);
+    Page<Reservation> findByUserIdAndStatus(Long userId, ReservationStatus status, Pageable pageable);
 
-    List<Reservation> findByUserIdAndStatusNot(Long userId, ReservationStatus status);
+    Page<Reservation> findByUserIdAndStatusNot(Long userId, ReservationStatus status, Pageable pageable);
 }

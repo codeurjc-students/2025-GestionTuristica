@@ -9,6 +9,8 @@ import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
 import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.repositories.ReservationRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +41,16 @@ public class ReservationService {
         this.emailService = emailService;
     }
 
-    public List<ReservationDTO> getReservations(ReservationFilter filter) {
-        List<Reservation> reservations;
+    public Page<ReservationDTO> getReservations(ReservationFilter filter, int page) {
+        Page<Reservation> reservations;
         if (filter == ReservationFilter.CANCELLED) {
-            reservations = reservationRepository.findByStatus(ReservationStatus.CANCELLED);
+            reservations = reservationRepository.findByStatus(ReservationStatus.CANCELLED,
+                    Pageable.ofSize(5).withPage(page));
         } else {
-            reservations = reservationRepository.findByStatusNot(ReservationStatus.CANCELLED);
+            reservations = reservationRepository.findByStatusNot(ReservationStatus.CANCELLED,
+                    Pageable.ofSize(5).withPage(page));
         }
-        return reservations.stream().map(this::convertToDTO).toList();
+        return reservations.map(this::convertToDTO);
 
     }
 
@@ -118,14 +122,16 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public List<ReservationDTO> getReservationsByUser(Long userId, ReservationFilter filter) {
-        List<Reservation> userReservations;
+    public Page<ReservationDTO> getReservationsByUser(Long userId, ReservationFilter filter, int page) {
+        Page<Reservation> userReservations;
         if (filter == ReservationFilter.CANCELLED) {
-            userReservations = reservationRepository.findByUserIdAndStatus(userId, ReservationStatus.CANCELLED);
+            userReservations = reservationRepository.findByUserIdAndStatus(userId, ReservationStatus.CANCELLED,
+                    Pageable.ofSize(5).withPage(page));
         } else {
-            userReservations = reservationRepository.findByUserIdAndStatusNot(userId, ReservationStatus.CANCELLED);
+            userReservations = reservationRepository.findByUserIdAndStatusNot(userId, ReservationStatus.CANCELLED,
+                    Pageable.ofSize(5).withPage(page));
         }
-        return userReservations.stream().map(this::convertToDTO).toList();
+        return userReservations.map(this::convertToDTO);
     }
 
     public Reservation getReservationEntityByIdentifier(String reservationIdentifier) {

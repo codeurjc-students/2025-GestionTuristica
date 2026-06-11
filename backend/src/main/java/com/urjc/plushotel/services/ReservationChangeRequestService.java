@@ -8,9 +8,10 @@ import com.urjc.plushotel.entities.*;
 import com.urjc.plushotel.exceptions.NullModificationDatesException;
 import com.urjc.plushotel.exceptions.ReservationChangeRequestNotFoundException;
 import com.urjc.plushotel.repositories.ReservationChangeRequestRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,31 +29,31 @@ public class ReservationChangeRequestService {
         this.reservationService = reservationService;
     }
 
-    public List<ModificationRequestDTO> findReservationChangeRequests(RequestFilter status) {
-        List<ReservationChangeRequest> requests = new ArrayList<>();
+    public Page<ModificationRequestDTO> findReservationChangeRequests(RequestFilter status, int page) {
+        Page<ReservationChangeRequest> requests = null;
         switch (status) {
-            case PENDING -> requests = findAllByStatus(RequestStatus.PENDING);
-            case RESOLVED -> requests = findAllResolvedReservationChangeRequest();
-            case APPROVED -> requests = findAllByStatus(RequestStatus.APPROVED);
-            case REJECTED -> requests = findAllByStatus(RequestStatus.REJECTED);
-            case ALL -> requests = findAll();
+            case PENDING -> requests = findAllByStatus(RequestStatus.PENDING, page);
+            case RESOLVED -> requests = findAllResolvedReservationChangeRequest(page);
+            case APPROVED -> requests = findAllByStatus(RequestStatus.APPROVED, page);
+            case REJECTED -> requests = findAllByStatus(RequestStatus.REJECTED, page);
+            default -> requests = findAll(page);
         }
 
-        return requests.stream().map(this::convertToDTO).toList();
+        return requests.map(this::convertToDTO);
     }
 
-    private List<ReservationChangeRequest> findAllByStatus(RequestStatus status) {
-        return reservationChangeRequestRepository.findByStatus(status);
+    private Page<ReservationChangeRequest> findAllByStatus(RequestStatus status, int page) {
+        return reservationChangeRequestRepository.findByStatus(status, Pageable.ofSize(5).withPage(page));
     }
 
-    private List<ReservationChangeRequest> findAllResolvedReservationChangeRequest() {
+    private Page<ReservationChangeRequest> findAllResolvedReservationChangeRequest(int page) {
         return reservationChangeRequestRepository.findByStatusIn(
-                List.of(RequestStatus.APPROVED, RequestStatus.REJECTED)
+                List.of(RequestStatus.APPROVED, RequestStatus.REJECTED), Pageable.ofSize(5).withPage(page)
         );
     }
 
-    private List<ReservationChangeRequest> findAll() {
-        return reservationChangeRequestRepository.findAll();
+    private Page<ReservationChangeRequest> findAll(int page) {
+        return reservationChangeRequestRepository.findAll(Pageable.ofSize(5).withPage(page));
     }
 
     public void createRequest(ModificationRequest modificationRequest) {

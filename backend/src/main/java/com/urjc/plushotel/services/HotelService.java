@@ -6,10 +6,11 @@ import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,8 +30,8 @@ public class HotelService {
         this.reservationChangeRequestService = reservationChangeRequestService;
     }
 
-    public List<HotelAvgRatingDTO> getAll() {
-        return hotelRepository.findHotelsWithAverageRating();
+    public Page<HotelAvgRatingDTO> getAll(int pageNumber) {
+        return hotelRepository.findHotelsWithAverageRating(Pageable.ofSize(5).withPage(pageNumber));
     }
 
     public HotelAvgRatingDTO getHotelBySlug(String slug) {

@@ -29,10 +29,19 @@ describe('Requests', () => {
     }
   ]
 
+  const mockPage = {
+    content: mockRequests,
+    number: 0,
+    first: true,
+    last: true,
+    totalElements: 2,
+    totalPages: 1
+  }
+
   beforeEach(async () => {
 
     requestServiceMock = {
-      getRequests: jasmine.createSpy('getRequests').and.returnValue(of(mockRequests)),
+      getRequests: jasmine.createSpy('getRequests').and.returnValue(of(mockPage)),
       approveRequest: jasmine.createSpy('approveRequest').and.returnValue(of({})),
       rejectRequest: jasmine.createSpy('rejectRequest').and.returnValue(of({}))
     }

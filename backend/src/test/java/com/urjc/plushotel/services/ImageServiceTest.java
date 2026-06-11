@@ -132,11 +132,11 @@ class ImageServiceTest {
 
         List<HotelImage> images = List.of(image1, image2);
 
-        when(imageRepository.findByRoomIsNullAndPosition(0)).thenReturn(images);
+        when(imageRepository.findByPositionAndHotel_IdIn(anyInt(), anyList())).thenReturn(images);
         when(minioService.getImageUrl("file1.jpg")).thenReturn("url1");
         when(minioService.getImageUrl("file2.jpg")).thenReturn("url2");
 
-        List<HotelImageDTO> hotelImages = imageService.getHotelsMainImages();
+        List<HotelImageDTO> hotelImages = imageService.getHotelsMainImages(List.of(1L, 2L));
 
         assertNotNull(hotelImages);
         assertEquals("url1", hotelImages.getFirst().getUrl());
@@ -159,11 +159,11 @@ class ImageServiceTest {
 
         List<HotelImage> images = List.of(image1, image2);
 
-        when(imageRepository.findByHotel_SlugAndRoomIsNotNullAndPosition("hotel-test", 0)).thenReturn(images);
+        when(imageRepository.findByPositionAndRoom_IdIn(0, List.of(1L, 2L))).thenReturn(images);
         when(minioService.getImageUrl("file1.jpg")).thenReturn("url1");
         when(minioService.getImageUrl("file2.jpg")).thenReturn("url2");
 
-        List<HotelImageDTO> hotelImages = imageService.getHotelRoomsMainImages("hotel-test");
+        List<HotelImageDTO> hotelImages = imageService.getHotelRoomsMainImages(List.of(1L, 2L));
 
         assertNotNull(hotelImages);
         assertEquals("url1", hotelImages.getFirst().getUrl());

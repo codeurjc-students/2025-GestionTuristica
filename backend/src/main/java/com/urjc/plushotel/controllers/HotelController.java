@@ -6,13 +6,13 @@ import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.HotelService;
 import com.urjc.plushotel.utils.EndpointConstants;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -28,9 +28,9 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
-    public ResponseEntity<List<HotelAvgRatingDTO>> getAllHotels() {
+    public ResponseEntity<Page<HotelAvgRatingDTO>> getAllHotels(@RequestParam int page) {
 
-        return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo());
+        return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo(page));
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)

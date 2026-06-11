@@ -43,10 +43,19 @@ describe('Reviews', () => {
     }
   ];
 
+  const mockPage = {
+    content: mockReservations,
+    number: 0,
+    first: true,
+    last: true,
+    totalElements: 2,
+    totalPages: 1
+  }
+
   beforeEach(async () => {
 
     reservationServiceMock = {
-      getReservationsByUserId: jasmine.createSpy('getReservationsByUserId').and.returnValue(of(mockReservations))
+      getReservationsByUserId: jasmine.createSpy('getReservationsByUserId').and.returnValue(of(mockPage))
     };
 
     routerMock = {

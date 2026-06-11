@@ -4,6 +4,8 @@ import com.urjc.plushotel.entities.RequestStatus;
 import com.urjc.plushotel.entities.RequestType;
 import com.urjc.plushotel.entities.ReservationChangeRequest;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,11 +16,11 @@ import java.util.List;
 @Repository
 public interface ReservationChangeRequestRepository extends JpaRepository<ReservationChangeRequest, Long> {
 
-    List<ReservationChangeRequest> findByStatus(RequestStatus status);
+    Page<ReservationChangeRequest> findByStatus(RequestStatus status, Pageable pageable);
 
     List<ReservationChangeRequest> findByType(RequestType type);
 
-    List<ReservationChangeRequest> findByStatusIn(List<RequestStatus> statuses);
+    Page<ReservationChangeRequest> findByStatusIn(List<RequestStatus> statuses, Pageable pageable);
 
     @Transactional
     @Modifying

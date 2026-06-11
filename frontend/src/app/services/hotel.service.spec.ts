@@ -18,11 +18,11 @@ describe('HotelService', () => {
     it('find hotels', () => {
         const mockHotels = [{id: 1, name: 'Hotel'}] as any;
 
-        service.getHotels().subscribe((hotels) => {
+        service.getHotels(0).subscribe((hotels) => {
             expect(hotels).toEqual(mockHotels);
         });
 
-        const request = httpMock.expectOne('http://localhost:8080/api/v1/hotels');
+        const request = httpMock.expectOne('http://localhost:8080/api/v1/hotels?page=0');
         expect(request.request.method).toBe('GET');
         request.flush(mockHotels);
     });

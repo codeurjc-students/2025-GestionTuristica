@@ -1,3 +1,4 @@
+import { Page } from './../shared/pagination/page';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -41,9 +42,9 @@ export class ReservationService {
         return this.http.post<Reservation>(this.apiUrl + "/reservations/" + roomId + "/reserve", reservation);
     };
 
-    getReservations(filter: ReservationFilter): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(this.apiUrl + "/reservations", {
-                params: filter ? {filter: filter} : {}
+    getReservations(filter: ReservationFilter, page: number): Observable<Page<Reservation>> {
+        return this.http.get<Page<Reservation>>(this.apiUrl + "/reservations", {
+                params: filter ? {filter: filter, page: page} : {page:page}
             });
     };
 
@@ -55,9 +56,9 @@ export class ReservationService {
         return this.http.get<Reservation>(this.apiUrl + "/reservations/" + reservationIdentifier);
     }
 
-    getReservationsByUserId(userId: string, filter: ReservationFilter): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(this.apiUrl + "/reservations/user/" + userId, {
-            params: filter ? {filter: filter} : {}
+    getReservationsByUserId(userId: string, filter: ReservationFilter, page: number): Observable<Page<Reservation>> {
+        return this.http.get<Page<Reservation>>(this.apiUrl + "/reservations/user/" + userId, {
+            params: filter ? {filter: filter, page: page} : {page: page}
          });
     }
 

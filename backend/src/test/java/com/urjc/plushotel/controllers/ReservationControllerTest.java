@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -59,12 +60,14 @@ class ReservationControllerTest {
 
         List<ReservationDTO> reservations = List.of(reservation1, reservation2);
 
-        when(reservationService.getReservations(ReservationFilter.NON_CANCELLED)).thenReturn(reservations);
+        PageImpl<ReservationDTO> paginatedReservations = new PageImpl<>(reservations);
 
-        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_BASE_URL))
+        when(reservationService.getReservations(ReservationFilter.NON_CANCELLED, 0)).thenReturn(paginatedReservations);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_BASE_URL + "?page=0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].reservationIdentifier").value("RSV-123L"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].reservationIdentifier").value("RSV-123L"));
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.urjc.plushotel.dtos.request.ReviewUpdateRequest;
 import com.urjc.plushotel.dtos.response.ReviewDTO;
 import com.urjc.plushotel.services.ReviewService;
 import com.urjc.plushotel.utils.EndpointConstants;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,8 +39,8 @@ public class ReviewController {
     }
 
     @GetMapping(EndpointConstants.ReviewsEndpoints.REVIEWS_ROOM_URL)
-    public ResponseEntity<List<ReviewDTO>> getReviewsByRoom(@PathVariable Long roomId) {
-        List<ReviewDTO> reviews = reviewService.getReviewsByRoom(roomId);
+    public ResponseEntity<Page<ReviewDTO>> getReviewsByRoom(@PathVariable Long roomId, @RequestParam int page) {
+        Page<ReviewDTO> reviews = reviewService.getReviewsByRoom(roomId, page);
         return ResponseEntity.ok(reviews);
     }
 

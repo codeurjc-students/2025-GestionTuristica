@@ -86,7 +86,7 @@ describe('HotelImages', () => {
   beforeEach(async () => {
 
     roomServiceMock = {
-      getRoomsByHotelSlug: jasmine.createSpy('getRoomsByHotelSlug').and.returnValue(of(mockRooms))
+      getNonPaginatedRoomsByHotelSlug: jasmine.createSpy('getNonPaginatedRoomsByHotelSlug').and.returnValue(of(mockRooms))
     };
 
     imageServiceMock = {

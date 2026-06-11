@@ -28,6 +28,12 @@
     </li>
     }
   </ul>
+
+  <div class="pagination">
+    <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+    Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
+    <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+  </div>
 </div>
 
 <div class="actions">

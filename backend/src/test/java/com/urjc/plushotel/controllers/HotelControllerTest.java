@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -60,13 +61,15 @@ class HotelControllerTest {
 
         List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
 
-        when(hotelRoomCardService.getHotelsInfo()).thenReturn(hotels);
+        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
 
-        mockMvc.perform(get("/api/v1/hotels"))
+        when(hotelRoomCardService.getHotelsInfo(0)).thenReturn(paginatedHotels);
+
+        mockMvc.perform(get("/api/v1/hotels?page=0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("H1"))
-                .andExpect(jsonPath("$[1].city").value("Barcelona"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content.[0].name").value("H1"))
+                .andExpect(jsonPath("$.content.[1].city").value("Barcelona"));
     }
 
     @Test

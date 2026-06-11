@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
 import java.math.BigDecimal;
@@ -61,16 +64,20 @@ class ReservationServiceTest {
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
-        when(reservationRepository.findByStatusNot(any())).thenReturn(reservations);
+        PageImpl<Reservation> paginatedReservations = new PageImpl<>(reservations);
 
-        List<ReservationDTO> result = reservationService.getReservations(null);
+        when(reservationRepository.findByStatusNot(ReservationStatus.CANCELLED, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedReservations);
+
+        Page<ReservationDTO> result = reservationService.getReservations(null, 0);
+
+        List<ReservationDTO> resultContent = result.getContent();
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
-        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+        assertEquals(2, resultContent.size());
+        assertEquals("RSV-123", resultContent.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", resultContent.getLast().getReservationIdentifier());
 
-        verify(reservationRepository, times(1)).findByStatusNot(any());
+        verify(reservationRepository, times(1)).findByStatusNot(any(), any());
     }
 
     @Test
@@ -88,16 +95,21 @@ class ReservationServiceTest {
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
-        when(reservationRepository.findByStatus(ReservationStatus.CANCELLED)).thenReturn(reservations);
+        PageImpl<Reservation> paginatedReservations = new PageImpl<>(reservations);
 
-        List<ReservationDTO> result = reservationService.getReservations(ReservationFilter.CANCELLED);
+        when(reservationRepository.findByStatus(ReservationStatus.CANCELLED, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedReservations);
+
+        Page<ReservationDTO> result = reservationService.getReservations(ReservationFilter.CANCELLED, 0);
+
+        List<ReservationDTO> resultContent = result.getContent();
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
-        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+        assertEquals(2, resultContent.size());
+        assertEquals("RSV-123", resultContent.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", resultContent.getLast().getReservationIdentifier());
 
-        verify(reservationRepository, times(1)).findByStatus(ReservationStatus.CANCELLED);
+        verify(reservationRepository, times(1)).findByStatus(ReservationStatus.CANCELLED,
+                Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -355,16 +367,22 @@ class ReservationServiceTest {
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
-        when(reservationRepository.findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED)).thenReturn(reservations);
+        PageImpl<Reservation> paginatedReservations = new PageImpl<>(reservations);
 
-        List<ReservationDTO> result = reservationService.getReservationsByUser(1L, null);
+        when(reservationRepository.findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED,
+                Pageable.ofSize(5).withPage(0))).thenReturn(paginatedReservations);
+
+        Page<ReservationDTO> result = reservationService.getReservationsByUser(1L, null, 0);
+
+        List<ReservationDTO> resultContent = result.getContent();
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
-        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+        assertEquals(2, resultContent.size());
+        assertEquals("RSV-123", resultContent.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", resultContent.getLast().getReservationIdentifier());
 
-        verify(reservationRepository, times(1)).findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED);
+        verify(reservationRepository, times(1)).findByUserIdAndStatusNot(1L, ReservationStatus.CANCELLED,
+                Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -382,15 +400,21 @@ class ReservationServiceTest {
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
-        when(reservationRepository.findByUserIdAndStatus(1L, ReservationStatus.CANCELLED)).thenReturn(reservations);
+        PageImpl<Reservation> paginatedReservations = new PageImpl<>(reservations);
 
-        List<ReservationDTO> result = reservationService.getReservationsByUser(1L, ReservationFilter.CANCELLED);
+        when(reservationRepository.findByUserIdAndStatus(1L, ReservationStatus.CANCELLED,
+                Pageable.ofSize(5).withPage(0))).thenReturn(paginatedReservations);
+
+        Page<ReservationDTO> result = reservationService.getReservationsByUser(1L, ReservationFilter.CANCELLED, 0);
+
+        List<ReservationDTO> resultContent = result.getContent();
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("RSV-123", result.getFirst().getReservationIdentifier());
-        assertEquals("RSV-1234", result.getLast().getReservationIdentifier());
+        assertEquals(2, resultContent.size());
+        assertEquals("RSV-123", resultContent.getFirst().getReservationIdentifier());
+        assertEquals("RSV-1234", resultContent.getLast().getReservationIdentifier());
 
-        verify(reservationRepository, times(1)).findByUserIdAndStatus(1L, ReservationStatus.CANCELLED);
+        verify(reservationRepository, times(1)).findByUserIdAndStatus(1L, ReservationStatus.CANCELLED,
+                Pageable.ofSize(5).withPage(0));
     }
 }

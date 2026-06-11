@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,19 +59,24 @@ class ReservationChangeRequestServiceTest {
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestRepository.findByStatus(RequestStatus.PENDING)).thenReturn(requests);
+        Page<ReservationChangeRequest> paginatedRequests = new PageImpl<>(requests);
 
-        List<ModificationRequestDTO> result =
-                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.PENDING);
+        when(reservationChangeRequestRepository.findByStatus(RequestStatus.PENDING, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedRequests);
 
-        assertEquals(requests.getFirst().getId(), result.getFirst().getId());
-        assertEquals(requests.getLast().getId(), result.getLast().getId());
-        assertEquals(requests.getFirst().getType(), result.getFirst().getType());
-        assertEquals(requests.getLast().getType(), result.getLast().getType());
-        assertEquals(requests.getFirst().getStatus(), result.getFirst().getStatus());
-        assertEquals(requests.getLast().getStatus(), result.getLast().getStatus());
+        Page<ModificationRequestDTO> result =
+                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.PENDING, 0);
 
-        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.PENDING);
+        List<ModificationRequestDTO> resultContent = result.getContent();
+
+        assertEquals(requests.getFirst().getId(), resultContent.getFirst().getId());
+        assertEquals(requests.getLast().getId(), resultContent.getLast().getId());
+        assertEquals(requests.getFirst().getType(), resultContent.getFirst().getType());
+        assertEquals(requests.getLast().getType(), resultContent.getLast().getType());
+        assertEquals(requests.getFirst().getStatus(), resultContent.getFirst().getStatus());
+        assertEquals(requests.getLast().getStatus(), resultContent.getLast().getStatus());
+
+        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.PENDING,
+                Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -91,21 +99,26 @@ class ReservationChangeRequestServiceTest {
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestRepository.findByStatusIn(List.of(RequestStatus.APPROVED, RequestStatus.REJECTED)))
-                .thenReturn(requests);
+        PageImpl<ReservationChangeRequest> paginatedRequests = new PageImpl<>(requests);
 
-        List<ModificationRequestDTO> result =
-                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.RESOLVED);
+        when(reservationChangeRequestRepository.findByStatusIn(List.of(RequestStatus.APPROVED,
+                RequestStatus.REJECTED), Pageable.ofSize(5).withPage(0)))
+                .thenReturn(paginatedRequests);
 
-        assertEquals(requests.getFirst().getId(), result.getFirst().getId());
-        assertEquals(requests.getLast().getId(), result.getLast().getId());
-        assertEquals(requests.getFirst().getType(), result.getFirst().getType());
-        assertEquals(requests.getLast().getType(), result.getLast().getType());
-        assertEquals(requests.getFirst().getStatus(), result.getFirst().getStatus());
-        assertEquals(requests.getLast().getStatus(), result.getLast().getStatus());
+        Page<ModificationRequestDTO> result =
+                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.RESOLVED, 0);
+
+        List<ModificationRequestDTO> resultContent = result.getContent();
+
+        assertEquals(requests.getFirst().getId(), resultContent.getFirst().getId());
+        assertEquals(requests.getLast().getId(), resultContent.getLast().getId());
+        assertEquals(requests.getFirst().getType(), resultContent.getFirst().getType());
+        assertEquals(requests.getLast().getType(), resultContent.getLast().getType());
+        assertEquals(requests.getFirst().getStatus(), resultContent.getFirst().getStatus());
+        assertEquals(requests.getLast().getStatus(), resultContent.getLast().getStatus());
 
         verify(reservationChangeRequestRepository, times(1)).findByStatusIn(
-                List.of(RequestStatus.APPROVED, RequestStatus.REJECTED));
+                List.of(RequestStatus.APPROVED, RequestStatus.REJECTED), Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -128,19 +141,24 @@ class ReservationChangeRequestServiceTest {
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestRepository.findByStatus(RequestStatus.APPROVED)).thenReturn(requests);
+        PageImpl<ReservationChangeRequest> paginatedRequests = new PageImpl<>(requests);
 
-        List<ModificationRequestDTO> result =
-                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.APPROVED);
+        when(reservationChangeRequestRepository.findByStatus(RequestStatus.APPROVED, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedRequests);
 
-        assertEquals(requests.getFirst().getId(), result.getFirst().getId());
-        assertEquals(requests.getLast().getId(), result.getLast().getId());
-        assertEquals(requests.getFirst().getType(), result.getFirst().getType());
-        assertEquals(requests.getLast().getType(), result.getLast().getType());
-        assertEquals(requests.getFirst().getStatus(), result.getFirst().getStatus());
-        assertEquals(requests.getLast().getStatus(), result.getLast().getStatus());
+        Page<ModificationRequestDTO> result =
+                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.APPROVED, 0);
 
-        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.APPROVED);
+        List<ModificationRequestDTO> resultContent = result.getContent();
+
+        assertEquals(requests.getFirst().getId(), resultContent.getFirst().getId());
+        assertEquals(requests.getLast().getId(), resultContent.getLast().getId());
+        assertEquals(requests.getFirst().getType(), resultContent.getFirst().getType());
+        assertEquals(requests.getLast().getType(), resultContent.getLast().getType());
+        assertEquals(requests.getFirst().getStatus(), resultContent.getFirst().getStatus());
+        assertEquals(requests.getLast().getStatus(), resultContent.getLast().getStatus());
+
+        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.APPROVED,
+                Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -163,19 +181,24 @@ class ReservationChangeRequestServiceTest {
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestRepository.findByStatus(RequestStatus.REJECTED)).thenReturn(requests);
+        PageImpl<ReservationChangeRequest> paginatedRequests = new PageImpl<>(requests);
 
-        List<ModificationRequestDTO> result =
-                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.REJECTED);
+        when(reservationChangeRequestRepository.findByStatus(RequestStatus.REJECTED, Pageable.ofSize(5).withPage(0))).thenReturn(paginatedRequests);
 
-        assertEquals(requests.getFirst().getId(), result.getFirst().getId());
-        assertEquals(requests.getLast().getId(), result.getLast().getId());
-        assertEquals(requests.getFirst().getType(), result.getFirst().getType());
-        assertEquals(requests.getLast().getType(), result.getLast().getType());
-        assertEquals(requests.getFirst().getStatus(), result.getFirst().getStatus());
-        assertEquals(requests.getLast().getStatus(), result.getLast().getStatus());
+        Page<ModificationRequestDTO> result =
+                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.REJECTED, 0);
 
-        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.REJECTED);
+        List<ModificationRequestDTO> resultContent = result.getContent();
+
+        assertEquals(requests.getFirst().getId(), resultContent.getFirst().getId());
+        assertEquals(requests.getLast().getId(), resultContent.getLast().getId());
+        assertEquals(requests.getFirst().getType(), resultContent.getFirst().getType());
+        assertEquals(requests.getLast().getType(), resultContent.getLast().getType());
+        assertEquals(requests.getFirst().getStatus(), resultContent.getFirst().getStatus());
+        assertEquals(requests.getLast().getStatus(), resultContent.getLast().getStatus());
+
+        verify(reservationChangeRequestRepository, times(1)).findByStatus(RequestStatus.REJECTED,
+                Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -198,19 +221,23 @@ class ReservationChangeRequestServiceTest {
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestRepository.findAll()).thenReturn(requests);
+        PageImpl<ReservationChangeRequest> paginatedRequests = new PageImpl<>(requests);
 
-        List<ModificationRequestDTO> result =
-                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.ALL);
+        when(reservationChangeRequestRepository.findAll(any(Pageable.class))).thenReturn(paginatedRequests);
 
-        assertEquals(requests.getFirst().getId(), result.getFirst().getId());
-        assertEquals(requests.getLast().getId(), result.getLast().getId());
-        assertEquals(requests.getFirst().getType(), result.getFirst().getType());
-        assertEquals(requests.getLast().getType(), result.getLast().getType());
-        assertEquals(requests.getFirst().getStatus(), result.getFirst().getStatus());
-        assertEquals(requests.getLast().getStatus(), result.getLast().getStatus());
+        Page<ModificationRequestDTO> result =
+                reservationChangeRequestService.findReservationChangeRequests(RequestFilter.ALL, 0);
 
-        verify(reservationChangeRequestRepository, times(1)).findAll();
+        List<ModificationRequestDTO> resultContent = result.getContent();
+
+        assertEquals(requests.getFirst().getId(), resultContent.getFirst().getId());
+        assertEquals(requests.getLast().getId(), resultContent.getLast().getId());
+        assertEquals(requests.getFirst().getType(), resultContent.getFirst().getType());
+        assertEquals(requests.getLast().getType(), resultContent.getLast().getType());
+        assertEquals(requests.getFirst().getStatus(), resultContent.getFirst().getStatus());
+        assertEquals(requests.getLast().getStatus(), resultContent.getLast().getStatus());
+
+        verify(reservationChangeRequestRepository, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

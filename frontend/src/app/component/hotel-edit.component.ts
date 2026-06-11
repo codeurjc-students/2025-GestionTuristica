@@ -134,7 +134,7 @@ export class HotelEdit implements OnInit{
   }
 
   loadRooms() {
-    this.roomService.getRoomsByHotelSlug(this.hotel.slug).subscribe({
+    this.roomService.getNonPaginatedRoomsByHotelSlug(this.hotel.slug).subscribe({
       next: (data) => {
         this.hotelModel.rooms = data;
       },
