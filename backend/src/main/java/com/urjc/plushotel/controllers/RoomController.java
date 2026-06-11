@@ -4,6 +4,7 @@ import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.RoomService;
 import com.urjc.plushotel.utils.EndpointConstants;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,15 @@ public class RoomController {
     }
 
     @GetMapping(EndpointConstants.RoomsEndpoints.ROOMS_HOTEL_SLUG_URL)
-    public ResponseEntity<List<RoomAvgRatingDTO>> getRoomsByHotelSlug(@PathVariable String slug) {
-        List<RoomAvgRatingDTO> rooms = hotelRoomCardService.getHotelRoomsInfo(slug);
+    public ResponseEntity<Page<RoomAvgRatingDTO>> getRoomsByHotelSlug(@PathVariable String slug,
+                                                                      @RequestParam int page) {
+        Page<RoomAvgRatingDTO> rooms = hotelRoomCardService.getHotelRoomsInfo(slug, page);
+        return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping(EndpointConstants.RoomsEndpoints.NON_PAGED_ROOMS_HOTEL_SLUG_URL)
+    public ResponseEntity<List<RoomAvgRatingDTO>> getNonPaginatedRoomsByHotelSlug(@PathVariable String slug) {
+        List<RoomAvgRatingDTO> rooms = roomService.getNonPaginatedRoomsByHotelSlug(slug);
         return ResponseEntity.ok(rooms);
     }
 }

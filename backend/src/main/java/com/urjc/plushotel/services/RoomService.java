@@ -4,6 +4,8 @@ import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.repositories.RoomRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,12 +31,12 @@ public class RoomService {
         );
     }
 
-    public List<RoomAvgRatingDTO> getRoomsByHotelId(Long hotelId) {
-        return roomRepository.findRoomsWithAverageRating(hotelId);
+    public Page<RoomAvgRatingDTO> getRoomsByHotelSlug(String hotelSlug, int pageNumber) {
+        return roomRepository.findRoomsByHotelSlugWithAverageRating(hotelSlug, Pageable.ofSize(5).withPage(pageNumber));
     }
 
-    public List<RoomAvgRatingDTO> getRoomsByHotelSlug(String hotelSlug) {
-        return roomRepository.findRoomsByHotelSlugWithAverageRating(hotelSlug);
+    public List<RoomAvgRatingDTO> getNonPaginatedRoomsByHotelSlug(String hotelSlug) {
+        return roomRepository.findNonPaginatedRoomsByHotelSlugWithAverageRating(hotelSlug);
     }
 
     public void deleteRoom(Long roomId) {
