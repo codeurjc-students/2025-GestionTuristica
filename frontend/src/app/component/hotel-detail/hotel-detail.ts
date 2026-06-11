@@ -30,6 +30,12 @@ export class HotelDetail implements OnInit {
 
   images: Image[] = [];
 
+  pageNumber: number = 0;
+  firstPage!: boolean;
+  lastPage!: boolean;
+  numberOfRooms!: number;
+  numberOfPages!: number;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly hotelService: HotelService,
@@ -48,16 +54,21 @@ export class HotelDetail implements OnInit {
     this.hotelService.getHotelBySlug(this.slug).subscribe({
       next: (data) => {
         this.hotel = data;
-        this.loadRooms();
+        this.loadRooms(this.pageNumber);
         this.loadImages();
       }
     });
   }
 
-  loadRooms() {
-      this.roomService.getRoomsByHotelSlug(this.hotel.slug).subscribe({
+  loadRooms(page: number) {
+      this.roomService.getRoomsByHotelSlug(this.hotel.slug, page).subscribe({
       next: (data) => {
-        this.hotel.rooms = data;
+        this.hotel.rooms = data.content;
+        this.pageNumber = data.number;
+        this.firstPage = data.first;
+        this.lastPage = data.last;
+        this.numberOfRooms = data.totalElements;
+        this.numberOfPages = data.totalPages;
       },
       error: (err) => console.error(err)
       });
@@ -70,6 +81,20 @@ export class HotelDetail implements OnInit {
       },
       error: (err) => console.error(err)
     });
+  }
+
+  nextPage() {
+      if(!this.lastPage) {
+          this.pageNumber++;
+          this.loadRooms(this.pageNumber);
+      }
+  }
+
+  previousPage() {
+      if(!this.firstPage) {
+          this.pageNumber--;
+          this.loadRooms(this.pageNumber);
+      }
   }
 
   cancel() {

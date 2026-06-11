@@ -20,7 +20,7 @@ export class HotelImages implements OnInit {
     hotelImages: EditableImage[] = [];
 
     roomImages: {
-        [roomId: number]: EditableImage[]; 
+        [roomId: number]: EditableImage[];
     } = {};
 
     rooms: Room[] = [];
@@ -36,12 +36,12 @@ export class HotelImages implements OnInit {
     ngOnInit(): void {
         this.hotelSlug = String(this.activatedRoute.snapshot.paramMap.get('slug'));
         if(this.hotelSlug) {
-            this.roomService.getRoomsByHotelSlug(this.hotelSlug).subscribe({
+            this.roomService.getNonPaginatedRoomsByHotelSlug(this.hotelSlug).subscribe({
                 next: (data) => {
                     this.rooms = data;
 
                     for(const room of this.rooms){
-                        this.roomImages[room.id!] = [];
+                        this.roomImages[room.id] = [];
                     };
 
                     this.loadHotelImages();
@@ -49,7 +49,7 @@ export class HotelImages implements OnInit {
                 error: (err) => console.error(err)
             });
         }
-        
+
     }
 
     onFilesSelected(event: any) {
@@ -77,7 +77,7 @@ export class HotelImages implements OnInit {
     }
 
     drop(event: CdkDragDrop<EditableImage[]>) {
-        
+
         if(event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             this.updatePositions(event.container.data);
@@ -152,8 +152,8 @@ export class HotelImages implements OnInit {
         );
 
         for(const room of this.rooms){
-            this.imageService.getImagesByRoomId(room.id!).subscribe(
-                (data) => this.roomImages[room.id!] = data
+            this.imageService.getImagesByRoomId(room.id).subscribe(
+                (data) => this.roomImages[room.id] = data
             );
         }
     }
