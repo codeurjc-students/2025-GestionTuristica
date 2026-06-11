@@ -1,3 +1,4 @@
+import { Page } from './../shared/pagination/page';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -35,8 +36,8 @@ export class ReviewService {
         return this.http.post<Review>(this.apiUrl + "/reviews", request);
     };
 
-    getReviewsByRoom(roomId: number): Observable<Review[]>{
-        return this.http.get<Review[]>(this.apiUrl + "/reviews/room/" + roomId);
+    getReviewsByRoom(roomId: number, page: number): Observable<Page<Review>>{
+        return this.http.get<Page<Review>>(this.apiUrl + "/reviews/room/" + roomId, {params: {page: page}});
     };
 
     getReviewByReservationIdentifier(reservationIdentifier: string): Observable<Review> {

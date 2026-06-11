@@ -12,8 +12,14 @@ import { DatePipe } from '@angular/common';
 })
 export class Reviews implements OnInit {
 
+  userId!: string;
   reservations: Reservation[] = [];
   reservationsFilter: ReservationFilter = 'NON_CANCELLED';
+  pageNumber: number = 0;
+  firstPage!: boolean;
+  lastPage!: boolean;
+  numberOfReviews!: number;
+  numberOfPages!: number;
 
   constructor(
     private readonly reviewService: ReviewService,
@@ -23,15 +29,24 @@ export class Reviews implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const userId = this.authService.getUserId();
-    if(userId) {
-      this.reservationService.getReservationsByUserId(userId, this.reservationsFilter).subscribe({
+    this.userId = this.authService.getUserId() || '';
+    if(this.userId) {
+      this.loadReviews(this.userId, this.pageNumber);
+    }
+  }
+
+  loadReviews(userId: string, page: number) {
+    this.reservationService.getReservationsByUserId(userId, this.reservationsFilter, page).subscribe({
         next: (data) => {
-          this.reservations = data;
+          this.reservations = data.content;
+          this.pageNumber = data.number;
+          this.firstPage = data.first;
+          this.lastPage = data.last;
+          this.numberOfReviews = data.totalElements;
+          this.numberOfPages = data.totalPages;
         },
         error: (error) => console.error(error)
       });
-    }
   }
 
   goToReviewCreation(reservationIdentifier: string) {
@@ -52,4 +67,17 @@ export class Reviews implements OnInit {
     return !reservation.reviewed && endDate <= today;
   }
 
+  nextPage() {
+    if(!this.lastPage) {
+      this.pageNumber++;
+      this.loadReviews(this.userId, this.pageNumber);
+    }
+  }
+
+  previousPage() {
+    if(!this.firstPage) {
+      this.pageNumber--;
+      this.loadReviews(this.userId, this.pageNumber);
+    }
+  }
 }
