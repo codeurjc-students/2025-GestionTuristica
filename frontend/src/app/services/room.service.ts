@@ -1,3 +1,4 @@
+import { Page } from './../shared/pagination/page';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -24,7 +25,11 @@ export class RoomService {
         return this.http.get<Room>(this.apiUrl + "/rooms/" + roomId);
     }
 
-    getRoomsByHotelSlug(hotelSlug: string): Observable<Room[]> {
-        return this.http.get<Room[]>(this.apiUrl + "/rooms/hotel/" + hotelSlug);
+    getRoomsByHotelSlug(hotelSlug: string, page: number): Observable<Page<Room>> {
+        return this.http.get<Page<Room>>(this.apiUrl + "/rooms/hotel/" + hotelSlug, {params: {page: page}});
+    }
+
+    getNonPaginatedRoomsByHotelSlug(hotelSlug: string): Observable<Room[]> {
+        return this.http.get<Room[]>(this.apiUrl + "/rooms/admin/hotel/" + hotelSlug);
     }
 }

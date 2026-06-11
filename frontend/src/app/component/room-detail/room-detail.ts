@@ -41,6 +41,11 @@ export class RoomDetail implements OnInit{
   reservedDates: ReservedRange[] = [];
   reviews: Review[] = [];
   images: Image[] = [];
+  pageNumber: number = 0;
+  firstPage!: boolean;
+  lastPage!: boolean;
+  numberOfReviews!: number;
+  numberOfPages!: number;
 
   dateFilter = (date: Date | null): boolean => {
     if (!date) {
@@ -106,10 +111,7 @@ export class RoomDetail implements OnInit{
       }
     });
 
-    this.reviewService.getReviewsByRoom(this.roomId).subscribe({
-      next: (data) => this.reviews = data,
-      error: (err) => console.log(err)
-    })
+    this.loadReviews(this.pageNumber);
   }
 
   normalizeDate(date: Date): Date {
@@ -151,6 +153,35 @@ export class RoomDetail implements OnInit{
     return this.reservedDates.some(range =>
       (startDate < range.endDate) && (endDate > range.startDate)
     );
+  }
+
+  loadReviews(page: number) {
+    this.reviewService.getReviewsByRoom(this.roomId, page).subscribe({
+      next: (data) => {
+        this.reviews = data.content;
+        this.pageNumber = data.number;
+        this.firstPage = data.first;
+        this.lastPage = data.last;
+        this.numberOfReviews = data.totalElements;
+        this.numberOfPages = data.totalPages;
+
+      },
+      error: (err) => console.log(err)
+    });
+  }
+
+  nextPage() {
+    if(!this.lastPage) {
+      this.pageNumber++;
+      this.loadReviews(this.pageNumber);
+    }
+  }
+
+  previousPage() {
+    if(!this.firstPage) {
+      this.pageNumber--;
+      this.loadReviews(this.pageNumber);
+    }
   }
 
   cancel() {
