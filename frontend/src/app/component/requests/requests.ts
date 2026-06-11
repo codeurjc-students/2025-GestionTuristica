@@ -10,17 +10,28 @@ import { MatButtonModule } from "@angular/material/button";
 export class Requests implements OnInit{
   requests: ModificationRequest[] = [];
   currentStatus: RequestFilter = 'PENDING';
+  pageNumber: number = 0;
+  firstPage!: boolean;
+  lastPage!: boolean;
+  numberOfRequests!: number;
+  numberOfPages!: number;
+
 
   constructor(private readonly requestService: RequestService) {}
 
   ngOnInit(): void {
-      this.loadRequests();
+      this.loadRequests(this.pageNumber);
   }
 
-  loadRequests() {
-    this.requestService.getRequests(this.currentStatus).subscribe({
+  loadRequests(page: number) {
+    this.requestService.getRequests(this.currentStatus, page).subscribe({
         next: (data) => {
-          this.requests = data;
+          this.requests = data.content;
+          this.pageNumber = data.number;
+          this.firstPage = data.first;
+          this.lastPage = data.last;
+          this.numberOfRequests = data.totalElements;
+          this.numberOfPages = data.totalPages;
         },
         error: (err) => console.error(err)
       });
@@ -46,6 +57,20 @@ export class Requests implements OnInit{
 
   changeStatus(status: RequestFilter) {
     this.currentStatus = status;
-    this.loadRequests();
+    this.loadRequests(this.pageNumber);
+  }
+
+  nextPage() {
+    if(!this.lastPage) {
+      this.pageNumber++;
+      this.loadRequests(this.pageNumber);
+    }
+  }
+
+  previousPage() {
+    if(!this.firstPage) {
+      this.pageNumber--;
+      this.loadRequests(this.pageNumber);
+    }
   }
 }

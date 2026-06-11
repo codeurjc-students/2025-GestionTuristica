@@ -1,3 +1,4 @@
+import { Page } from './../shared/pagination/page';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -35,10 +36,9 @@ export class RequestService {
         return this.http.post<void>(this.apiUrl + "/requests", modificationRequest);
     };
 
-    getRequests(status?: RequestFilter): Observable<ModificationRequest[]> {
-
-        return this.http.get<ModificationRequest[]>(this.apiUrl + "/requests", {
-            params: status ? { status: status} : {}
+    getRequests(status: RequestFilter, page:number): Observable<Page<ModificationRequest>> {
+        return this.http.get<Page<ModificationRequest>>(this.apiUrl + "/requests", {
+            params: status ? { status: status, page: page} : {page: page}
         });
     };
 
