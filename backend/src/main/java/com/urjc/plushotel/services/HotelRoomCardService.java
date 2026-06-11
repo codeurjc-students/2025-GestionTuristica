@@ -3,6 +3,7 @@ package com.urjc.plushotel.services;
 import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,17 +25,19 @@ public class HotelRoomCardService {
         this.roomService = roomService;
     }
 
-    public List<HotelAvgRatingDTO> getHotelsInfo() {
+    public Page<HotelAvgRatingDTO> getHotelsInfo(int pageNumber) {
 
-        List<HotelAvgRatingDTO> hotels = hotelService.getAll();
+        Page<HotelAvgRatingDTO> hotels = hotelService.getAll(pageNumber);
 
-        List<HotelImageDTO> hotelsMainImages = imageService.getHotelsMainImages();
+        List<Long> hotelIds = hotels.getContent().stream().map(HotelAvgRatingDTO::getId).toList();
+
+        List<HotelImageDTO> hotelsMainImages = imageService.getHotelsMainImages(hotelIds);
 
         Map<Long, String> imagesMap = hotelsMainImages.stream().collect(Collectors.toMap(
                 HotelImageDTO::getHotelId,
                 HotelImageDTO::getUrl));
 
-        hotels.forEach(hotel -> hotel.setMainImageUrl(imagesMap.get(hotel.getId())));
+        hotels.getContent().forEach(hotel -> hotel.setMainImageUrl(imagesMap.get(hotel.getId())));
 
         return hotels;
     }
