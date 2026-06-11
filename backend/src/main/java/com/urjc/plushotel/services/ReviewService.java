@@ -8,11 +8,12 @@ import com.urjc.plushotel.entities.Review;
 import com.urjc.plushotel.entities.User;
 import com.urjc.plushotel.exceptions.ReviewNotFoundException;
 import com.urjc.plushotel.repositories.ReviewRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class ReviewService {
@@ -47,9 +48,10 @@ public class ReviewService {
         return convertToDTO(reviewRepository.save(review));
     }
 
-    public List<ReviewDTO> getReviewsByRoom(Long roomId) {
-        List<Review> reviews = reviewRepository.findByReservationRoomId(roomId);
-        return reviews.stream().map(this::convertToDTO).toList();
+    public Page<ReviewDTO> getReviewsByRoom(Long roomId, int pageNumber) {
+        Page<Review> reviews = reviewRepository.findByReservationRoomId(roomId,
+                Pageable.ofSize(5).withPage(pageNumber));
+        return reviews.map(this::convertToDTO);
     }
 
     public ReviewDTO getReviewByReservationIdentifier(String reservationIdentifier) {
