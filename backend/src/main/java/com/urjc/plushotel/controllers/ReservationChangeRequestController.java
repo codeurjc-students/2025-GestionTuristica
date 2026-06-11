@@ -4,11 +4,10 @@ import com.urjc.plushotel.dtos.request.ModificationRequest;
 import com.urjc.plushotel.dtos.request.RequestFilter;
 import com.urjc.plushotel.dtos.response.ModificationRequestDTO;
 import com.urjc.plushotel.services.ReservationChangeRequestService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,9 +21,9 @@ public class ReservationChangeRequestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/requests")
-    public ResponseEntity<List<ModificationRequestDTO>> findReservationChangeRequest(@RequestParam(name = "status",
-            defaultValue = "PENDING") RequestFilter status) {
-        return ResponseEntity.ok(reservationChangeRequestService.findReservationChangeRequests(status));
+    public ResponseEntity<Page<ModificationRequestDTO>> findReservationChangeRequest(@RequestParam(name = "status",
+            defaultValue = "PENDING") RequestFilter status, @RequestParam int page) {
+        return ResponseEntity.ok(reservationChangeRequestService.findReservationChangeRequests(status, page));
     }
 
     @PreAuthorize("hasRole('USER')")
