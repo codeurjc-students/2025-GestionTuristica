@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -60,15 +61,17 @@ class ReservationChangeRequestControllerTest {
 
         List<ModificationRequestDTO> requests = List.of(request1, request2);
 
-        when(reservationChangeRequestService.findReservationChangeRequests(any())).thenReturn(requests);
+        PageImpl<ModificationRequestDTO> paginatedRequests = new PageImpl<>(requests);
 
-        mockMvc.perform(get("/api/v1/requests"))
+        when(reservationChangeRequestService.findReservationChangeRequests(any(), anyInt())).thenReturn(paginatedRequests);
+
+        mockMvc.perform(get("/api/v1/requests?page=0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].reservationIdentifier").value("RSV-123"))
-                .andExpect(jsonPath("$[1].reservationIdentifier").value("RSV-456"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content.[0].reservationIdentifier").value("RSV-123"))
+                .andExpect(jsonPath("$.content.[1].reservationIdentifier").value("RSV-456"));
 
-        verify(reservationChangeRequestService, times(1)).findReservationChangeRequests(any());
+        verify(reservationChangeRequestService, times(1)).findReservationChangeRequests(any(), anyInt());
     }
 
     @Test

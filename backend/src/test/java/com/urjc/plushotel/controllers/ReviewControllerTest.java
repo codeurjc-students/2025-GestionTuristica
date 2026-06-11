@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -76,17 +77,19 @@ class ReviewControllerTest {
 
         List<ReviewDTO> reviews = List.of(review1, review2);
 
-        when(reviewService.getReviewsByRoom(1L)).thenReturn(reviews);
+        PageImpl<ReviewDTO> paginatedReviews = new PageImpl<>(reviews);
 
-        mockMvc.perform(get("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEWS_ROOM_URL, "1"))
+        when(reviewService.getReviewsByRoom(1L, 0)).thenReturn(paginatedReviews);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEWS_ROOM_URL + "?page=0", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].reservationIdentifier").value("RSV-123"))
-                .andExpect(jsonPath("$[0].rating").value(4.5))
-                .andExpect(jsonPath("$[0].message").value("message1"))
-                .andExpect(jsonPath("$[1].reservationIdentifier").value("RSV-1234"))
-                .andExpect(jsonPath("$[1].rating").value(3.5))
-                .andExpect(jsonPath("$[1].message").value("message2"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content.[0].reservationIdentifier").value("RSV-123"))
+                .andExpect(jsonPath("$.content.[0].rating").value(4.5))
+                .andExpect(jsonPath("$.content.[0].message").value("message1"))
+                .andExpect(jsonPath("$.content.[1].reservationIdentifier").value("RSV-1234"))
+                .andExpect(jsonPath("$.content.[1].rating").value(3.5))
+                .andExpect(jsonPath("$.content.[1].message").value("message2"));
     }
 
     @Test

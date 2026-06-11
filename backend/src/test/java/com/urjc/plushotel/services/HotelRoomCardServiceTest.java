@@ -8,13 +8,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,34 +49,38 @@ class HotelRoomCardServiceTest {
 
         List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
 
-        when(hotelService.getAll()).thenReturn(hotels);
+        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
 
-        when(imageService.getHotelsMainImages()).thenReturn(images);
+        when(hotelService.getAll(0)).thenReturn(paginatedHotels);
 
-        List<HotelAvgRatingDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo();
+        when(imageService.getHotelsMainImages(List.of(1L, 2L))).thenReturn(images);
+
+        Page<HotelAvgRatingDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo(0);
+
+        List<HotelAvgRatingDTO> hotelsInfoContent = hotelsInfo.getContent();
 
         assertNotNull(hotelsInfo);
 
-        assertEquals(hotelsInfo.getFirst().getMainImageUrl(), image1.getUrl());
-        assertEquals(hotelsInfo.getLast().getMainImageUrl(), image2.getUrl());
-        assertEquals(hotelsInfo.getFirst().getId(), h1.getId());
-        assertEquals(hotelsInfo.getLast().getId(), h2.getId());
-        assertEquals(hotelsInfo.getFirst().getName(), h1.getName());
-        assertEquals(hotelsInfo.getLast().getName(), h2.getName());
-        assertEquals(hotelsInfo.getFirst().getDescription(), h1.getDescription());
-        assertEquals(hotelsInfo.getLast().getDescription(), h2.getDescription());
-        assertEquals(hotelsInfo.getFirst().getCountry(), h1.getCountry());
-        assertEquals(hotelsInfo.getLast().getCountry(), h2.getCountry());
-        assertEquals(hotelsInfo.getFirst().getCity(), h1.getCity());
-        assertEquals(hotelsInfo.getLast().getCity(), h2.getCity());
-        assertEquals(hotelsInfo.getFirst().getAddress(), h1.getAddress());
-        assertEquals(hotelsInfo.getLast().getAddress(), h2.getAddress());
-        assertEquals(hotelsInfo.getFirst().getStars(), h1.getStars());
-        assertEquals(hotelsInfo.getLast().getStars(), h2.getStars());
-        assertEquals(hotelsInfo.getFirst().getSlug(), h1.getSlug());
-        assertEquals(hotelsInfo.getLast().getSlug(), h2.getSlug());
-        assertEquals(hotelsInfo.getFirst().getAverageRating(), h1.getAverageRating());
-        assertEquals(hotelsInfo.getLast().getAverageRating(), h2.getAverageRating());
+        assertEquals(hotelsInfoContent.getFirst().getMainImageUrl(), image1.getUrl());
+        assertEquals(hotelsInfoContent.getLast().getMainImageUrl(), image2.getUrl());
+        assertEquals(hotelsInfoContent.getFirst().getId(), h1.getId());
+        assertEquals(hotelsInfoContent.getLast().getId(), h2.getId());
+        assertEquals(hotelsInfoContent.getFirst().getName(), h1.getName());
+        assertEquals(hotelsInfoContent.getLast().getName(), h2.getName());
+        assertEquals(hotelsInfoContent.getFirst().getDescription(), h1.getDescription());
+        assertEquals(hotelsInfoContent.getLast().getDescription(), h2.getDescription());
+        assertEquals(hotelsInfoContent.getFirst().getCountry(), h1.getCountry());
+        assertEquals(hotelsInfoContent.getLast().getCountry(), h2.getCountry());
+        assertEquals(hotelsInfoContent.getFirst().getCity(), h1.getCity());
+        assertEquals(hotelsInfoContent.getLast().getCity(), h2.getCity());
+        assertEquals(hotelsInfoContent.getFirst().getAddress(), h1.getAddress());
+        assertEquals(hotelsInfoContent.getLast().getAddress(), h2.getAddress());
+        assertEquals(hotelsInfoContent.getFirst().getStars(), h1.getStars());
+        assertEquals(hotelsInfoContent.getLast().getStars(), h2.getStars());
+        assertEquals(hotelsInfoContent.getFirst().getSlug(), h1.getSlug());
+        assertEquals(hotelsInfoContent.getLast().getSlug(), h2.getSlug());
+        assertEquals(hotelsInfoContent.getFirst().getAverageRating(), h1.getAverageRating());
+        assertEquals(hotelsInfoContent.getLast().getAverageRating(), h2.getAverageRating());
     }
 
     @Test
@@ -90,24 +96,28 @@ class HotelRoomCardServiceTest {
 
         List<RoomAvgRatingDTO> rooms = List.of(roomDTO1, roomDTO2);
 
-        when(roomService.getRoomsByHotelSlug(anyString())).thenReturn(rooms);
+        PageImpl<RoomAvgRatingDTO> paginatedRooms = new PageImpl<>(rooms);
 
-        when(imageService.getHotelRoomsMainImages(anyString())).thenReturn(images);
+        when(roomService.getRoomsByHotelSlug(anyString(), anyInt())).thenReturn(paginatedRooms);
 
-        List<RoomAvgRatingDTO> hotelRoomsInfo = hotelRoomCardService.getHotelRoomsInfo("h1");
+        when(imageService.getHotelRoomsMainImages(anyList())).thenReturn(images);
+
+        Page<RoomAvgRatingDTO> hotelRoomsInfo = hotelRoomCardService.getHotelRoomsInfo("h1", 0);
+
+        List<RoomAvgRatingDTO> hotelRoomsInfoContent = hotelRoomsInfo.getContent();
 
         assertNotNull(hotelRoomsInfo);
-        assertEquals(hotelRoomsInfo.getFirst().getId(), roomDTO1.getId());
-        assertEquals(hotelRoomsInfo.getLast().getId(), roomDTO2.getId());
-        assertEquals(hotelRoomsInfo.getFirst().getName(), roomDTO1.getName());
-        assertEquals(hotelRoomsInfo.getLast().getName(), roomDTO2.getName());
-        assertEquals(hotelRoomsInfo.getFirst().getDescription(), roomDTO1.getDescription());
-        assertEquals(hotelRoomsInfo.getLast().getDescription(), roomDTO2.getDescription());
-        assertEquals(hotelRoomsInfo.getFirst().getPrice(), roomDTO1.getPrice());
-        assertEquals(hotelRoomsInfo.getLast().getPrice(), roomDTO2.getPrice());
-        assertEquals(hotelRoomsInfo.getFirst().getAverageRating(), roomDTO1.getAverageRating());
-        assertEquals(hotelRoomsInfo.getLast().getAverageRating(), roomDTO2.getAverageRating());
-        assertEquals(hotelRoomsInfo.getFirst().getMainImageUrl(), image1.getUrl());
-        assertEquals(hotelRoomsInfo.getLast().getMainImageUrl(), image2.getUrl());
+        assertEquals(hotelRoomsInfoContent.getFirst().getId(), roomDTO1.getId());
+        assertEquals(hotelRoomsInfoContent.getLast().getId(), roomDTO2.getId());
+        assertEquals(hotelRoomsInfoContent.getFirst().getName(), roomDTO1.getName());
+        assertEquals(hotelRoomsInfoContent.getLast().getName(), roomDTO2.getName());
+        assertEquals(hotelRoomsInfoContent.getFirst().getDescription(), roomDTO1.getDescription());
+        assertEquals(hotelRoomsInfoContent.getLast().getDescription(), roomDTO2.getDescription());
+        assertEquals(hotelRoomsInfoContent.getFirst().getPrice(), roomDTO1.getPrice());
+        assertEquals(hotelRoomsInfoContent.getLast().getPrice(), roomDTO2.getPrice());
+        assertEquals(hotelRoomsInfoContent.getFirst().getAverageRating(), roomDTO1.getAverageRating());
+        assertEquals(hotelRoomsInfoContent.getLast().getAverageRating(), roomDTO2.getAverageRating());
+        assertEquals(hotelRoomsInfoContent.getFirst().getMainImageUrl(), image1.getUrl());
+        assertEquals(hotelRoomsInfoContent.getLast().getMainImageUrl(), image2.getUrl());
     }
 }
