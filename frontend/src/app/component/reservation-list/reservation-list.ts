@@ -18,6 +18,11 @@ export class ReservationList implements OnInit{
   reservations: Reservation[] = [];
   userAdmin!: boolean;
   showCancelled: boolean = false;
+  pageNumber: number = 0;
+  firstPage!: boolean;
+  lastPage!: boolean;
+  numberOfReservations!: number;
+  numberOfPages!: number;
 
   constructor(
     private readonly reservationService: ReservationService,
@@ -26,15 +31,20 @@ export class ReservationList implements OnInit{
   ){}
 
   ngOnInit(): void {
-    this.loadReservations(this.showCancelled);
+    this.loadReservations(this.showCancelled, this.pageNumber);
   }
 
-  loadReservations(showCancelled: boolean) {
+  loadReservations(showCancelled: boolean, page: number) {
     let filter: ReservationFilter = showCancelled ? 'CANCELLED' : 'NON_CANCELLED';
     if(this.authService.getRole() === 'ROLE_ADMIN'){
-      this.reservationService.getReservations(filter).subscribe({
+      this.reservationService.getReservations(filter, page).subscribe({
         next: (data) => {
-          this.reservations = data;
+          this.reservations = data.content;
+          this.pageNumber = data.number;
+          this.firstPage = data.first;
+          this.lastPage = data.last;
+          this.numberOfReservations = data.totalElements;
+          this.numberOfPages = data.totalPages;
           this.userAdmin = true;
         },
         error: (err) => console.error(err)
@@ -42,9 +52,14 @@ export class ReservationList implements OnInit{
     } else {
       const userId = this.authService.getUserId();
       if(userId) {
-        this.reservationService.getReservationsByUserId(userId, filter).subscribe({
+        this.reservationService.getReservationsByUserId(userId, filter, page).subscribe({
           next: (data) => {
-            this.reservations = data;
+            this.reservations = data.content;
+            this.pageNumber = data.number;
+            this.firstPage = data.first;
+            this.lastPage = data.last;
+            this.numberOfReservations = data.totalElements;
+            this.numberOfPages = data.totalPages;
             this.userAdmin = false;
           },
           error: (err) => console.error(err)
@@ -85,7 +100,7 @@ export class ReservationList implements OnInit{
 
   alterView() {
     this.showCancelled = !this.showCancelled;
-    this.loadReservations(this.showCancelled);
+    this.loadReservations(this.showCancelled, this.pageNumber);
   }
 
   downloadPdf(reservationIdentifier: string) {
@@ -101,5 +116,19 @@ export class ReservationList implements OnInit{
       },
       error: (err) => console.error(err)
     });
+  }
+
+  nextPage() {
+    if(!this.lastPage) {
+      this.pageNumber++;
+      this.loadReservations(this.showCancelled, this.pageNumber);
+    }
+  }
+
+  previousPage() {
+    if(!this.firstPage) {
+      this.pageNumber--;
+      this.loadReservations(this.showCancelled, this.pageNumber);
+    }
   }
 }
