@@ -140,4 +140,13 @@ public class HotelService {
                 hotel.getRating()
         );
     }
+
+    public void updateRating(Double updatedHotelRating, Double updatedRoomRating, Long roomId) {
+
+        Room room = roomService.updateRating(updatedRoomRating, roomId);
+        Hotel hotel = findBySlug(room.getHotel().getSlug());
+        hotel.setRating(updatedHotelRating);
+
+        hotelRepository.save(hotel);
+    }
 }

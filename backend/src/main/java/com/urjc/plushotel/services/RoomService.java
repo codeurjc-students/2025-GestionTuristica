@@ -56,4 +56,12 @@ public class RoomService {
                 room.getRating()
         );
     }
+
+    public Room updateRating(Double updatedRating, Long roomId) {
+
+        Room room = getRoomEntityById(roomId);
+        room.setRating(updatedRating);
+
+        return roomRepository.save(room);
+    }
 }
