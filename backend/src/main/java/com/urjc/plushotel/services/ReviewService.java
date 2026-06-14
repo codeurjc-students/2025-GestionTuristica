@@ -89,7 +89,17 @@ public class ReviewService {
         );
         review.setMessage(request.getMessage());
         review.setRating(request.getRating());
-        return convertToDTO(reviewRepository.save(review));
+        Review updatedReview = reviewRepository.save(review);
+
+        Long roomId = review.getReservation().getRoom().getId();
+
+        Double updatedHotelRating =
+                reviewRepository.findHotelAverageRating(review.getReservation().getRoom().getHotel().getSlug());
+        Double updatedRoomRating = reviewRepository.findRoomAverageRating(roomId);
+
+        hotelService.updateRating(updatedHotelRating, updatedRoomRating, roomId);
+
+        return convertToDTO(updatedReview);
     }
 
     public void deleteReview(String reservationIdentifier) {
