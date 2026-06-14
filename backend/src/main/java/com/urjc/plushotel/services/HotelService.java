@@ -1,7 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.request.HotelRequest;
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
@@ -30,14 +30,13 @@ public class HotelService {
         this.reservationChangeRequestService = reservationChangeRequestService;
     }
 
-    public Page<HotelAvgRatingDTO> getAll(int pageNumber) {
-        return hotelRepository.findHotelsWithAverageRating(Pageable.ofSize(5).withPage(pageNumber));
+    public Page<HotelDTO> getAll(int pageNumber) {
+        Page<Hotel> hotels = hotelRepository.findAll(Pageable.ofSize(5).withPage(pageNumber));
+        return hotels.map(this::convertToDTO);
     }
 
-    public HotelAvgRatingDTO getHotelBySlug(String slug) {
-        return hotelRepository.findHotelsWithAverageRatingBySlug(slug).orElseThrow(
-                () -> new RuntimeException("This hotel doesn't exist")
-        );
+    public HotelDTO getHotelBySlug(String slug) {
+        return convertToDTO(findBySlug(slug));
     }
 
     public Hotel findBySlug(String slug) {
@@ -126,5 +125,19 @@ public class HotelService {
                 .slug(request.getSlug())
                 .rooms(request.getRooms())
                 .build();
+    }
+
+    private HotelDTO convertToDTO(Hotel hotel) {
+        return new HotelDTO(
+                hotel.getId(),
+                hotel.getName(),
+                hotel.getDescription(),
+                hotel.getCountry(),
+                hotel.getCity(),
+                hotel.getAddress(),
+                hotel.getStars(),
+                hotel.getSlug(),
+                hotel.getRating()
+        );
     }
 }

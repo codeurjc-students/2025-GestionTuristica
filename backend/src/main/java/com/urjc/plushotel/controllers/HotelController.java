@@ -1,7 +1,7 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.request.HotelRequest;
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.HotelService;
@@ -28,15 +28,15 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
-    public ResponseEntity<Page<HotelAvgRatingDTO>> getAllHotels(@RequestParam int page) {
+    public ResponseEntity<Page<HotelDTO>> getAllHotels(@RequestParam int page) {
 
         return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo(page));
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)
-    public ResponseEntity<HotelAvgRatingDTO> getHotelBySlug(@PathVariable String slug) {
+    public ResponseEntity<HotelDTO> getHotelBySlug(@PathVariable String slug) {
 
-        HotelAvgRatingDTO hotel = hotelService.getHotelBySlug(slug);
+        HotelDTO hotel = hotelService.getHotelBySlug(slug);
         return ResponseEntity.ok(hotel);
     }
 

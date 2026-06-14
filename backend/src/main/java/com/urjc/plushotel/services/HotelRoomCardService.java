@@ -1,6 +1,6 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import org.springframework.data.domain.Page;
@@ -25,11 +25,11 @@ public class HotelRoomCardService {
         this.roomService = roomService;
     }
 
-    public Page<HotelAvgRatingDTO> getHotelsInfo(int pageNumber) {
+    public Page<HotelDTO> getHotelsInfo(int pageNumber) {
 
-        Page<HotelAvgRatingDTO> hotels = hotelService.getAll(pageNumber);
+        Page<HotelDTO> hotels = hotelService.getAll(pageNumber);
 
-        List<Long> hotelIds = hotels.getContent().stream().map(HotelAvgRatingDTO::getId).toList();
+        List<Long> hotelIds = hotels.getContent().stream().map(HotelDTO::getId).toList();
 
         List<HotelImageDTO> hotelsMainImages = imageService.getHotelsMainImages(hotelIds);
 
