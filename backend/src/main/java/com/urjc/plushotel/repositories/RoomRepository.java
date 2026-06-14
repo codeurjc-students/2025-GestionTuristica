@@ -1,68 +1,17 @@
 package com.urjc.plushotel.repositories;
 
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
 import com.urjc.plushotel.entities.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    @Query("""
-            SELECT new com.urjc.plushotel.dtos.response.RoomAvgRatingDTO(
-                ro.id,
-                ro.name,
-                ro.description,
-                ro.price,
-                AVG(r.rating)
-            )
-            FROM Room ro
-            LEFT JOIN Reservation res ON res.room = ro
-            LEFT JOIN Review r ON r.reservation = res
-            WHERE ro.id = :roomId
-            AND ro.deleted = false
-            GROUP BY ro.id, ro.name, ro.description, ro.price
-            """)
-    Optional<RoomAvgRatingDTO> findRoomWithAverageRatingById(@Param("roomId") Long roomId);
+    Page<Room> findByHotel_Slug(String hotelSlug, Pageable pageable);
 
-    @Query("""
-            SELECT new com.urjc.plushotel.dtos.response.RoomAvgRatingDTO(
-                ro.id,
-                ro.name,
-                ro.description,
-                ro.price,
-                AVG(r.rating)
-            )
-            FROM Room ro
-            LEFT JOIN Reservation res ON res.room = ro
-            LEFT JOIN Review r ON r.reservation = res
-            WHERE ro.hotel.slug = :hotelSlug
-            AND ro.deleted = false
-            GROUP BY ro.id, ro.name, ro.description, ro.price
-            """)
-    Page<RoomAvgRatingDTO> findRoomsByHotelSlugWithAverageRating(String hotelSlug, Pageable pageable);
-
-    @Query("""
-            SELECT new com.urjc.plushotel.dtos.response.RoomAvgRatingDTO(
-                ro.id,
-                ro.name,
-                ro.description,
-                ro.price,
-                AVG(r.rating)
-            )
-            FROM Room ro
-            LEFT JOIN Reservation res ON res.room = ro
-            LEFT JOIN Review r ON r.reservation = res
-            WHERE ro.hotel.slug = :hotelSlug
-            AND ro.deleted = false
-            GROUP BY ro.id, ro.name, ro.description, ro.price
-            """)
-    List<RoomAvgRatingDTO> findNonPaginatedRoomsByHotelSlugWithAverageRating(String hotelSlug);
+    List<Room> findByHotel_Slug(String hotelSlug);
 }

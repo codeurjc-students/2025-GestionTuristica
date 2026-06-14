@@ -21,13 +21,15 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CustomUserDetailsService userDetailsService;
     private final ReservationService reservationService;
+    private final HotelService hotelService;
 
     public ReviewService(ReviewRepository reviewRepository,
                          CustomUserDetailsService userDetailsService,
-                         ReservationService reservationService) {
+                         ReservationService reservationService, HotelService hotelService) {
         this.reviewRepository = reviewRepository;
         this.userDetailsService = userDetailsService;
         this.reservationService = reservationService;
+        this.hotelService = hotelService;
     }
 
     public ReviewDTO createReview(ReviewCreationRequest request, Authentication authentication) {
@@ -45,7 +47,15 @@ public class ReviewService {
 
         reservationService.updateReviewed(request.getReservationIdentifier(), true);
 
-        return convertToDTO(reviewRepository.save(review));
+        Review createdReview = reviewRepository.save(review);
+
+        Double updatedHotelRating = reviewRepository.findHotelAverageRating(reservation.getRoom().getHotel().getSlug());
+
+        Double updatedRoomRating = reviewRepository.findRoomAverageRating(reservation.getRoom().getId());
+
+        hotelService.updateRating(updatedHotelRating, updatedRoomRating, reservation.getRoom().getId());
+
+        return convertToDTO(createdReview);
     }
 
     public Page<ReviewDTO> getReviewsByRoom(Long roomId, int pageNumber) {
@@ -79,7 +89,17 @@ public class ReviewService {
         );
         review.setMessage(request.getMessage());
         review.setRating(request.getRating());
-        return convertToDTO(reviewRepository.save(review));
+        Review updatedReview = reviewRepository.save(review);
+
+        Long roomId = review.getReservation().getRoom().getId();
+
+        Double updatedHotelRating =
+                reviewRepository.findHotelAverageRating(review.getReservation().getRoom().getHotel().getSlug());
+        Double updatedRoomRating = reviewRepository.findRoomAverageRating(roomId);
+
+        hotelService.updateRating(updatedHotelRating, updatedRoomRating, roomId);
+
+        return convertToDTO(updatedReview);
     }
 
     public void deleteReview(String reservationIdentifier) {

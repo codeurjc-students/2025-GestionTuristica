@@ -35,6 +35,8 @@ public class Hotel {
     private Integer stars;
     @Column(unique = true, nullable = false)
     private String slug;
+    @Column
+    private Double rating;
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Room> rooms = new ArrayList<>();

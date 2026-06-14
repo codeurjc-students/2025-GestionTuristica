@@ -1,8 +1,8 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.RoomDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +25,11 @@ public class HotelRoomCardService {
         this.roomService = roomService;
     }
 
-    public Page<HotelAvgRatingDTO> getHotelsInfo(int pageNumber) {
+    public Page<HotelDTO> getHotelsInfo(int pageNumber) {
 
-        Page<HotelAvgRatingDTO> hotels = hotelService.getAll(pageNumber);
+        Page<HotelDTO> hotels = hotelService.getAll(pageNumber);
 
-        List<Long> hotelIds = hotels.getContent().stream().map(HotelAvgRatingDTO::getId).toList();
+        List<Long> hotelIds = hotels.getContent().stream().map(HotelDTO::getId).toList();
 
         List<HotelImageDTO> hotelsMainImages = imageService.getHotelsMainImages(hotelIds);
 
@@ -42,11 +42,11 @@ public class HotelRoomCardService {
         return hotels;
     }
 
-    public Page<RoomAvgRatingDTO> getHotelRoomsInfo(String slug, int page) {
+    public Page<RoomDTO> getHotelRoomsInfo(String slug, int page) {
 
-        Page<RoomAvgRatingDTO> hotelRooms = roomService.getRoomsByHotelSlug(slug, page);
+        Page<RoomDTO> hotelRooms = roomService.getRoomsByHotelSlug(slug, page);
 
-        List<Long> roomIds = hotelRooms.getContent().stream().map(RoomAvgRatingDTO::getId).toList();
+        List<Long> roomIds = hotelRooms.getContent().stream().map(RoomDTO::getId).toList();
 
         List<HotelImageDTO> hotelRoomsMainImages = imageService.getHotelRoomsMainImages(roomIds);
 

@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,13 +43,20 @@ class ReviewServiceTest {
     private ReservationService reservationService;
 
     @Mock
+    private HotelService hotelService;
+
+    @Mock
     private Authentication authentication;
 
     @Test
     void createReviewTest() {
         User user = User.builder().email("john@example.com").build();
 
-        Room room = Room.builder().name("Room1").build();
+        Hotel hotel = Hotel.builder().slug("Hotel1").rooms(new ArrayList<>()).build();
+
+        Room room = Room.builder().id(1L).name("Room1").build();
+
+        hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -70,6 +78,8 @@ class ReviewServiceTest {
         assertEquals(request.getMessage(), response.getMessage());
         assertEquals(request.getRating(), response.getRating());
         assertEquals(reservation.getReservationIdentifier(), response.getReservationIdentifier());
+
+        verify(hotelService, times(1)).updateRating(anyDouble(), anyDouble(), anyLong());
     }
 
     @Test
@@ -150,7 +160,11 @@ class ReviewServiceTest {
     void updateReviewSuccessfulTest() {
         User user = User.builder().email("john@example.com").build();
 
-        Room room = Room.builder().name("Room1").build();
+        Hotel hotel = Hotel.builder().slug("h1").rooms(new ArrayList<>()).build();
+
+        Room room = Room.builder().id(1L).name("Room1").build();
+
+        hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -171,6 +185,7 @@ class ReviewServiceTest {
 
         verify(reviewRepository, times(1)).findByReservationReservationIdentifier("RSV-123");
         verify(reviewRepository, times(1)).save(any(Review.class));
+        verify(hotelService, times(1)).updateRating(anyDouble(), anyDouble(), anyLong());
     }
 
     @Test

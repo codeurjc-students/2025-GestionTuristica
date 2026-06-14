@@ -1,6 +1,6 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.RoomDTO;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.repositories.RoomRepository;
@@ -19,10 +19,10 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public RoomAvgRatingDTO getRoomById(Long id) {
-        return roomRepository.findRoomWithAverageRatingById(id).orElseThrow(
+    public RoomDTO getRoomById(Long id) {
+        return convertToDTO(roomRepository.findById(id).orElseThrow(
                 () -> new RoomNotFoundException("There is no room with such id")
-        );
+        ));
     }
 
     public Room getRoomEntityById(Long id) {
@@ -31,12 +31,12 @@ public class RoomService {
         );
     }
 
-    public Page<RoomAvgRatingDTO> getRoomsByHotelSlug(String hotelSlug, int pageNumber) {
-        return roomRepository.findRoomsByHotelSlugWithAverageRating(hotelSlug, Pageable.ofSize(5).withPage(pageNumber));
+    public Page<RoomDTO> getRoomsByHotelSlug(String hotelSlug, int pageNumber) {
+        return roomRepository.findByHotel_Slug(hotelSlug, Pageable.ofSize(5).withPage(pageNumber)).map(this::convertToDTO);
     }
 
-    public List<RoomAvgRatingDTO> getNonPaginatedRoomsByHotelSlug(String hotelSlug) {
-        return roomRepository.findNonPaginatedRoomsByHotelSlugWithAverageRating(hotelSlug);
+    public List<RoomDTO> getNonPaginatedRoomsByHotelSlug(String hotelSlug) {
+        return roomRepository.findByHotel_Slug(hotelSlug).stream().map(this::convertToDTO).toList();
     }
 
     public void deleteRoom(Long roomId) {
@@ -45,5 +45,23 @@ public class RoomService {
         room.setDeleted(true);
 
         roomRepository.save(room);
+    }
+
+    private RoomDTO convertToDTO(Room room) {
+        return new RoomDTO(
+                room.getId(),
+                room.getName(),
+                room.getDescription(),
+                room.getPrice(),
+                room.getRating()
+        );
+    }
+
+    public Room updateRating(Double updatedRating, Long roomId) {
+
+        Room room = getRoomEntityById(roomId);
+        room.setRating(updatedRating);
+
+        return roomRepository.save(room);
     }
 }

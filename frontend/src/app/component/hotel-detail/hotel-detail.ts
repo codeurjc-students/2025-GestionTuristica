@@ -24,7 +24,7 @@ export class HotelDetail implements OnInit {
     stars: 0,
     slug: '',
     rooms: [],
-    averageRating: 0,
+    rating: 0,
     mainImageUrl: ''
   };
 

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelAvgRatingDTO {
+public class HotelDTO {
 
     private Long id;
     private String name;
@@ -18,10 +18,10 @@ public class HotelAvgRatingDTO {
     private Integer stars;
     private String slug;
     private String mainImageUrl;
-    private Double averageRating;
+    private Double rating;
 
-    public HotelAvgRatingDTO(Long id, String name, String description, String country, String city, String address,
-                             Integer stars, String slug, Double averageRating) {
+    public HotelDTO(Long id, String name, String description, String country, String city, String address,
+                    Integer stars, String slug, Double rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,6 +30,6 @@ public class HotelAvgRatingDTO {
         this.address = address;
         this.stars = stars;
         this.slug = slug;
-        this.averageRating = averageRating;
+        this.rating = rating;
     }
 }
