@@ -26,6 +26,8 @@ public class Room {
     private String description;
     @Column(nullable = false)
     private BigDecimal price;
+    @Column
+    private Double rating;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hotel_id", nullable = false)
     @JsonBackReference
