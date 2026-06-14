@@ -6,7 +6,7 @@
 
   <p> {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</p>
 
-  <p>Puntuación de los usuarios: {{hotel.averageRating}}</p>
+  <p>Puntuación de los usuarios: {{hotel.rating}}</p>
 </div>
 
 @for(image of images; track $index) {
@@ -22,7 +22,7 @@
       <img alt="Room main" class="main-image" [src]="room.mainImageUrl"/>
       <p>{{room.description}}</p>
       <p>{{room.price}}€/noche</p>
-      <p>Puntuación: {{room.averageRating}}</p>
+      <p>Puntuación: {{room.rating}}</p>
 
       <button type="button" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']"> Detalles</button>
     </li>

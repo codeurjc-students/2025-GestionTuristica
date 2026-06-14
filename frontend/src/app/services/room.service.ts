@@ -8,7 +8,7 @@ export interface Room {
         name: string;
         description: string;
         price: number;
-        averageRating?: number;
+        rating?: number;
         mainImageUrl?: string;
     };
 
