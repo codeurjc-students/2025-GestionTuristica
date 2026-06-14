@@ -3,7 +3,7 @@ package com.urjc.plushotel.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.dtos.request.HotelRequest;
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.services.CustomUserDetailsService;
@@ -54,14 +54,14 @@ class HotelControllerTest {
     @Test
     void findAllHotelsTest() throws Exception {
 
-        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+        HotelDTO h1 = new HotelDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
                 " Example 4, Madrid", 3, "h1", 3.6);
-        HotelAvgRatingDTO h2 = new HotelAvgRatingDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
+        HotelDTO h2 = new HotelDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
                 " Example 3, Barcelona", 4, "h2", 4.2);
 
-        List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
+        List<HotelDTO> hotels = List.of(h1, h2);
 
-        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
+        PageImpl<HotelDTO> paginatedHotels = new PageImpl<>(hotels);
 
         when(hotelRoomCardService.getHotelsInfo(0)).thenReturn(paginatedHotels);
 
@@ -75,7 +75,7 @@ class HotelControllerTest {
     @Test
     void findHotelBySlugTest() throws Exception {
 
-        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+        HotelDTO h1 = new HotelDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
                 " Example 4, Madrid", 3, "h1", 1.2);
 
         when(hotelService.getHotelBySlug(anyString())).thenReturn(h1);

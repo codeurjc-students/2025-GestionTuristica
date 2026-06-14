@@ -1,6 +1,7 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.RoomDTO;
+import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.repositories.RoomRepository;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,21 +30,22 @@ class RoomServiceTest {
 
     @Test
     void getRoomById() {
-        RoomAvgRatingDTO roomDTO = new RoomAvgRatingDTO(1L, "room", "desc", BigDecimal.TEN, 3.3);
-        when(roomRepository.findRoomWithAverageRatingById(anyLong())).thenReturn(Optional.of(roomDTO));
+        Hotel hotel = new Hotel();
+        Room room = new Room(1L, "room", "desc", BigDecimal.TEN, 3.3, hotel, new ArrayList<>(), false);
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(room));
 
-        RoomAvgRatingDTO resultRoom = roomService.getRoomById(1L);
+        RoomDTO resultRoom = roomService.getRoomById(1L);
 
         assertNotNull(resultRoom);
-        assertEquals(roomDTO.getId(), resultRoom.getId());
-        assertEquals(roomDTO.getName(), resultRoom.getName());
-        assertEquals(roomDTO.getDescription(), resultRoom.getDescription());
-        assertEquals(roomDTO.getPrice(), resultRoom.getPrice());
+        assertEquals(room.getId(), resultRoom.getId());
+        assertEquals(room.getName(), resultRoom.getName());
+        assertEquals(room.getDescription(), resultRoom.getDescription());
+        assertEquals(room.getPrice(), resultRoom.getPrice());
     }
 
     @Test
     void getRoomByIdNotFound() {
-        when(roomRepository.findRoomWithAverageRatingById(anyLong())).thenReturn(Optional.empty());
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(RoomNotFoundException.class, () -> roomService.getRoomById(1L));
     }
@@ -87,5 +90,17 @@ class RoomServiceTest {
         assertThrows(RoomNotFoundException.class, () -> roomService.deleteRoom(1L));
 
         verify(roomRepository, times(0)).save(any());
+    }
+
+    @Test
+    void updateRatingTest() {
+
+        Room room = new Room();
+
+        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
+
+        roomService.updateRating(4.5, 1L);
+
+        verify(roomRepository, times(1)).save(room);
     }
 }

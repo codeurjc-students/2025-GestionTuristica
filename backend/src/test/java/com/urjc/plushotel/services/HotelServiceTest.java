@@ -1,7 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.request.HotelRequest;
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
@@ -44,26 +44,38 @@ class HotelServiceTest {
 
     @Test
     void findAllTest() {
-        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
-                " Example 4, Madrid", 3, "h1", 3.6);
-        HotelAvgRatingDTO h2 = new HotelAvgRatingDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
-                " Example 3, Barcelona", 4, "h2", 4.2);
+        Hotel h1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
+        Hotel h2 = new Hotel(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
+                " Example 3, Barcelona", 4, "h2", 4.2, new ArrayList<>(), false);
 
-        List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
+        List<Hotel> hotels = List.of(h1, h2);
 
-        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
+        PageImpl<Hotel> paginatedHotels = new PageImpl<>(hotels);
 
-        when(hotelRepository.findHotelsWithAverageRating(Pageable.ofSize(5).withPage(0))).thenReturn(paginatedHotels);
+        when(hotelRepository.findAll(Pageable.ofSize(5).withPage(0))).thenReturn(paginatedHotels);
 
-        Page<HotelAvgRatingDTO> result = hotelService.getAll(0);
+        Page<HotelDTO> result = hotelService.getAll(0);
 
-        List<HotelAvgRatingDTO> resultContent = result.getContent();
+        List<HotelDTO> resultContent = result.getContent();
 
         assertEquals(2, resultContent.size());
-        assertEquals(h1, resultContent.getFirst());
-        assertEquals(h2, resultContent.getLast());
+        assertEquals(h1.getName(), resultContent.getFirst().getName());
+        assertEquals(h2.getName(), resultContent.getLast().getName());
+        assertEquals(h1.getDescription(), resultContent.getFirst().getDescription());
+        assertEquals(h2.getDescription(), resultContent.getLast().getDescription());
+        assertEquals(h1.getCountry(), resultContent.getFirst().getCountry());
+        assertEquals(h2.getCountry(), resultContent.getLast().getCountry());
+        assertEquals(h1.getCity(), resultContent.getFirst().getCity());
+        assertEquals(h2.getCity(), resultContent.getLast().getCity());
+        assertEquals(h1.getAddress(), resultContent.getFirst().getAddress());
+        assertEquals(h2.getAddress(), resultContent.getLast().getAddress());
+        assertEquals(h1.getStars(), resultContent.getFirst().getStars());
+        assertEquals(h2.getStars(), resultContent.getLast().getStars());
+        assertEquals(h1.getSlug(), resultContent.getFirst().getSlug());
+        assertEquals(h2.getSlug(), resultContent.getLast().getSlug());
 
-        verify(hotelRepository, times(1)).findHotelsWithAverageRating(Pageable.ofSize(5).withPage(0));
+        verify(hotelRepository, times(1)).findAll(Pageable.ofSize(5).withPage(0));
     }
 
     @Test
@@ -179,13 +191,13 @@ class HotelServiceTest {
 
     @Test
     void findHotelBySlugSuccessTest() {
-        HotelAvgRatingDTO hotel = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, " +
-                "Madrid", 3, "h1", 3.6);
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/ Example 4, " +
+                "Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
 
-        when(hotelRepository.findHotelsWithAverageRatingBySlug("h1")).thenReturn(Optional.of(hotel));
+        when(hotelRepository.findBySlug("h1")).thenReturn(Optional.of(hotel));
 
-        HotelAvgRatingDTO result = hotelService.getHotelBySlug("h1");
+        HotelDTO result = hotelService.getHotelBySlug("h1");
 
         assertEquals(hotel.getName(), result.getName());
         assertEquals(hotel.getSlug(), result.getSlug());
@@ -194,18 +206,35 @@ class HotelServiceTest {
         assertEquals(hotel.getCity(), result.getCity());
         assertEquals(hotel.getAddress(), result.getAddress());
         assertEquals(hotel.getStars(), result.getStars());
-        assertEquals(hotel.getAverageRating(), result.getAverageRating());
+        assertEquals(hotel.getRating(), result.getRating());
         assertEquals(hotel.getId(), result.getId());
 
-        verify(hotelRepository, times(1)).findHotelsWithAverageRatingBySlug("h1");
+        verify(hotelRepository, times(1)).findBySlug("h1");
     }
 
     @Test
     void findHotelBySlugNotFoundTest() {
-        when(hotelRepository.findHotelsWithAverageRatingBySlug("h1")).thenReturn(Optional.empty());
+        when(hotelRepository.findBySlug("h1")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> hotelService.getHotelBySlug("h1"));
 
-        verify(hotelRepository, times(1)).findHotelsWithAverageRatingBySlug("h1");
+        verify(hotelRepository, times(1)).findBySlug("h1");
+    }
+
+    @Test
+    void updateRatingTest() {
+
+        Hotel hotel = Hotel.builder().slug("hotel").rooms(new ArrayList<>()).build();
+
+        Room room = Room.builder().id(1L).build();
+
+        hotel.addRoom(room);
+
+        when(roomService.updateRating(4.0, 1L)).thenReturn(room);
+        when(hotelRepository.findBySlug("hotel")).thenReturn(Optional.of(hotel));
+
+        hotelService.updateRating(4.5, 4.0, 1L);
+
+        verify(hotelRepository, times(1)).save(hotel);
     }
 }

@@ -1,8 +1,8 @@
 package com.urjc.plushotel.services;
 
-import com.urjc.plushotel.dtos.response.HotelAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.RoomDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,22 +42,22 @@ class HotelRoomCardServiceTest {
 
         List<HotelImageDTO> images = List.of(image1, image2);
 
-        HotelAvgRatingDTO h1 = new HotelAvgRatingDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+        HotelDTO h1 = new HotelDTO(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
                 " Example 4, Madrid", 3, "h1", 3.6);
-        HotelAvgRatingDTO h2 = new HotelAvgRatingDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
+        HotelDTO h2 = new HotelDTO(2L, "H2", "Hotel2 desc", "España", "Barcelona", "C/" +
                 " Example 3, Barcelona", 4, "h2", 4.2);
 
-        List<HotelAvgRatingDTO> hotels = List.of(h1, h2);
+        List<HotelDTO> hotels = List.of(h1, h2);
 
-        PageImpl<HotelAvgRatingDTO> paginatedHotels = new PageImpl<>(hotels);
+        PageImpl<HotelDTO> paginatedHotels = new PageImpl<>(hotels);
 
         when(hotelService.getAll(0)).thenReturn(paginatedHotels);
 
         when(imageService.getHotelsMainImages(List.of(1L, 2L))).thenReturn(images);
 
-        Page<HotelAvgRatingDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo(0);
+        Page<HotelDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo(0);
 
-        List<HotelAvgRatingDTO> hotelsInfoContent = hotelsInfo.getContent();
+        List<HotelDTO> hotelsInfoContent = hotelsInfo.getContent();
 
         assertNotNull(hotelsInfo);
 
@@ -79,8 +79,8 @@ class HotelRoomCardServiceTest {
         assertEquals(hotelsInfoContent.getLast().getStars(), h2.getStars());
         assertEquals(hotelsInfoContent.getFirst().getSlug(), h1.getSlug());
         assertEquals(hotelsInfoContent.getLast().getSlug(), h2.getSlug());
-        assertEquals(hotelsInfoContent.getFirst().getAverageRating(), h1.getAverageRating());
-        assertEquals(hotelsInfoContent.getLast().getAverageRating(), h2.getAverageRating());
+        assertEquals(hotelsInfoContent.getFirst().getRating(), h1.getRating());
+        assertEquals(hotelsInfoContent.getLast().getRating(), h2.getRating());
     }
 
     @Test
@@ -91,20 +91,20 @@ class HotelRoomCardServiceTest {
 
         List<HotelImageDTO> images = List.of(image1, image2);
 
-        RoomAvgRatingDTO roomDTO1 = new RoomAvgRatingDTO(1L, "room1", "desc1", BigDecimal.TEN, 3.3);
-        RoomAvgRatingDTO roomDTO2 = new RoomAvgRatingDTO(2L, "room2", "desc2", BigDecimal.TWO, 3.7);
+        RoomDTO roomDTO1 = new RoomDTO(1L, "room1", "desc1", BigDecimal.TEN, 3.3);
+        RoomDTO roomDTO2 = new RoomDTO(2L, "room2", "desc2", BigDecimal.TWO, 3.7);
 
-        List<RoomAvgRatingDTO> rooms = List.of(roomDTO1, roomDTO2);
+        List<RoomDTO> rooms = List.of(roomDTO1, roomDTO2);
 
-        PageImpl<RoomAvgRatingDTO> paginatedRooms = new PageImpl<>(rooms);
+        PageImpl<RoomDTO> paginatedRooms = new PageImpl<>(rooms);
 
         when(roomService.getRoomsByHotelSlug(anyString(), anyInt())).thenReturn(paginatedRooms);
 
         when(imageService.getHotelRoomsMainImages(anyList())).thenReturn(images);
 
-        Page<RoomAvgRatingDTO> hotelRoomsInfo = hotelRoomCardService.getHotelRoomsInfo("h1", 0);
+        Page<RoomDTO> hotelRoomsInfo = hotelRoomCardService.getHotelRoomsInfo("h1", 0);
 
-        List<RoomAvgRatingDTO> hotelRoomsInfoContent = hotelRoomsInfo.getContent();
+        List<RoomDTO> hotelRoomsInfoContent = hotelRoomsInfo.getContent();
 
         assertNotNull(hotelRoomsInfo);
         assertEquals(hotelRoomsInfoContent.getFirst().getId(), roomDTO1.getId());
@@ -115,8 +115,8 @@ class HotelRoomCardServiceTest {
         assertEquals(hotelRoomsInfoContent.getLast().getDescription(), roomDTO2.getDescription());
         assertEquals(hotelRoomsInfoContent.getFirst().getPrice(), roomDTO1.getPrice());
         assertEquals(hotelRoomsInfoContent.getLast().getPrice(), roomDTO2.getPrice());
-        assertEquals(hotelRoomsInfoContent.getFirst().getAverageRating(), roomDTO1.getAverageRating());
-        assertEquals(hotelRoomsInfoContent.getLast().getAverageRating(), roomDTO2.getAverageRating());
+        assertEquals(hotelRoomsInfoContent.getFirst().getRating(), roomDTO1.getRating());
+        assertEquals(hotelRoomsInfoContent.getLast().getRating(), roomDTO2.getRating());
         assertEquals(hotelRoomsInfoContent.getFirst().getMainImageUrl(), image1.getUrl());
         assertEquals(hotelRoomsInfoContent.getLast().getMainImageUrl(), image2.getUrl());
     }

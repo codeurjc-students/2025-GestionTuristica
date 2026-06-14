@@ -1,6 +1,6 @@
 package com.urjc.plushotel.controllers;
 
-import com.urjc.plushotel.dtos.response.RoomAvgRatingDTO;
+import com.urjc.plushotel.dtos.response.RoomDTO;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.JwtService;
@@ -45,8 +45,8 @@ class RoomControllerTest {
     @WithMockUser
     void getRoomByRoomIdTest() throws Exception {
 
-        RoomAvgRatingDTO room =
-                new RoomAvgRatingDTO(1L, "Room1", "Small room", BigDecimal.TEN, 4.3);
+        RoomDTO room =
+                new RoomDTO(1L, "Room1", "Small room", BigDecimal.TEN, 4.3);
 
         when(roomService.getRoomById(anyLong())).thenReturn(room);
 
@@ -62,15 +62,15 @@ class RoomControllerTest {
     @WithMockUser
     void getRoomByRoomByHotelIdTest() throws Exception {
 
-        RoomAvgRatingDTO room1 =
-                new RoomAvgRatingDTO(1L, "Room1", "Small room", BigDecimal.TEN, 4.3);
+        RoomDTO room1 =
+                new RoomDTO(1L, "Room1", "Small room", BigDecimal.TEN, 4.3);
 
-        RoomAvgRatingDTO room2 =
-                new RoomAvgRatingDTO(2L, "Room2", "Big room", BigDecimal.TWO, 4.3);
+        RoomDTO room2 =
+                new RoomDTO(2L, "Room2", "Big room", BigDecimal.TWO, 4.3);
 
-        List<RoomAvgRatingDTO> rooms = List.of(room1, room2);
+        List<RoomDTO> rooms = List.of(room1, room2);
 
-        PageImpl<RoomAvgRatingDTO> paginatedRooms = new PageImpl<>(rooms);
+        PageImpl<RoomDTO> paginatedRooms = new PageImpl<>(rooms);
 
         when(hotelRoomCardService.getHotelRoomsInfo(anyString(), anyInt())).thenReturn(paginatedRooms);
 
