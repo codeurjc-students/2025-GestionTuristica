@@ -1,5 +1,6 @@
 package com.urjc.plushotel.controllers;
 
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
@@ -28,9 +29,16 @@ public class HotelController {
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_BASE_URL)
-    public ResponseEntity<Page<HotelDTO>> getAllHotels(@RequestParam int page) {
+    public ResponseEntity<Page<HotelDTO>> getAllHotels(@RequestParam int page,
+                                                       @RequestParam(required = false) String name,
+                                                       @RequestParam(required = false) String country,
+                                                       @RequestParam(required = false) String city,
+                                                       @RequestParam(required = false) Double stars,
+                                                       @RequestParam(required = false) Double rating
+    ) {
+        HotelFilters filters = new HotelFilters(name, country, city, stars, rating);
 
-        return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo(page));
+        return ResponseEntity.ok(hotelRoomCardService.getHotelsInfo(page, filters));
     }
 
     @GetMapping(EndpointConstants.HotelsEndpoints.HOTELS_SLUG_URL)

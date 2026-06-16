@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
@@ -8,10 +9,13 @@ import com.urjc.plushotel.entities.Room;
 import com.urjc.plushotel.repositories.HotelRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.urjc.plushotel.specifications.HotelSpecifications.*;
 
 @Service
 public class HotelService {
@@ -30,8 +34,16 @@ public class HotelService {
         this.reservationChangeRequestService = reservationChangeRequestService;
     }
 
-    public Page<HotelDTO> getAll(int pageNumber) {
-        Page<Hotel> hotels = hotelRepository.findAll(Pageable.ofSize(5).withPage(pageNumber));
+    public Page<HotelDTO> getAll(int pageNumber, HotelFilters filters) {
+        Specification<Hotel> specification = Specification.<Hotel>unrestricted()
+                .and(hasDeletedFalse())
+                .and(hasName(filters.getName()))
+                .and(hasCountry(filters.getCountry()))
+                .and(hasCity(filters.getCity()))
+                .and(hasMinStars(filters.getStars()))
+                .and(hasMinRating(filters.getRating()));
+
+        Page<Hotel> hotels = hotelRepository.findAll(specification, Pageable.ofSize(5).withPage(pageNumber));
         return hotels.map(this::convertToDTO);
     }
 
