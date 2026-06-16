@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.dtos.response.RoomDTO;
@@ -50,12 +51,13 @@ class HotelRoomCardServiceTest {
         List<HotelDTO> hotels = List.of(h1, h2);
 
         PageImpl<HotelDTO> paginatedHotels = new PageImpl<>(hotels);
+        HotelFilters filters = new HotelFilters("Hotel", null, null, null, 3.0);
 
-        when(hotelService.getAll(0)).thenReturn(paginatedHotels);
+        when(hotelService.getAll(0, filters)).thenReturn(paginatedHotels);
 
         when(imageService.getHotelsMainImages(List.of(1L, 2L))).thenReturn(images);
 
-        Page<HotelDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo(0);
+        Page<HotelDTO> hotelsInfo = hotelRoomCardService.getHotelsInfo(0, filters);
 
         List<HotelDTO> hotelsInfoContent = hotelsInfo.getContent();
 

@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urjc.plushotel.config.SecurityConfig;
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
@@ -24,8 +25,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,9 +63,9 @@ class HotelControllerTest {
 
         PageImpl<HotelDTO> paginatedHotels = new PageImpl<>(hotels);
 
-        when(hotelRoomCardService.getHotelsInfo(0)).thenReturn(paginatedHotels);
+        when(hotelRoomCardService.getHotelsInfo(anyInt(), any(HotelFilters.class))).thenReturn(paginatedHotels);
 
-        mockMvc.perform(get("/api/v1/hotels?page=0"))
+        mockMvc.perform(get("/api/v1/hotels?page=0&name=Hotel&rating=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(2))
                 .andExpect(jsonPath("$.content.[0].name").value("H1"))
