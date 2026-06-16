@@ -43,6 +43,14 @@ export interface RoomRequest {
     price: number;
 }
 
+export interface HotelFilters {
+    name?: string;
+    country?: string;
+    city?: string;
+    stars?: number;
+    rating?: number;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -52,8 +60,10 @@ export class HotelService {
 
     constructor(private readonly http: HttpClient){}
 
-    getHotels(pageNumber: number): Observable<Page<Hotel>> {
-        return this.http.get<Page<Hotel>>(this.apiUrl + "/hotels", {params: {page: pageNumber}});
+    getHotels(page: number, filters?: HotelFilters): Observable<Page<Hotel>> {
+        const params = Object.fromEntries(Object.entries({page, ...filters}).filter(([_, value]) => (value !== undefined && value !== '')));
+
+        return this.http.get<Page<Hotel>>(this.apiUrl + "/hotels", { params });
     }
 
     getHotelBySlug(slug: string): Observable<Hotel> {

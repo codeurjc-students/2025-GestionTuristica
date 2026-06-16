@@ -1,14 +1,15 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { Hotel, HotelService } from "../services/hotel.service";
+import { Hotel, HotelFilters, HotelService } from "../services/hotel.service";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
+import { FormsModule } from "@angular/forms";
 
 
 @Component({
     selector: 'hotel-list',
     standalone: true,
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule, RouterLink, FormsModule],
     templateUrl: './hotel-list.component.html',
     styleUrl: './hotel-list.component.scss'
 })
@@ -21,6 +22,14 @@ export class HotelListComponent implements OnInit{
     lastPage!: boolean;
     numberOfHotels!: number;
     numberOfPages!: number;
+
+    filters: HotelFilters = {
+        name: '',
+        country: '',
+        city: '',
+        stars: undefined,
+        rating: undefined
+    };
 
     constructor(private readonly hotelService: HotelService, private readonly authService: AuthService){}
 
@@ -41,7 +50,7 @@ export class HotelListComponent implements OnInit{
     }
 
     loadHotels(page: number) {
-        this.hotelService.getHotels(page).subscribe({
+        this.hotelService.getHotels(page, this.filters).subscribe({
             next: (data) => {
                 this.hotels = data.content;
                 this.pageNumber = data.number;
@@ -70,5 +79,16 @@ export class HotelListComponent implements OnInit{
             this.pageNumber--;
             this.loadHotels(this.pageNumber);
         }
+    }
+
+    searchByFilters() {
+        this.pageNumber = 0;
+        this.loadHotels(this.pageNumber);
+    }
+
+    resetFilters() {
+        this.filters = {};
+        this.pageNumber = 0;
+        this.loadHotels(this.pageNumber);
     }
 }

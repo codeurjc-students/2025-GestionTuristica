@@ -20,6 +20,37 @@
   }
 </ul>
 
+<div class="filters">
+  <h3>Filtros</h3>
+  <label>Nombre:
+    <input type="text" [(ngModel)]="filters.name">
+  </label>
+  <label>País:
+    <input type="text" [(ngModel)]="filters.country">
+  </label>
+  <label>Ciudad:
+    <input type="text" [(ngModel)]="filters.city">
+  </label>
+  <label>
+    Estrellas:
+    <select name="stars" [(ngModel)]="filters.stars">
+      @for (s of [1,2,3,4,5]; track $index) {
+      <option [value]="s">{{ s }}</option>
+      }
+    </select>
+  </label>
+  <label>
+    Puntuación mínima:
+    <select name="rating" [(ngModel)]="filters.rating">
+      @for (r of [1,1.5,2,2.5,3,3.5,4,4.5,5]; track $index) {
+      <option [value]="r">{{ r }}</option>
+      }
+    </select>
+  </label>
+  <button type="button" (click)="searchByFilters()">Filtrar</button>
+  <button type="button" (click)="resetFilters()">Restablecer filtros</button>
+</div>
+
 <div class="pagination">
   <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
   Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
