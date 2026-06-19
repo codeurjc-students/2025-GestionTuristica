@@ -4,12 +4,14 @@ import { Hotel, HotelFilters, HotelService } from "../services/hotel.service";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { FormsModule } from "@angular/forms";
-
+import { ChartData, ChartOptions } from "chart.js";
+import { BaseChartDirective } from "ng2-charts";
+import { ReservationService } from "../services/reservation.service";
 
 @Component({
     selector: 'hotel-list',
     standalone: true,
-    imports: [CommonModule, RouterLink, FormsModule],
+    imports: [CommonModule, RouterLink, FormsModule, BaseChartDirective],
     templateUrl: './hotel-list.component.html',
     styleUrl: './hotel-list.component.scss'
 })
@@ -31,12 +33,36 @@ export class HotelListComponent implements OnInit{
         rating: undefined
     };
 
-    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService){}
+    reservationsData: ChartData<'pie', number[], string | string[]> = {
+                    labels: [],
+                    datasets: [
+                        {
+                            data: []
+                        }
+                    ]
+                };
+
+    reservationOptions: ChartOptions<'pie'> = {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Hoteles más reservados'
+            },
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        }
+    }
+
+    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService){}
 
     ngOnInit() {
         this.adminUser = this.authService.getRole() === 'ROLE_ADMIN';
 
         this.loadHotels(this.pageNumber);
+
+        this.loadHotelReservationsData();
     }
 
     deleteHotel(slug: string) {
@@ -90,5 +116,19 @@ export class HotelListComponent implements OnInit{
         this.filters = {};
         this.pageNumber = 0;
         this.loadHotels(this.pageNumber);
+    }
+
+    loadHotelReservationsData() {
+        this.reservationService.getMostReservedHotels().subscribe(
+            (data) => {
+                this.reservationsData = {
+                    labels: data.map(item => item.hotel),
+                    datasets: [
+                        {
+                            data: data.map(item => item.reservations)
+                        }
+                    ]
+                };
+            });
     }
 }

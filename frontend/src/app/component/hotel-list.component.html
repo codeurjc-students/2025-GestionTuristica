@@ -1,5 +1,9 @@
 <h2> Hoteles </h2>
 
+<div class="chart">
+  <canvas baseChart [data]="reservationsData" [type]="'pie'"></canvas>
+</div>
+
 <ul>
   @for (hotel of hotels; track hotel.id) {
   <li>

@@ -29,6 +29,11 @@ export interface ReservedRange {
 
 export type ReservationFilter = 'CANCELLED' | 'NON_CANCELLED';
 
+export interface HotelReservationCount {
+    hotel: string,
+    reservations: number
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -73,4 +78,9 @@ export class ReservationService {
     downloadReservationPdf(reservationIdentifier: string): Observable<Blob> {
         return this.http.get(this.apiUrl + "/reservations/download/summary/" + reservationIdentifier, {responseType: 'blob'});
     }
+
+    getMostReservedHotels(): Observable<HotelReservationCount[]> {
+        return this.http.get<HotelReservationCount[]>(this.apiUrl + "/reservations/hotels/most-reserved");
+    }
+
 }
