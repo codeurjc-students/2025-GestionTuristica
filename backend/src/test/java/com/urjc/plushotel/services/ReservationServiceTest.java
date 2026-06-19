@@ -1,6 +1,7 @@
 package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.request.ReservationRequest;
+import com.urjc.plushotel.dtos.response.HotelReservationsResponse;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.*;
@@ -416,5 +417,37 @@ class ReservationServiceTest {
 
         verify(reservationRepository, times(1)).findByUserIdAndStatus(1L, ReservationStatus.CANCELLED,
                 Pageable.ofSize(5).withPage(0));
+    }
+
+    @Test
+    void getMostReservedHotelsTest() {
+
+        HotelReservationsResponse hotel1Reservations = new HotelReservationsResponse("Hotel1", 10L);
+        HotelReservationsResponse hotel2Reservations = new HotelReservationsResponse("Hotel2", 8L);
+        HotelReservationsResponse hotel3Reservations = new HotelReservationsResponse("Hotel3", 6L);
+        HotelReservationsResponse hotel4Reservations = new HotelReservationsResponse("Hotel4", 5L);
+        HotelReservationsResponse hotel5Reservations = new HotelReservationsResponse("Hotel5", 2L);
+
+        List<HotelReservationsResponse> hotelsReservations = List.of(hotel1Reservations, hotel2Reservations,
+                hotel3Reservations, hotel4Reservations, hotel5Reservations);
+
+        when(reservationRepository.findMostReservedHotels()).thenReturn(hotelsReservations);
+
+        List<HotelReservationsResponse> mostReservedHotels = reservationService.getMostReservedHotels();
+
+        assertNotNull(mostReservedHotels);
+        assertEquals(hotelsReservations.size(), mostReservedHotels.size());
+        assertEquals(hotelsReservations.get(0).getHotel(), mostReservedHotels.get(0).getHotel());
+        assertEquals(hotelsReservations.get(0).getReservations(), mostReservedHotels.get(0).getReservations());
+        assertEquals(hotelsReservations.get(1).getHotel(), mostReservedHotels.get(1).getHotel());
+        assertEquals(hotelsReservations.get(1).getReservations(), mostReservedHotels.get(1).getReservations());
+        assertEquals(hotelsReservations.get(2).getHotel(), mostReservedHotels.get(2).getHotel());
+        assertEquals(hotelsReservations.get(2).getReservations(), mostReservedHotels.get(2).getReservations());
+        assertEquals(hotelsReservations.get(3).getHotel(), mostReservedHotels.get(3).getHotel());
+        assertEquals(hotelsReservations.get(3).getReservations(), mostReservedHotels.get(3).getReservations());
+        assertEquals(hotelsReservations.get(4).getHotel(), mostReservedHotels.get(4).getHotel());
+        assertEquals(hotelsReservations.get(4).getReservations(), mostReservedHotels.get(4).getReservations());
+
+        verify(reservationRepository, times(1)).findMostReservedHotels();
     }
 }

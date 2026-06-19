@@ -1,6 +1,7 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.config.SecurityConfig;
+import com.urjc.plushotel.dtos.response.HotelReservationsResponse;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.ReservationFilter;
@@ -174,5 +175,34 @@ class ReservationControllerTest {
                         "RSV-123"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/pdf"));
+    }
+
+    @Test
+    void findMostReservedHotelsTest() throws Exception {
+
+        HotelReservationsResponse hotel1Reservations = new HotelReservationsResponse("Hotel1", 10L);
+        HotelReservationsResponse hotel2Reservations = new HotelReservationsResponse("Hotel2", 8L);
+        HotelReservationsResponse hotel3Reservations = new HotelReservationsResponse("Hotel3", 6L);
+        HotelReservationsResponse hotel4Reservations = new HotelReservationsResponse("Hotel4", 5L);
+        HotelReservationsResponse hotel5Reservations = new HotelReservationsResponse("Hotel5", 2L);
+
+        List<HotelReservationsResponse> hotelsReservations = List.of(hotel1Reservations, hotel2Reservations,
+                hotel3Reservations, hotel4Reservations, hotel5Reservations);
+
+        when(reservationService.getMostReservedHotels()).thenReturn(hotelsReservations);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.MOST_RESERVED_HOTELS))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].hotel").value("Hotel1"))
+                .andExpect(jsonPath("$[0].reservations").value(10))
+                .andExpect(jsonPath("$[1].hotel").value("Hotel2"))
+                .andExpect(jsonPath("$[1].reservations").value(8))
+                .andExpect(jsonPath("$[2].hotel").value("Hotel3"))
+                .andExpect(jsonPath("$[2].reservations").value(6))
+                .andExpect(jsonPath("$[3].hotel").value("Hotel4"))
+                .andExpect(jsonPath("$[3].reservations").value(5))
+                .andExpect(jsonPath("$[4].hotel").value("Hotel5"))
+                .andExpect(jsonPath("$[4].reservations").value(2));
     }
 }
