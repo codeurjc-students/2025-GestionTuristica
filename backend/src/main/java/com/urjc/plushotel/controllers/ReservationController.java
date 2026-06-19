@@ -1,6 +1,7 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.request.ReservationRequest;
+import com.urjc.plushotel.dtos.response.HotelReservationsResponse;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.ReservationFilter;
@@ -93,5 +94,12 @@ public class ReservationController {
         response.setHeader("Content-Disposition", "attachment; filename=" + reservationIdentifier + ".pdf");
 
         reservationService.generatePdf(reservationIdentifier, response);
+    }
+
+    @GetMapping(EndpointConstants.ReservationsEndpoints.MOST_RESERVED_HOTELS)
+    public ResponseEntity<List<HotelReservationsResponse>> getMostReservedHotels() {
+        List<HotelReservationsResponse> reservationsPerHotel = reservationService.getMostReservedHotels();
+
+        return ResponseEntity.ok(reservationsPerHotel);
     }
 }

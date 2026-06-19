@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/hotels/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reservations/hotels/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

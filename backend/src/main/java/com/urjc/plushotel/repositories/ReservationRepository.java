@@ -1,5 +1,6 @@
 package com.urjc.plushotel.repositories;
 
+import com.urjc.plushotel.dtos.response.HotelReservationsResponse;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.ReservationStatus;
@@ -36,4 +37,18 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Page<Reservation> findByUserIdAndStatus(Long userId, ReservationStatus status, Pageable pageable);
 
     Page<Reservation> findByUserIdAndStatusNot(Long userId, ReservationStatus status, Pageable pageable);
+
+    @Query("""
+            SELECT new com.urjc.plushotel.dtos.response.HotelReservationsResponse(
+                h.name,
+                COUNT(r)
+            )
+            FROM Reservation r
+            JOIN r.room ro
+            JOIN ro.hotel h
+            WHERE h.deleted = false
+            GROUP BY h.name
+            ORDER BY COUNT(r) DESC
+            """)
+    List<HotelReservationsResponse> findMostReservedHotels();
 }

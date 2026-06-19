@@ -2,6 +2,7 @@ package com.urjc.plushotel.services;
 
 import com.urjc.plushotel.dtos.internal.ReservationEmailDTO;
 import com.urjc.plushotel.dtos.request.ReservationRequest;
+import com.urjc.plushotel.dtos.response.HotelReservationsResponse;
 import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.*;
@@ -30,6 +31,7 @@ public class ReservationService {
     private final EmailService emailService;
 
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int PAGE_SIZE = 5;
 
     public ReservationService(ReservationRepository reservationRepository, RoomService roomService,
                               CustomUserDetailsService userDetailsService, PdfGenerationService pdfGenerationService,
@@ -45,10 +47,10 @@ public class ReservationService {
         Page<Reservation> reservations;
         if (filter == ReservationFilter.CANCELLED) {
             reservations = reservationRepository.findByStatus(ReservationStatus.CANCELLED,
-                    Pageable.ofSize(5).withPage(page));
+                    Pageable.ofSize(PAGE_SIZE).withPage(page));
         } else {
             reservations = reservationRepository.findByStatusNot(ReservationStatus.CANCELLED,
-                    Pageable.ofSize(5).withPage(page));
+                    Pageable.ofSize(PAGE_SIZE).withPage(page));
         }
         return reservations.map(this::convertToDTO);
 
@@ -126,10 +128,10 @@ public class ReservationService {
         Page<Reservation> userReservations;
         if (filter == ReservationFilter.CANCELLED) {
             userReservations = reservationRepository.findByUserIdAndStatus(userId, ReservationStatus.CANCELLED,
-                    Pageable.ofSize(5).withPage(page));
+                    Pageable.ofSize(PAGE_SIZE).withPage(page));
         } else {
             userReservations = reservationRepository.findByUserIdAndStatusNot(userId, ReservationStatus.CANCELLED,
-                    Pageable.ofSize(5).withPage(page));
+                    Pageable.ofSize(PAGE_SIZE).withPage(page));
         }
         return userReservations.map(this::convertToDTO);
     }
@@ -161,6 +163,11 @@ public class ReservationService {
         );
 
         pdfGenerationService.generateReservationPdf(reservation, response.getOutputStream());
+    }
+
+    public List<HotelReservationsResponse> getMostReservedHotels() {
+
+        return reservationRepository.findMostReservedHotels();
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {
