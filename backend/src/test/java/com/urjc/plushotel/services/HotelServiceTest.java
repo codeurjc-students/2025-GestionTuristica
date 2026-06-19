@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -53,9 +55,11 @@ class HotelServiceTest {
 
         PageImpl<Hotel> paginatedHotels = new PageImpl<>(hotels);
 
-        when(hotelRepository.findAll(Pageable.ofSize(5).withPage(0))).thenReturn(paginatedHotels);
+        when(hotelRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(paginatedHotels);
 
-        Page<HotelDTO> result = hotelService.getAll(0);
+        HotelFilters filters = new HotelFilters("Hotel", null, null, null, 3.0);
+
+        Page<HotelDTO> result = hotelService.getAll(0, filters);
 
         List<HotelDTO> resultContent = result.getContent();
 
@@ -75,7 +79,7 @@ class HotelServiceTest {
         assertEquals(h1.getSlug(), resultContent.getFirst().getSlug());
         assertEquals(h2.getSlug(), resultContent.getLast().getSlug());
 
-        verify(hotelRepository, times(1)).findAll(Pageable.ofSize(5).withPage(0));
+        verify(hotelRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test

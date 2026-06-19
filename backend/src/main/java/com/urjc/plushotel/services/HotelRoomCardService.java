@@ -1,5 +1,6 @@
 package com.urjc.plushotel.services;
 
+import com.urjc.plushotel.dtos.request.HotelFilters;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.dtos.response.HotelImageDTO;
 import com.urjc.plushotel.dtos.response.RoomDTO;
@@ -25,9 +26,9 @@ public class HotelRoomCardService {
         this.roomService = roomService;
     }
 
-    public Page<HotelDTO> getHotelsInfo(int pageNumber) {
+    public Page<HotelDTO> getHotelsInfo(int pageNumber, HotelFilters filters) {
 
-        Page<HotelDTO> hotels = hotelService.getAll(pageNumber);
+        Page<HotelDTO> hotels = hotelService.getAll(pageNumber, filters);
 
         List<Long> hotelIds = hotels.getContent().stream().map(HotelDTO::getId).toList();
 
