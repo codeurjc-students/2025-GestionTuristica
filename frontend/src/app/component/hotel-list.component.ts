@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, OnInit } from "@angular/core";
 import { Hotel, HotelFilters, HotelService } from "../services/hotel.service";
 import { RouterLink } from "@angular/router";
@@ -11,7 +11,7 @@ import { ReservationService } from "../services/reservation.service";
 @Component({
     selector: 'hotel-list',
     standalone: true,
-    imports: [CommonModule, RouterLink, FormsModule, BaseChartDirective],
+    imports: [RouterLink, FormsModule, BaseChartDirective],
     templateUrl: './hotel-list.component.html',
     styleUrl: './hotel-list.component.scss'
 })

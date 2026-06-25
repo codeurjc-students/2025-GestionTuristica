@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -7,7 +7,7 @@ import { HotelService, HotelRequest, RoomRequest } from "../services/hotel.servi
 @Component({
     selector: 'hotel-create',
     standalone: true,
-    imports: [ CommonModule, FormsModule ],
+    imports: [FormsModule],
     templateUrl: './hotel-create.component.html'
 })
 export class HotelCreateComponent {

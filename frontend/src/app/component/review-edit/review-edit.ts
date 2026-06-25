@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Review, ReviewService, ReviewUpdateRequest } from '../../services/review.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-review-edit',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './review-edit.html',
 })
 export class ReviewEdit implements OnInit{

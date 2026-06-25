@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ReviewService, ReviewRequest } from './../../services/review.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-review-create',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './review-create.html'
 })
 export class ReviewCreate {

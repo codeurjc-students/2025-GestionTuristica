@@ -2,14 +2,13 @@ import { HotelRequest, HotelService, RoomRequest } from './../services/hotel.ser
 import { Component, OnInit } from '@angular/core';
 import { Hotel } from '../services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoomService } from '../services/room.service';
 
 @Component({
   selector: 'hotel-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './hotel-edit.component.html',
 })
 export class HotelEdit implements OnInit{
