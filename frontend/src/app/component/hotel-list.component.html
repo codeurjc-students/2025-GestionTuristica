@@ -1,62 +1,94 @@
-<h2> Hoteles </h2>
+<div class="page-background">
+<h2 class="section-title"> HOTELES </h2>
 
-<div class="chart">
-  <canvas baseChart [data]="reservationsData" [type]="'pie'"></canvas>
-</div>
+<div class="hotel-search-wrapper">
+  <div class="filters-chart-wrapper">
+    <div class="filters">
+      <h3>Filtros</h3>
+      <label>Nombre
+        <br>
+        <input type="text" [(ngModel)]="filters.name">
+      </label>
+      <label>País
+        <br>
+        <input type="text" [(ngModel)]="filters.country">
+      </label>
+      <label>Ciudad
+        <br>
+        <input type="text" [(ngModel)]="filters.city">
+      </label>
+      <label>
+        Estrellas
+        <br>
+        <select name="stars" [(ngModel)]="filters.stars">
+          @for (s of [1,2,3,4,5]; track $index) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Puntuación mínima
+        <br>
+        <select name="rating" [(ngModel)]="filters.rating">
+          @for (r of [1,1.5,2,2.5,3,3.5,4,4.5,5]; track $index) {
+          <option [value]="r">{{ r }}</option>
+          }
+        </select>
+      </label>
+      <button type="button" class="action-button" (click)="searchByFilters()">Filtrar</button>
+      <button type="button" class="action-button" (click)="resetFilters()">Restablecer filtros</button>
+    </div>
+    <div class="chart">
+    <canvas baseChart [data]="reservationsData" [options]="reservationOptions" [type]="'pie'"></canvas>
+  </div>
+  </div>
 
-<ul>
-  @for (hotel of hotels; track hotel.id) {
-  <li>
-    <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl"/>
-    <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
-    - {{hotel.city}}, {{hotel.country}} {{hotel.stars}}* - Dirección: {{hotel.address}}
-    <br> {{hotel.description}} - Puntuación de los usuarios: {{hotel.rating}}
+  <div class="hotel-grid">
+    @for (hotel of hotels; track hotel.id) {
+    <div class="hotel-card">
+      <div class="hotel-title">
+        <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
+        {{hotel.stars}}⭐
+      </div>
+      <div class="card-content-wrapper">
+        <div class="hotel-image-wrapper">
+          <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl"/>
+        </div>
+        <div class="hotel-content">
+        <div class="hotel-description">
+          {{hotel.description}}
+        </div>
+          <div class="hotel-card-footer">
+            <div class="hotel-location">
+              📍 {{hotel.city}}, {{hotel.country}} - Dirección: {{hotel.address}}
+            </div>
+            <div class="hotel-score">
+              Puntuación de los usuarios: {{hotel.rating}}
+            </div>
 
-    @if(adminUser){
-    <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar</button>
-    <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
+          @if(adminUser){
+            <div class="hotel-actions">
+              <button type="button" class="action-button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar</button>
+              <button type="button" class="red-action-button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
     }
-  </li>
-  }
 
-  @if(adminUser) {
-  <button type="button" [routerLink]="['/hotels/create']"> Crear hotel</button>
-  }
-</ul>
-
-<div class="filters">
-  <h3>Filtros</h3>
-  <label>Nombre:
-    <input type="text" [(ngModel)]="filters.name">
-  </label>
-  <label>País:
-    <input type="text" [(ngModel)]="filters.country">
-  </label>
-  <label>Ciudad:
-    <input type="text" [(ngModel)]="filters.city">
-  </label>
-  <label>
-    Estrellas:
-    <select name="stars" [(ngModel)]="filters.stars">
-      @for (s of [1,2,3,4,5]; track $index) {
-      <option [value]="s">{{ s }}</option>
-      }
-    </select>
-  </label>
-  <label>
-    Puntuación mínima:
-    <select name="rating" [(ngModel)]="filters.rating">
-      @for (r of [1,1.5,2,2.5,3,3.5,4,4.5,5]; track $index) {
-      <option [value]="r">{{ r }}</option>
-      }
-    </select>
-  </label>
-  <button type="button" (click)="searchByFilters()">Filtrar</button>
-  <button type="button" (click)="resetFilters()">Restablecer filtros</button>
+    <div class="pagination">
+      <button type="button" class="action-button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+      Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
+      <button type="button" class="action-button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+    </div>
+  </div>
 </div>
 
-<div class="pagination">
-  <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
-  Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-  <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+@if(adminUser) {
+  <div class="hotel-actions">
+    <button type="button" class="action-button" [routerLink]="['/hotels/create']"> Crear hotel</button>
+  </div>
+}
 </div>
