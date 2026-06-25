@@ -23,3 +23,63 @@
         padding: 5px;
     }
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #f5f7fb;
+}
+
+.action-button {
+    background: rgb(200, 225, 250);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease
+}
+
+.action-button:disabled {
+    background: darkgrey;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.action-button:hover {
+    background: rgb(230, 230, 230);
+    box-shadow: 0 4px 10px rgba(0,0,0,.50);
+}
+
+.action-button {
+    background: rgb(200, 225, 250);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease
+}
+
+.action-button:hover {
+    background: rgb(175, 200, 250);
+    box-shadow: 0 4px 10px rgba(0,0,0,.50);
+}
+
+.red-action-button {
+    background: rgb(220, 80, 80);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease
+}
+
+.red-action-button:hover {
+    background: rgb(250, 20, 20);
+    box-shadow: 0 4px 10px rgba(0,0,0,.50);
+}
