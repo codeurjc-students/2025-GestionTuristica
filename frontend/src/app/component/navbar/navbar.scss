@@ -1,14 +1,16 @@
 .main-nav {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  background-color: white;
 }
 
-.nav-title {
-  font-family: "Rubik Glitch", serif;
-}
-
-img {
-    width: 2rem;
+.main-nav img {
+    height: 50px;
+    width: 200px;
     padding-right: .25rem;
+}
+
+.main-nav img:hover {
+    cursor: pointer;
 }
 
 .nav-links {

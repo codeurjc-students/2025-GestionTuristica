@@ -11,21 +11,26 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar implements OnInit{
+export class Navbar implements OnInit {
 
-  constructor(private readonly authService: AuthService, private readonly router: Router) {}
+  constructor(private readonly authService: AuthService, private readonly router: Router) { }
 
   userLoggedIn: boolean = false;
+  userAdmin: boolean = false;
   private sub!: Subscription;
 
   ngOnInit() {
     this.sub = this.authService.loggedIn$.subscribe(
-      logged => this.userLoggedIn = logged
+      logged => {
+        this.userLoggedIn = logged;
+        this.userAdmin = this.authService.getRole() === 'ROLE_ADMIN';
+      }
     );
   }
 
   logout() {
     this.authService.logout();
+    this.userAdmin = false;
     this.router.navigate(["/"])
   }
 }
