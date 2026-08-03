@@ -1,0 +1,22 @@
+.star-rating {
+    display: flex;
+}
+.star-icon.editable {
+    cursor: pointer;
+}
+
+.star, .star_half {
+    color: #ffc400
+}
+
+.star_border {
+    color: #3b3b3b;
+}
+
+.clear-button {
+    color: red;
+}
+
+.clear-button:hover {
+    cursor: pointer;
+}
