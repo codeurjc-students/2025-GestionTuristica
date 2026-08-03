@@ -7,15 +7,16 @@ import { FormsModule } from "@angular/forms";
 import { ChartData, ChartOptions } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
 import { ReservationService } from "../services/reservation.service";
+import { StarRating } from "./star-rating/star-rating";
 
 @Component({
     selector: 'hotel-list',
     standalone: true,
-    imports: [RouterLink, FormsModule, BaseChartDirective],
+    imports: [RouterLink, FormsModule, BaseChartDirective, StarRating],
     templateUrl: './hotel-list.component.html',
     styleUrl: './hotel-list.component.scss'
 })
-export class HotelListComponent implements OnInit{
+export class HotelListComponent implements OnInit {
 
     hotels: Hotel[] = [];
     adminUser!: boolean;
@@ -34,13 +35,13 @@ export class HotelListComponent implements OnInit{
     };
 
     reservationsData: ChartData<'pie', number[], string | string[]> = {
-                    labels: [],
-                    datasets: [
-                        {
-                            data: []
-                        }
-                    ]
-                };
+        labels: [],
+        datasets: [
+            {
+                data: []
+            }
+        ]
+    };
 
     reservationOptions: ChartOptions<'pie'> = {
         plugins: {
@@ -55,7 +56,7 @@ export class HotelListComponent implements OnInit{
         }
     }
 
-    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService){}
+    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService) { }
 
     ngOnInit() {
         this.adminUser = this.authService.getRole() === 'ROLE_ADMIN';
@@ -85,7 +86,7 @@ export class HotelListComponent implements OnInit{
                 this.numberOfHotels = data.totalElements;
                 this.numberOfPages = data.totalPages;
 
-                if(this.numberOfHotels === 0 && !this.firstPage) {
+                if (this.numberOfHotels === 0 && !this.firstPage) {
                     this.loadHotels(this.pageNumber - 1);
                 }
             },
@@ -94,14 +95,14 @@ export class HotelListComponent implements OnInit{
     }
 
     nextPage() {
-        if(!this.lastPage) {
+        if (!this.lastPage) {
             this.pageNumber++;
             this.loadHotels(this.pageNumber);
         }
     }
 
     previousPage() {
-        if(!this.firstPage) {
+        if (!this.firstPage) {
             this.pageNumber--;
             this.loadHotels(this.pageNumber);
         }
