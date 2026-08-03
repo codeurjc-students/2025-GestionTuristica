@@ -1,22 +1,28 @@
 @if (reservations.length > 0) {
+    <div class="reservations-list">
     @for (reservation of reservations; track reservation.id) {
         <div class="reservation">
-            {{reservation.reservationIdentifier}}
-            {{reservation.roomName}}
-            {{reservation.startDate | date: 'dd/MM/yyyy'}} - {{reservation.endDate | date: 'dd/MM/yyyy'}}
-            @if(canBeReviewed(reservation)) {
-            <button (click)="goToReviewCreation(reservation.reservationIdentifier)">Escribir reseña</button>
-            } @else if (reservation.reviewed) {
-                <button (click)="viewReview(reservation.reservationIdentifier)">Ver reseña</button>
-            }
+            <div class="reservation-identifier"> {{reservation.reservationIdentifier}} </div>
+            <div class="reservation-info">
+                <div class="reservation-room">{{reservation.roomName}}</div>
+                <div class="reservation-dates">{{reservation.startDate | date: 'dd/MM/yyyy'}} - {{reservation.endDate | date: 'dd/MM/yyyy'}}</div>
+            </div>
+            <div class="review-action">
+                @if(canBeReviewed(reservation)) {
+                    <button class="action-button" (click)="goToReviewCreation(reservation.reservationIdentifier)">Escribir reseña</button>
+                } @else if (reservation.reviewed) {
+                    <button class="action-button" (click)="viewReview(reservation.reservationIdentifier)">Ver reseña</button>
+                }
+            </div>
         </div>
     }
+    </div>
 
     <div class="pagination">
-        <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+        <button class="action-button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
         Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-        <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+        <button class="action-button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
     </div>
 } @else {
-    <p>No tienes ninguna reserva sobre la que escribir una reseña</p>
+    <div class="empty-results">No tienes ninguna reserva sobre la que escribir una reseña</div>
 }

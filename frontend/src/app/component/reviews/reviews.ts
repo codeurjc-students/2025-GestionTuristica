@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
   selector: 'app-reviews',
   imports: [DatePipe],
   templateUrl: './reviews.html',
+  styleUrl: './reviews.scss'
 })
 export class Reviews implements OnInit {
 
