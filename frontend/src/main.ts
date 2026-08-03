@@ -3,8 +3,11 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
+import { register } from 'swiper/element/bundle'
 
 registerLocaleData(localeEs);
+
+register();
 
 bootstrapApplication(App, appConfig)
   .catch(err => console.error(err));
