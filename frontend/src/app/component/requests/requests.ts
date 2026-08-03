@@ -4,8 +4,9 @@ import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: 'app-requests',
-  imports: [MatButtonModule],
-  templateUrl: './requests.html'
+  imports: [MatButtonModule, NgClass],
+  templateUrl: './requests.html',
+  styleUrl: './requests.scss'
 })
 export class Requests implements OnInit{
   requests: ModificationRequest[] = [];
@@ -71,6 +72,29 @@ export class Requests implements OnInit{
     if(!this.firstPage) {
       this.pageNumber--;
       this.loadRequests(this.pageNumber);
+    }
+  }
+
+  getStatusText(status: string) {
+    switch (status) {
+      case 'PENDING':
+        return 'PENDIENTE';
+      case 'APPROVED':
+        return 'APROBADA';
+      case 'REJECTED':
+        return 'RECHAZADA';
+      default:
+        return status;
+    }
+  }
+
+  getTypeText(type: string) {
+    if (type === 'MODIFICATION') {
+      return 'MODIFICACIÓN';
+    } else if (type === 'CANCELLATION') {
+      return 'CANCELACIÓN';
+    } else {
+      return type;
     }
   }
 }
