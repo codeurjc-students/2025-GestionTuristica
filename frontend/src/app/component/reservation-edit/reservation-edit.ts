@@ -20,7 +20,8 @@ import { AuthService } from '../../services/auth.service';
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  templateUrl: './reservation-edit.html'
+  templateUrl: './reservation-edit.html',
+  styleUrl: './reservation-edit.scss'
 })
 export class ReservationEdit implements OnInit {
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
