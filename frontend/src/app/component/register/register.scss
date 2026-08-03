@@ -1,0 +1,39 @@
+.section-title {
+    display: flex;
+    justify-content: center;
+}
+
+.register-box {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 600px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.name-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.email-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.password-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.register-actions {
+    gap: 0.5rem;
+    padding: 1rem;
+}
