@@ -12,8 +12,9 @@ import { MatButtonModule } from "@angular/material/button";
   standalone: true,
   imports: [DatePipe, RouterLink, MatButtonModule, CommonModule],
   templateUrl: './reservation-list.html',
+  styleUrl: './reservation-list.scss'
 })
-export class ReservationList implements OnInit{
+export class ReservationList implements OnInit {
 
   reservations: Reservation[] = [];
   userAdmin!: boolean;
@@ -84,7 +85,7 @@ export class ReservationList implements OnInit{
   }
 
   requestCancellation(reservation: Reservation) {
-    
+
     reservation.status = 'CANCELLATION_REQUESTED';
 
     const cancellationRequest: ModificationRequestCreation = {
@@ -98,8 +99,8 @@ export class ReservationList implements OnInit{
     });
   }
 
-  alterView() {
-    this.showCancelled = !this.showCancelled;
+  alterView(cancelled: boolean) {
+    this.showCancelled = cancelled;
     this.loadReservations(this.showCancelled, this.pageNumber);
   }
 
