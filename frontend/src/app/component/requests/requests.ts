@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModificationRequest, RequestFilter, RequestService } from '../../services/request.service';
 import { MatButtonModule } from "@angular/material/button";
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-requests',
