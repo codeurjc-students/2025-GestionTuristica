@@ -1,0 +1,36 @@
+.section-title {
+    display: flex;
+    justify-content: center;
+}
+
+.review-detail-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 480px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.50);
+}
+
+.review-detail {
+    display: flex;
+    flex-direction: column;
+    align-items:first baseline;
+    font-size: 1.2rem;
+    gap: 1rem;
+}
+
+.rating-selection {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    padding: 3rem;
+    gap: 1rem;
+    justify-content: center;
+}

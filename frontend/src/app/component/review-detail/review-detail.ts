@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Review, ReviewService } from '../../services/review.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatAnchor } from "@angular/material/button";
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-review-detail',
-  imports: [MatAnchor],
   templateUrl: './review-detail.html',
+  styleUrl: './review-detail.scss',
+  imports: [StarRating]
 })
 export class ReviewDetail implements OnInit{
 
