@@ -3,11 +3,13 @@ import { Review, ReviewService, ReviewUpdateRequest } from '../../services/revie
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-review-edit',
-  imports: [FormsModule],
+  imports: [FormsModule, StarRating],
   templateUrl: './review-edit.html',
+  styleUrl: './review-edit.scss'
 })
 export class ReviewEdit implements OnInit{
 
