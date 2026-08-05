@@ -3,11 +3,13 @@ import { ReviewService, ReviewRequest } from './../../services/review.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from "@angular/forms";
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-review-create',
-  imports: [FormsModule],
-  templateUrl: './review-create.html'
+  imports: [FormsModule, StarRating],
+  templateUrl: './review-create.html',
+  styleUrl: './review-create.scss'
 })
 export class ReviewCreate {
 

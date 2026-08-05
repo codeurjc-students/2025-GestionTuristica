@@ -1,18 +1,24 @@
-<form (ngSubmit)="createReview()" #f="ngForm" class="review-form">
-    <div>
-        <label>
-            Mensaje
-            <textarea name="message" [(ngModel)]="message" required></textarea>
-        </label>
-    </div>
+<h1 class="section-title">Crear reseña</h1>
 
-    <div>
-        <label>
+<div class="review-creation-wrapper">
+    <h2 class="section-subtitle"> Reseña </h2>
+    <form (ngSubmit)="createReview()" #f="ngForm" class="review-form">
+        <div class="message-wrapper">
+            <label for="message">Mensaje</label>
+            <textarea id="message" class="message-input" name="message" [(ngModel)]="message" maxlength="500" required></textarea>
+            <p>{{message.length}}/500 caracteres</p>
+        </div>
+
+        <div class="rating-wrapper">
             Valoración
-            <input type="number" name="rating" [(ngModel)]="rating" min="1" max="5" step="0.5" required>
-        </label>
-    </div>
+            <div class="rating-selector">
+                <app-star-rating [rating]="rating" [editable]="true" (valueChange)="rating = $event"></app-star-rating> {{rating}}/5
+            </div>
+        </div>
 
-    <button type="submit"> Crear reseña</button>
-    <button (click)="cancel()">Cancelar</button>
-</form>
+        <div class="review-creation-actions">
+            <button class="action-button" type="submit"> Crear reseña</button>
+            <button class="red-action-button" (click)="cancel()">Cancelar</button>
+        </div>
+    </form>
+</div>
