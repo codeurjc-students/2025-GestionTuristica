@@ -4,12 +4,14 @@ import { Hotel } from '../services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RoomService } from '../services/room.service';
+import { StarRating } from "./star-rating/star-rating";
 
 @Component({
   selector: 'hotel-edit',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, StarRating],
   templateUrl: './hotel-edit.component.html',
+  styleUrl: './hotel-edit.component.scss'
 })
 export class HotelEdit implements OnInit{
   slug!: string;
@@ -142,6 +144,6 @@ export class HotelEdit implements OnInit{
   }
 
   resetRoomForm() {
-    this.roomModel = { name: '', description: '', price: 0};
+    this.roomModel = { name: '', description: '', price: 0 };
   }
 }
