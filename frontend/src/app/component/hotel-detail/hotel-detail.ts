@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Hotel, HotelService } from '../../services/hotel.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { ImageService, Image } from '../../services/image-service';
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-hotel-detail',
   imports: [
-    RouterModule
+    RouterModule,
+    StarRating
   ],
   templateUrl: './hotel-detail.html',
   styleUrl: './hotel-detail.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HotelDetail implements OnInit {
   slug!: string;
