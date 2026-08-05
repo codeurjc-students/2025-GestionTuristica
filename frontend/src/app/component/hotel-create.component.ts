@@ -3,12 +3,14 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HotelService, HotelRequest, RoomRequest } from "../services/hotel.service";
+import { StarRating } from "./star-rating/star-rating";
 
 @Component({
     selector: 'hotel-create',
     standalone: true,
-    imports: [FormsModule],
-    templateUrl: './hotel-create.component.html'
+    imports: [FormsModule, StarRating],
+    templateUrl: './hotel-create.component.html',
+    styleUrl: './hotel-create.component.scss'
 })
 export class HotelCreateComponent {
 
