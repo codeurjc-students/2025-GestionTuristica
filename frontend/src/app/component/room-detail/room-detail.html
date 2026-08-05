@@ -1,60 +1,84 @@
 @if (room){
-<div>
-  <h1>{{room.name}}</h1>
+  <h1 class="section-title">{{room.name}}</h1>
+  <div class="room-info-wrapper">
+    <div class="room-info">
 
-  <p>{{room.description}}</p>
+      <div class="room-description">{{room.description}}</div>
 
-  <p> {{room.price}}€/noche</p>
+      <div class="room-price"> {{room.price}}€/noche</div>
 
-  <p>Puntuación: {{room.rating}}</p>
+      <div class="room-rating"> Puntuación: {{room.rating}}</div>
+    </div>
+
+    <div class="reserve-wrapper">
+      <h2 class="section-subtitle">Seleccionar fechas de reserva</h2>
+
+      <div class="date-picker-wrapper">
+        <div class="reservation-date-picker">
+          <div [formGroup]="dateRange">
+            <mat-form-field appearance="outline">
+              <mat-label>Fechas reserva</mat-label>
+              <mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
+                <input matStartDate formControlName="start" placeholder="Fecha entrada">
+                <input matEndDate formControlName="end" placeholder="Fecha salida">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="reservation-info-actions-wrapper">
+          @if (nights > 0) {
+          <div>
+            <p> Noches: {{nights}}</p>
+            <p> Precio total: {{totalPrice}}€</p>
+          </div>
+          }
+
+          <div class="reserve-actions">
+            @if (nights > 0) {
+            <button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="swiper-wrapper">
+      <swiper-container navigation="true" loop="true" pagination="true">
+        @for(image of images; track $index) {
+          <swiper-slide>
+            <img alt="Room preview" class="room-image" [src]="image.url"/>
+          </swiper-slide>
+        }
+      </swiper-container>
+    </div>
+  </div>
+
+
+<div class="reviews-wrapper">
+  <h2 class="section-subtitle">Reseñas</h2>
+  <div class="reviews-list">
+    @for (review of reviews; track $index) {
+      <div class="review-card">
+        <div class="review-card-header">
+          <div class="review-user">{{review.userEmail}}</div>
+          <div class="review-creation-time"> {{review.creationTime}} </div>
+        </div>
+        <div class="review-message">{{review.message}}</div>
+        <div class="review-rating">{{review.rating}}/5</div>
+      </div>
+    }
+  </div>
 </div>
 
-@for(image of images; track $index) {
-<img alt="Room preview" class="room-image" [src]="image.url"/>
-}
-
-<p>Seleccionar fechas de reserva</p>
-
-<div [formGroup]="dateRange">
-  <mat-form-field appearance="fill">
-    <mat-label>Fechas reserva</mat-label>
-    <mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
-      <input matStartDate formControlName="start" placeholder="Fecha entrada">
-      <input matEndDate formControlName="end" placeholder="Fecha salida">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-  </mat-form-field>
-</div>
-
-@if (nights > 0) {
-<div>
-  <p> Noches: {{nights}}</p>
-  <p> Precio total: {{totalPrice}}€</p>
-</div>
-}
-
-<div class="actions">
-  @if (nights > 0) {
-  <button class="action-button" type="button" (click)="reserveRoom()">Reservar habitación</button>
-  }
-  <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-</div>
-
-<div class="reviews">
-  <h2>Reseñas</h2>
-  @for (review of reviews; track $index) {
-  <p>{{review.userEmail}} - {{review.creationTime}}</p>
-  <p>{{review.message}}</p>
-  <p>{{review.rating}}</p>
-  }
-
-  <div class="pagination">
+<div class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
     Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
     <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
   </div>
-</div>
 } @else {
 <p>Cargando datos de la habitación...</p>
 }

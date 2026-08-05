@@ -1,5 +1,5 @@
 import { ImageService } from './../../services/image-service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { Room, RoomService } from '../../services/room.service';
 import { ReservationService, ReservedRange } from '../../services/reservation.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Review, ReviewService } from '../../services/review.service';
 import { Image } from '../../services/image-service';
+import { A11yModule } from "@angular/cdk/a11y";
 
 
 @Component({
@@ -20,10 +21,11 @@ import { Image } from '../../services/image-service';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule
-  ],
+    MatNativeDateModule,
+    A11yModule],
   templateUrl: './room-detail.html',
-  styleUrl: './room-detail.scss'
+  styleUrl: './room-detail.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RoomDetail implements OnInit{
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
