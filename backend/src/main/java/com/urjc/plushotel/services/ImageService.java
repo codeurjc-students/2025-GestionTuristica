@@ -66,7 +66,7 @@ public class ImageService {
 
     public List<HotelImageDTO> getHotelsMainImages(List<Long> hotelIds) {
 
-        List<HotelImage> images = imageRepository.findByPositionAndHotel_IdIn(0, hotelIds);
+        List<HotelImage> images = imageRepository.findByPositionAndRoomNullAndHotel_IdIn(0, hotelIds);
 
         return images.stream().map(
                 img -> new HotelImageDTO(img.getId(), minioService.getImageUrl(img.getFileName()),

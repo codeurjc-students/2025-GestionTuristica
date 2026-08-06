@@ -132,7 +132,7 @@ class ImageServiceTest {
 
         List<HotelImage> images = List.of(image1, image2);
 
-        when(imageRepository.findByPositionAndHotel_IdIn(anyInt(), anyList())).thenReturn(images);
+        when(imageRepository.findByPositionAndRoomNullAndHotel_IdIn(anyInt(), anyList())).thenReturn(images);
         when(minioService.getImageUrl("file1.jpg")).thenReturn("url1");
         when(minioService.getImageUrl("file2.jpg")).thenReturn("url2");
 
