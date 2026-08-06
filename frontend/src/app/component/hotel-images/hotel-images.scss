@@ -1,27 +1,109 @@
+.section-title {
+  display: flex;
+  justify-content: center;
+}
+
+.section-subtitle {
+  display: flex;
+  justify-content: center;
+}
+
+.image-uploader {
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+.action-button {
+  margin: 10px;
+  display: flex;
+  justify-self: center;
+  align-self: center;
+}
+
+.help-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.images-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
 .image-preview {
-    width: 150px;
-    height: 150px;
+  display: block;
+  width: 170px;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .image-list {
-  border: solid 1px #ccc;
-  min-height: 60px;
-  background: white;
-  border-radius: 4px;
-  overflow: hidden;
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border: solid 1px #ccc;
+  min-height: 180px;
+  background: white;
+  border-radius: 10px;
+  overflow-x: auto;
 }
 
-.cdk.drag.preview {
-    box-sizing: border-box;
-    border-radius: 4px;
+.image-item {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  border-radius: 12px;
+  flex: 0 0 auto;
+  cursor: grab;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.cdk.drag-placeholder {
-    opacity: 0.5;
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgb(220, 80, 80);
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.delete-button:hover {
+  background-color: rgb(250, 20, 20);
+
+  transform: scale(1.1);
+}
+
+.image-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.cdk-drag-preview {
+  width: 170px;
+  height: 170px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.5;
 }
 
 .cdk-drag-animating {
-    transition: transform 250ms;
+  transition: transform 250ms;
+}
+
+.actions {
+  display: flex;
+  padding: 20px;
 }
