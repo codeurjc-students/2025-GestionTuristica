@@ -24,7 +24,7 @@
           </div>
           <div class="reservation-info">
           <p><strong>Usuario:</strong> {{reservation.userEmail}}</p>
-          <p><strong>Hotel:</strong> ################## </p>
+          <p><strong>Hotel:</strong> {{reservation.hotelName}} </p>
           <p><strong>Habitación reservada:</strong> {{reservation.roomName}} </p>
           <p><strong>Fecha de entrada:</strong> {{reservation.startDate | date: 'dd/MM/yyyy'}}</p>
           <p><strong>Fecha de salida:</strong> {{reservation.endDate | date: 'dd/MM/yyyy'}}</p>
