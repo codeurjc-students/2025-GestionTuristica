@@ -12,6 +12,7 @@ import { StarRating } from "../star-rating/star-rating";
 export class ReviewDetail implements OnInit{
 
   review: Review = {
+    userName: '',
     userEmail: '',
     reservationIdentifier: '',
     roomName: '',

@@ -14,13 +14,14 @@ import { StarRating } from "../star-rating/star-rating";
 export class ReviewEdit implements OnInit{
 
   review: Review = {
-      userEmail: '',
-      reservationIdentifier: '',
-      roomName: '',
-      message: '',
-      rating: 0,
-      creationTime: ''
-    };
+    userEmail: '',
+    userName: '',
+    reservationIdentifier: '',
+    roomName: '',
+    message: '',
+    rating: 0,
+    creationTime: ''
+  };
 
     constructor(
       private readonly reviewService: ReviewService,
