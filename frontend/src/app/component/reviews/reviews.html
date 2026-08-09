@@ -4,6 +4,7 @@
         <div class="reservation">
             <div class="reservation-identifier"> {{reservation.reservationIdentifier}} </div>
             <div class="reservation-info">
+                <div class="reservation-hotel">{{reservation.hotelName}}</div>
                 <div class="reservation-room">{{reservation.roomName}}</div>
                 <div class="reservation-dates">{{reservation.startDate | date: 'dd/MM/yyyy'}} - {{reservation.endDate | date: 'dd/MM/yyyy'}}</div>
             </div>
