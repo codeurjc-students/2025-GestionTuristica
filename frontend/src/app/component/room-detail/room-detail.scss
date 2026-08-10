@@ -58,6 +58,22 @@ swiper-slide img {
     border-radius: 12px;
 }
 
+.image-placeholder {
+    display: flex;
+    justify-self: center;
+    width: 800px;
+    height: 450px;
+    flex-shrink: 0;
+    padding-top: 2rem;
+    border-right: 2px solid #a7a5a5;
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .section-subtitle {
     display: flex;
     justify-content: center;
@@ -129,6 +145,12 @@ swiper-slide img {
     display: flex;
     flex-direction: row;
     justify-content: right;
+}
+
+.alt-text {
+    display: flex;
+    justify-content: center;
+    font-size: 1.4rem;
 }
 
 .pagination {

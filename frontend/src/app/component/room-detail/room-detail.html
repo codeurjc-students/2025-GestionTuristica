@@ -45,7 +45,7 @@
       </div>
     </div>
 
-
+    @if (images.length > 0) {
     <div class="swiper-wrapper">
       <swiper-container navigation="true" loop="true" pagination="true">
         @for(image of images; track $index) {
@@ -55,30 +55,36 @@
         }
       </swiper-container>
     </div>
-  </div>
-
-
-<div class="reviews-wrapper">
-  <h2 class="section-subtitle">Reseñas</h2>
-  <div class="reviews-list">
-    @for (review of reviews; track $index) {
-      <div class="review-card">
-        <div class="review-card-header">
-          <div class="review-user">{{review.userName}}</div>
-          <div class="review-creation-time"> {{review.creationTime}} </div>
-        </div>
-        <div class="review-message">{{review.message}}</div>
-        <div class="review-rating">{{review.rating}}/5</div>
+    } @else {
+      <div class="image-placeholder">
+        <img alt="No images available" [src]="'assets/room-placeholder.jpg'"/>
       </div>
     }
   </div>
-</div>
 
-<div class="pagination">
+  @if(reviews.length > 0) {
+  <div class="reviews-wrapper">
+    <h2 class="section-subtitle">Reseñas</h2>
+    <div class="reviews-list">
+      @for (review of reviews; track $index) {
+        <div class="review-card">
+          <div class="review-card-header">
+            <div class="review-user">{{review.userName}}</div>
+            <div class="review-creation-time"> {{review.creationTime}} </div>
+          </div>
+          <div class="review-message">{{review.message}}</div>
+          <div class="review-rating">{{review.rating}}/5</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
     Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
     <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
   </div>
+  }
 } @else {
 <p>Cargando datos de la habitación...</p>
 }

@@ -43,7 +43,7 @@
         </div>
         <div class="card-content-wrapper">
           <div class="hotel-image-wrapper">
-            <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl"/>
+            <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl || 'assets/hotel-placeholder.jpg'"/>
           </div>
           <div class="hotel-content">
           <div class="hotel-description">
