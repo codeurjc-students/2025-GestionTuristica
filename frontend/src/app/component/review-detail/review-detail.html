@@ -2,11 +2,9 @@
 
 <div class="review-detail-wrapper">
     <div class="review-detail">
-        <div>Identificador: {{review.reservationIdentifier}}</div>
-        <div>Habitación: {{review.roomName}}</div>
-        <div>Hora de creación: {{review.creationTime}}</div>
         <div>Mensaje: {{review.message}}</div>
         <div class="rating-selection">Puntuación: <app-star-rating [rating]="review.rating" [editable]="false"></app-star-rating> {{review.rating}}/5</div>
+        <div>Hora de creación: {{review.creationTime}}</div>
     </div>
 
     <div class="actions">
