@@ -40,8 +40,8 @@
       @for (room of hotelModel.rooms; track room.name) {
       <div class="room-card">
         <div class="room-name">{{room.name}}</div>
-        <div class="room-description">{{room.description}}</div>
-        <div class="room-price">{{room.price}}€</div>
+        <div class="room-description">Descripción: {{room.description}}</div>
+        <div class="room-price">Precio: {{room.price}}€/noche</div>
         <button class="red-action-button" type="button" (click)="removeRoom(room)">Eliminar habitación</button>
       </div>
       }
