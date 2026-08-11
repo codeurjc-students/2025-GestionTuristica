@@ -10,7 +10,8 @@
 
       <div class="description-wrapper">
         <label for="hotel-description">Descripción</label>
-        <textarea id="hotel-description" name="description" [(ngModel)]="hotelModel.description"></textarea>
+        <textarea id="hotel-description" name="description" [(ngModel)]="hotelModel.description" maxlength="500" required></textarea>
+        <p>{{hotelModel.description.length}}/500 caracteres</p>
       </div>
 
       <div class="country-wrapper">
@@ -30,7 +31,7 @@
 
       <div class="stars-wrapper">
         <div>Estrellas</div>
-          <app-star-rating [rating]="hotelModel.stars" [editable]="true" [allowHalfStars]="false" (valueChange)="hotelModel.stars"></app-star-rating>
+          <app-star-rating [rating]="hotelModel.stars" [editable]="true" [allowHalfStars]="false" (valueChange)="hotelModel.stars = $event"></app-star-rating>
       </div>
     </div>
 
@@ -65,7 +66,8 @@
 
         <div class="description-wrapper">
           <label for="room-description">Descripción</label>
-          <textarea id="room-description" name="roomDescription" [(ngModel)]="roomModel.description" required> </textarea>
+          <textarea id="room-description" name="roomDescription" [(ngModel)]="roomModel.description" maxlength="500" required> </textarea>
+          <p>{{roomModel.description.length}}/500 caracteres</p>
         </div>
 
         <div class="price-wrapper">
