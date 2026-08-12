@@ -128,6 +128,7 @@ export class HotelEdit implements OnInit{
 
     this.toggleRoomFormVisibility();
     this.resetSelectedRoomIndex();
+    this.resetRoomForm();
   }
 
   removeRoom(room: RoomRequest) {
