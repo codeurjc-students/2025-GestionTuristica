@@ -1,7 +1,8 @@
+import { DialogService } from './../services/dialog.service';
 
 import { Component, OnInit } from "@angular/core";
 import { Hotel, HotelFilters, HotelService } from "../services/hotel.service";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { FormsModule } from "@angular/forms";
 import { ChartData, ChartOptions } from "chart.js";
@@ -56,7 +57,7 @@ export class HotelListComponent implements OnInit {
         }
     }
 
-    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService) { }
+    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService, private readonly router: Router, private readonly dialogService: DialogService) { }
 
     ngOnInit() {
         this.adminUser = this.authService.getRole() === 'ROLE_ADMIN';
@@ -67,13 +68,22 @@ export class HotelListComponent implements OnInit {
     }
 
     deleteHotel(slug: string) {
-        this.hotelService.removeHotel(slug).subscribe({
-            next: () => {
-                this.hotels = this.hotels.filter(hotel => hotel.slug !== slug);
-                this.loadHotels(this.pageNumber);
-            },
-            error: (err) => console.error(err)
-        });
+        this.dialogService.confirmationDialog('Eliminar hotel', '¿Estás seguro/a que quieres eliminar este hotel? Esta acción no se puede deshacer.', 'Eliminar', 'Cancelar')
+            .subscribe(
+                confirm => {
+                    if (confirm === true) {
+                        this.hotelService.removeHotel(slug).subscribe({
+                            next: () => {
+                                this.hotels = this.hotels.filter(hotel => hotel.slug !== slug);
+                                this.loadHotels(this.pageNumber);
+                                this.dialogService.infoDialog('Éxito', 'Hotel eliminado correctamente')
+                            },
+                            error: () => this.dialogService.infoDialog('Error', 'Ha habido un error eliminando el hotel. Inténtalo de nuevo más tarde.')
+                        });
+                    }
+                }
+            )
+
     }
 
     loadHotels(page: number) {
@@ -90,7 +100,7 @@ export class HotelListComponent implements OnInit {
                     this.loadHotels(this.pageNumber - 1);
                 }
             },
-            error: (err) => console.error(err)
+            error: () => this.router.navigate(['/error'])
         });
     }
 
