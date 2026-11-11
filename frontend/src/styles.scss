@@ -2,89 +2,198 @@
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
+.section-title {
+    display: flex;
+    color: rgb(11, 61, 145);
+    text-transform: uppercase;
+}
+
+.section-subtitle {
+    display: flex;
+    color: rgb(11, 61, 145);
+    justify-content: center;
+}
+
 .main-nav{
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
 }
 
-.hotel-form{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    .action-button{
-        display: auto;
-        margin-right: 10px;
-    }
-
-    .rooms-list ul{
-        gap: 10px;
-    }
-
-    .rooms-list li{
-        display: space-between;
-        padding: 5px;
-    }
-}
-
 html, body {
+    font-family: 'Inter', sans-serif;
     height: 100%;
     margin: 0;
-    scrollbar-gutter: stable;
 }
 
 body {
     background-color: #f5f7fb;
 }
 
-.action-button {
-    background: rgb(200, 225, 250);
-    padding: 0.5rem;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.action-button:disabled {
-    background: darkgrey;
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.primary-button {
+    background: rgb(11,61,145);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 8px;
+    border: 2px solid rgb(11, 61, 145);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.primary-button:hover {
+    color: rgb(11, 61, 145);
+    background: white;
+    border: 2px solid rgb(11, 61, 145);
+}
+
+.primary-button:disabled {
+    background: rgba(170, 170, 170, 0.5);
+    color: rgba(0, 0, 0, 0.5);
+    border: 2px transparent;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-.action-button.selected {
-    background: rgb(129, 252, 156);
-    padding: 0.5rem;
-    border-radius: 8px;
-    border: 1px solid #000000;
+.tertiary-button.selected {
+    color: white;
+    background: rgb(11,61,145);
+    border: 2px solid rgb(11, 61, 145);
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease
+    transition: all 0.2s ease;
 }
 
-.action-button:hover {
-    background: rgb(175, 200, 250);
-    box-shadow: 0 4px 10px rgba(0,0,0,.50);
+.tertiary-button.selected:hover {
+    background: rgb(11, 61, 145);
+    color: white;
 }
 
-.action-button.selected:hover {
-    background: rgb(54, 253, 114);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .50);
-}
-
-.red-action-button {
-    background: rgb(220, 80, 80);
-    padding: 0.5rem;
+.secondary-button {
+    background: rgba(59, 130, 246);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 8px;
+    padding-bottom: 8px;
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     font-size: 1rem;
+    color: white;
     cursor: pointer;
-    transition: all 0.2s ease
 }
 
-.red-action-button:hover {
-    background: rgb(250, 20, 20);
-    box-shadow: 0 4px 10px rgba(0,0,0,.50);
+.secondary-button:hover {
+    color: rgba(59, 130, 246);
+    background: white;
+    border: 2px solid rgba(59, 130, 246);
+}
+
+.tertiary-button {
+    background: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 8px;
+    border: 2px solid rgb(11,61,145);
+    color: rgb(11, 61, 145);
+    font-size: 1rem;
+}
+
+.tertiary-button:hover {
+    color: white;
+    background: rgb(11, 61, 145);
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    border: 2px solid rgb(11, 61, 145);
+    padding: 2rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    align-items: center;
+    .primary-button {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.alt-text {
+    display: flex;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.text-input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-bottom: rgba(11, 61, 145, 0.6) 2px solid;
+    border-top: 2px transparent;
+    border-left: 2px transparent;
+    border-right: 2px transparent;
+}
+
+.text-input:focus {
+    border: rgba(11, 61, 145, 0.6) 2px solid;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.footer {
+    background: rgb(11, 61, 145);
+    color: white;
+    margin-top: auto;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.label {
+    font-size: smaller;
+}
+
+.form-label {
+    color:rgb(11, 61, 145);
+    font-size: large;
 }
