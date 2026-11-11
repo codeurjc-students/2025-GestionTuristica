@@ -1,33 +1,26 @@
 .section-title {
-    display: flex;
     justify-content: center;
-}
-
-.section-subtitle {
-    display: flex;
-    justify-content: center;
+    margin: 2rem;
 }
 
 .review-creation-wrapper {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    width: 700px;
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    width: 50%;
 }
 
 .message-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 1rem;
 }
 
 .rating-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 1rem;
 }
 
@@ -39,15 +32,8 @@
 
 .review-creation-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 1rem;
-}
-
-.message-input {
-    min-height: 180px;
-    max-height: 300px;
-    padding: 1rem;
-    font-size: 1.1rem;
 }
 
 textarea {

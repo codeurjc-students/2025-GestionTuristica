@@ -20,7 +20,7 @@ export class ReviewCreate {
     private readonly activatedRoute: ActivatedRoute,
     private readonly reviewService: ReviewService,
     private readonly router: Router
-  ){}
+  ) { }
 
   createReview() {
     const reservationIdentifier = this.activatedRoute.snapshot.paramMap.get('reservationIdentifier');
@@ -33,7 +33,7 @@ export class ReviewCreate {
       next: () => {
         this.router.navigate(['/reviews']);
       },
-      error: (error) => console.error(error)
+      error: () => this.router.navigate(['/error'])
     })
   }
 

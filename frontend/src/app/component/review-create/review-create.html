@@ -1,11 +1,10 @@
 <h1 class="section-title">Crear reseña</h1>
 
-<div class="review-creation-wrapper">
+<div class="review-creation-wrapper card">
     <h2 class="section-subtitle"> Reseña </h2>
     <form (ngSubmit)="createReview()" #f="ngForm" class="review-form">
         <div class="message-wrapper">
-            <label for="message">Mensaje</label>
-            <textarea id="message" class="message-input" name="message" [(ngModel)]="message" maxlength="500" required></textarea>
+            <textarea class="text-input" placeholder="Mensaje*" id="message" name="message" [(ngModel)]="message" maxlength="500" required></textarea>
             <p>{{message.length}}/500 caracteres</p>
         </div>
 
@@ -17,8 +16,8 @@
         </div>
 
         <div class="review-creation-actions">
-            <button class="action-button" type="submit"> Crear reseña</button>
-            <button class="red-action-button" (click)="cancel()">Cancelar</button>
+            <button class="primary-button" type="submit"> Crear reseña</button>
+            <button class="secondary-button" (click)="cancel()">Cancelar</button>
         </div>
     </form>
 </div>
