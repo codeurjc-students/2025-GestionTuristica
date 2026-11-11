@@ -1,11 +1,6 @@
 .section-title {
-    display: flex;
-    justify-content: center;
-}
-
-.section-subtitle {
-    display: flex;
-    justify-content: center;
+    margin: 3rem;
+    justify-self: center;
 }
 
 .review-edit-wrapper {
@@ -13,8 +8,6 @@
     flex-direction: column;
     margin: 0 auto;
     width: 700px;
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 .message-wrapper {

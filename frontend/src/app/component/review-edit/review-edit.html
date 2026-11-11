@@ -1,23 +1,23 @@
 <h1 class="section-title">Editar reseña</h1>
 
-<div class="review-edit-wrapper">
+<div class="review-edit-wrapper card">
   <form (ngSubmit)="updateReview()" #f="ngForm" class="review-form">
     <div class="message-wrapper">
       <label for="message">Mensaje</label>
-      <textarea id="message" name="message" [(ngModel)]="review.message" required></textarea>
+      <textarea id="message" name="message" class="text-input" [(ngModel)]="review.message" required></textarea>
       <p>{{review.message.length}}/500 caracteres</p>
     </div>
 
     <div class="rating-wrapper">
-      Valoración 
+      Valoración
       <div class="rating-selector">
         <app-star-rating [rating]="review.rating" [editable]="true" (valueChange)="review.rating = $event"></app-star-rating> {{review.rating}}/5
       </div>
     </div>
 
     <div class="review-edit-actions">
-      <button class="action-button" type="submit"> Guardar cambios</button>
-      <button class="red-action-button" (click)="cancelEdit()">Cancelar edición</button>
+      <button class="primary-button" type="submit"> Guardar cambios</button>
+      <button class="secondary-button" (click)="cancelEdit()">Cancelar edición</button>
     </div>
   </form>
 </div>

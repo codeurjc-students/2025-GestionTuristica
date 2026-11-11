@@ -11,7 +11,7 @@ import { StarRating } from "../star-rating/star-rating";
   templateUrl: './review-edit.html',
   styleUrl: './review-edit.scss'
 })
-export class ReviewEdit implements OnInit{
+export class ReviewEdit implements OnInit {
 
   review: Review = {
     userEmail: '',
@@ -23,17 +23,17 @@ export class ReviewEdit implements OnInit{
     creationTime: ''
   };
 
-    constructor(
-      private readonly reviewService: ReviewService,
-      private readonly router: Router,
-      private readonly activatedRoute: ActivatedRoute
-    ) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     const reservationIdentifier = this.activatedRoute.snapshot.paramMap.get('reservationIdentifier');
     this.reviewService.getReviewByReservationIdentifier(reservationIdentifier!).subscribe({
       next: (data) => this.review = data,
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -48,7 +48,7 @@ export class ReviewEdit implements OnInit{
       next: () => {
         this.router.navigate(['/reviews']);
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
