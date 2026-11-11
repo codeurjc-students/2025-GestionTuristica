@@ -27,7 +27,7 @@ import { A11yModule } from "@angular/cdk/a11y";
   styleUrl: './room-detail.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class RoomDetail implements OnInit{
+export class RoomDetail implements OnInit {
   @ViewChild('picker') picker!: MatDateRangePicker<Date>;
   roomId!: number;
   room!: Room;
@@ -71,7 +71,7 @@ export class RoomDetail implements OnInit{
     private readonly authService: AuthService,
     private readonly reviewService: ReviewService,
     private readonly imageService: ImageService
-  ){};
+  ) { };
 
   ngOnInit(): void {
     this.roomId = Number(this.route.snapshot.paramMap.get('roomId'));
@@ -81,7 +81,7 @@ export class RoomDetail implements OnInit{
         this.room = data;
         this.imageService.getImagesByRoomId(this.roomId).subscribe({
           next: (data) => this.images = data,
-          error: (err) => console.error(err)
+          error: () => this.router.navigate(['/error'])
         });
       }
     });
@@ -95,14 +95,14 @@ export class RoomDetail implements OnInit{
       }
     });
 
-    this.dateRange.valueChanges.subscribe(({start, end}) => {
-      if(start && end) {
-        if(this.checkOverlapedDates(this.normalizeDate(start), this.normalizeDate(end))) {
+    this.dateRange.valueChanges.subscribe(({ start, end }) => {
+      if (start && end) {
+        if (this.checkOverlapedDates(this.normalizeDate(start), this.normalizeDate(end))) {
           alert('Las fechas seleccionadas contienen fechas ya reservadas. Por favor, elija otras fechas.');
 
           this.picker.close();
           setTimeout(() =>
-                    this.dateRange.patchValue({start: null, end: null})
+            this.dateRange.patchValue({ start: null, end: null })
           );
           this.totalPrice = undefined;
           this.nights = 0;
@@ -123,13 +123,13 @@ export class RoomDetail implements OnInit{
   }
 
   reserveRoom() {
-    if(!this.authService.isAuthenticated()) {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
     }
     const startDate = this.dateToString(this.dateRange.get('start')?.value!);
     const endDate = this.dateToString(this.dateRange.get('end')?.value!);
-    const reservationRequest = {startDate: startDate, endDate: endDate}
+    const reservationRequest = { startDate: startDate, endDate: endDate }
     this.reservationService.reserveRoom(this.roomId, reservationRequest).subscribe({
       next: () => void this.router.navigate(['/']),
       error: (err) => console.error(err)
@@ -144,7 +144,7 @@ export class RoomDetail implements OnInit{
   }
 
   private calculatePrice(start: Date, end: Date) {
-    if(start && end) {
+    if (start && end) {
       const diffMs = end.getTime() - start.getTime();
       this.nights = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       this.totalPrice = this.nights * this.room.price;
@@ -168,19 +168,19 @@ export class RoomDetail implements OnInit{
         this.numberOfPages = data.totalPages;
 
       },
-      error: (err) => console.log(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
   nextPage() {
-    if(!this.lastPage) {
+    if (!this.lastPage) {
       this.pageNumber++;
       this.loadReviews(this.pageNumber);
     }
   }
 
   previousPage() {
-    if(!this.firstPage) {
+    if (!this.firstPage) {
       this.pageNumber--;
       this.loadReviews(this.pageNumber);
     }

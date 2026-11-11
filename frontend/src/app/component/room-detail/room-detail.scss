@@ -1,46 +1,53 @@
 .section-title {
+    margin-top: 3rem;
+    margin-left: 6rem;
+}
+
+.room-info-reserve-wrapper {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    gap: 2rem;
+    margin: 4rem;
 }
 
 .room-info-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto auto;
-
-    grid-template-areas: "info reserve" "swiper reserve";
-
-    gap: 0;
-    padding: 2rem;
-    background: white;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
 }
 
 .room-info {
-    grid-area: info;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 30%;
     padding: 2rem;
     gap: 1.5rem;
-    border-right: 2px solid #a7a5a5;
-    border-bottom: 2px solid #a7a5a5;
+}
+
+.room-description {
+    width: 100%;
+}
+
+.room-images-wrapper {
+    display: flex;
+    width: 100%;
+    height: 70%;
 }
 
 .swiper-wrapper {
-    grid-area: swiper;
     display: flex;
     justify-self: center;
-    max-width: 800px;
+    width: 90%;
+    height: 100%;
     max-height: fit-content;
     padding-top: 2rem;
-
-    border-right: 2px solid #a7a5a5;
 }
 
 swiper-container {
     width: 100%;
-    height: 400px;
+    height: 100%;
 }
 
 swiper-slide {
@@ -51,21 +58,20 @@ swiper-slide {
 }
 
 swiper-slide img {
-    width: 700px;
     height: 100%;
+    width: 85%;
     object-fit: cover;
-    
+    aspect-ratio: 1.7;
     border-radius: 12px;
 }
 
 .image-placeholder {
     display: flex;
     justify-self: center;
-    width: 800px;
-    height: 450px;
+    width: 100%;
+    height: 90%;
     flex-shrink: 0;
     padding-top: 2rem;
-    border-right: 2px solid #a7a5a5;
 }
 
 .image-placeholder img {
@@ -74,45 +80,71 @@ swiper-slide img {
     object-fit: contain;
 }
 
-.section-subtitle {
-    display: flex;
-    justify-content: center;
-}
-
 .reserve-wrapper {
-    grid-area: reserve;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0 auto;
 
-    position: sticky;
+    width: 50%;
+    border-radius: 8px;
+    border: 2px solid rgb(11, 61, 145);
 }
 
 .date-picker-wrapper {
-    position: relative;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 1.5rem;
+    margin: 1rem auto;
+    height: 100%;
 }
 
 .reservation-date-picker {
     display: flex;
-    justify-content: center;
+    height: 80%;
+}
+
+::ng-deep .mat-calendar-body-disabled .mat-calendar-body-cell-content {
+    background-color: rgb(255, 150, 150);
+}
+
+::ng-deep .mat-calendar-body-range-start::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-start::after {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-end::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-end::after {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-in-range::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-in-range::after {
+    background-color: rgb(140, 205, 245);
 }
 
 .reservation-date-picker mat-form-field {
-    width: 350px;
+    width: 100%;
 }
 
 .reservation-info-actions-wrapper {
-    position: absolute;
-    left: calc(50% + 200px);
+    height: 20%;
 }
 
 .reservation-actions {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
+    height: 40%;
 }
 
 .reviews-wrapper {
@@ -131,38 +163,20 @@ swiper-slide img {
     display: flex;
     flex-direction: column;
     width: 500px;
-    gap: 0.5rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 12px;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    gap: 1rem;
+    padding: 2rem;
 }
 
 .review-card-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #a7a5a5;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgb(11, 61, 145);
 }
 
 .review-rating {
     display: flex;
     flex-direction: row;
     justify-content: right;
-}
-
-.alt-text {
-    display: flex;
-    justify-content: center;
-    font-size: 1.4rem;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    align-items: center;
 }
