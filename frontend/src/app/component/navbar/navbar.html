@@ -1,23 +1,24 @@
 <mat-toolbar class="main-nav">
-  <img src="assets/logo.jpg" routerLink="/" alt="Main logo">
+  <img src="assets/logo.svg" routerLink="/" alt="Main logo">
   <div class="nav-links">
-    <button mat-button routerLink="/hotels">Hoteles</button>
+    <button mat-button routerLink="/hotels">HOTELES</button>
     @if(userLoggedIn) {
-      <button mat-button routerLink="/reservations">Reservas</button>
+      <button mat-button routerLink="/reservations">RESERVAS</button>
       @if(userAdmin) {
-        <button mat-button routerLink="/requests">Solicitudes</button>
+        <button mat-button routerLink="/requests">SOLICITUDES</button>
+        <button type="button" class="primary-button" [routerLink]="['/hotels/create']">Crear hotel</button>
       } @else {
-        <button mat-button routerLink="/reviews">Deja una reseña</button>
+        <button mat-button routerLink="/reviews">RESEÑAS</button>
       }
     }
   </div>
   <span class="spacer"></span>
   <div class="auth-links">
     @if(!userLoggedIn) {
-    <button class="action-button" routerLink="/login">Iniciar sesión</button>
-    <button class="action-button" routerLink="/register">Registrarse</button>
+    <button class="primary-button" routerLink="/login">Iniciar sesión</button>
+    <button class="primary-button" routerLink="/register">Registrarse</button>
     } @else {
-    <button class="red-action-button" (click)="logout()">Cerrar sesión</button>
+    <button class="tertiary-button" (click)="logout()">Cerrar sesión</button>
     }
   </div>
 </mat-toolbar>
