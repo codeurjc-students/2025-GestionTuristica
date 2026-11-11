@@ -1,37 +1,40 @@
 <h1 class="section-title">Peticiones</h1>
 
     <div class="filters-buttons">
-        <button class="action-button" [class.selected]="currentStatus==='PENDING'" (click)="changeStatus('PENDING')">Pendientes</button>
-        <button class="action-button" [class.selected]="currentStatus==='APPROVED'" (click)="changeStatus('APPROVED')">Aprobadas</button>
-        <button class="action-button" [class.selected]="currentStatus==='REJECTED'" (click)="changeStatus('REJECTED')">Rechazadas</button>
-        <button class="action-button" [class.selected]="currentStatus==='RESOLVED'" (click)="changeStatus('RESOLVED')">Resueltas</button>
-        <button class="action-button" [class.selected]="currentStatus==='ALL'" (click)="changeStatus('ALL')">Todas</button>
+        <button class="tertiary-button" [class.selected]="currentStatus==='PENDING'" (click)="changeStatus('PENDING')">Pendientes</button>
+        <button class="tertiary-button" [class.selected]="currentStatus==='APPROVED'" (click)="changeStatus('APPROVED')">Aprobadas</button>
+        <button class="tertiary-button" [class.selected]="currentStatus==='REJECTED'" (click)="changeStatus('REJECTED')">Rechazadas</button>
+        <button class="tertiary-button" [class.selected]="currentStatus==='RESOLVED'" (click)="changeStatus('RESOLVED')">Resueltas</button>
+        <button class="tertiary-button" [class.selected]="currentStatus==='ALL'" (click)="changeStatus('ALL')">Todas</button>
     </div>
 
     @if(requests.length !== 0) {
     <div class="requests-list">
     @for(request of requests; track request.id) {
-        <div class="request-card">
+        <div class="request-card card">
             <div class="request-card-header">
                 <div class="header-top">
-                    <div class="request-reservation-identifier"> Reserva {{request.reservationIdentifier}}</div>
-                    <div class="request-status" [ngClass]="request.status.toLocaleLowerCase()"> {{getStatusText(request.status)}} </div>
+                    <div class="header-info">
+                        <div class="request-type label" [ngClass]="request.type.toLowerCase()">{{getTypeText(request.type)}}</div>
+                        <div class="request-reservation-identifier"> Reserva {{request.reservationIdentifier}}</div>
+                    </div>
+                    <div class="request-status label" [ngClass]="request.status.toLowerCase()"> {{getStatusText(request.status)}} </div>
                 </div>
                 <div class="header-bottom">
                     <div class="request-user-email"> {{request.userEmail}}</div>
                 </div>
             </div>
-            <div class="request-type">Tipo: {{getTypeText(request.type)}}</div>
             @if(request.type == 'MODIFICATION') {
                 <div class="request-modification-dates">
+                    <p>Cambio solicitado</p>
                     <p> Fecha entrada: {{request.requestedStartDate}}</p>
                     <p> Fecha salida: {{request.requestedEndDate}}</p>
                 </div>
             }
             @if(request.status == 'PENDING') {
                 <div class="request-actions">
-                    <button class="action-button" (click)="approveRequest(request.id)">Aprobar</button>
-                    <button class="red-action-button" (click)="rejectRequest(request.id)">Rechazar</button>
+                    <button class="primary-button" (click)="approveRequest(request.id)">Aprobar</button>
+                    <button class="secondary-button" (click)="rejectRequest(request.id)">Rechazar</button>
                 </div>
             }
         </div>
@@ -39,9 +42,9 @@
     </div>
 
     <div class="pagination">
-        <button class="action-button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+        <button class="primary-button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
         Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-        <button class="action-button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+        <button class="primary-button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
     </div>
     } @else {
         <div class="alt-text"> 🔎 No existen peticiones que cumplan los criterios</div>

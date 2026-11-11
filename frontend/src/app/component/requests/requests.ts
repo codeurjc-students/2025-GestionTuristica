@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModificationRequest, RequestFilter, RequestService } from '../../services/request.service';
 import { MatButtonModule } from "@angular/material/button";
 import { NgClass } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-requests',
@@ -9,7 +10,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './requests.html',
   styleUrl: './requests.scss'
 })
-export class Requests implements OnInit{
+export class Requests implements OnInit {
   requests: ModificationRequest[] = [];
   currentStatus: RequestFilter = 'PENDING';
   pageNumber: number = 0;
@@ -19,24 +20,24 @@ export class Requests implements OnInit{
   numberOfPages!: number;
 
 
-  constructor(private readonly requestService: RequestService) {}
+  constructor(private readonly requestService: RequestService, private readonly router: Router) { }
 
   ngOnInit(): void {
-      this.loadRequests(this.pageNumber);
+    this.loadRequests(this.pageNumber);
   }
 
   loadRequests(page: number) {
     this.requestService.getRequests(this.currentStatus, page).subscribe({
-        next: (data) => {
-          this.requests = data.content;
-          this.pageNumber = data.number;
-          this.firstPage = data.first;
-          this.lastPage = data.last;
-          this.numberOfRequests = data.totalElements;
-          this.numberOfPages = data.totalPages;
-        },
-        error: (err) => console.error(err)
-      });
+      next: (data) => {
+        this.requests = data.content;
+        this.pageNumber = data.number;
+        this.firstPage = data.first;
+        this.lastPage = data.last;
+        this.numberOfRequests = data.totalElements;
+        this.numberOfPages = data.totalPages;
+      },
+      error: () => this.router.navigate(['/error'])
+    });
   }
 
   approveRequest(requestId: number) {
@@ -44,7 +45,7 @@ export class Requests implements OnInit{
       next: () => {
         this.requests = this.requests.filter(request => request.id !== requestId);
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -53,7 +54,7 @@ export class Requests implements OnInit{
       next: () => {
         this.requests = this.requests.filter(request => request.id !== requestId);
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -63,14 +64,14 @@ export class Requests implements OnInit{
   }
 
   nextPage() {
-    if(!this.lastPage) {
+    if (!this.lastPage) {
       this.pageNumber++;
       this.loadRequests(this.pageNumber);
     }
   }
 
   previousPage() {
-    if(!this.firstPage) {
+    if (!this.firstPage) {
       this.pageNumber--;
       this.loadRequests(this.pageNumber);
     }
