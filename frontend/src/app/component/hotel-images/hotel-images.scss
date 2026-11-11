@@ -1,11 +1,6 @@
 .section-title {
-  display: flex;
-  justify-content: center;
-}
-
-.section-subtitle {
-  display: flex;
-  justify-content: center;
+  margin: 3rem;
+  justify-self: center;
 }
 
 .image-uploader {
@@ -14,7 +9,7 @@
   display: none;
 }
 
-.action-button {
+.primary-button {
   margin: 10px;
   display: flex;
   justify-self: center;
@@ -32,8 +27,6 @@
   flex-direction: column;
   margin-top: 20px;
   padding: 10px;
-  background: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .image-preview {
@@ -49,10 +42,7 @@
   align-items: center;
   gap: 20px;
   padding: 20px;
-  border: solid 1px #ccc;
   min-height: 180px;
-  background: white;
-  border-radius: 10px;
   overflow-x: auto;
 }
 
@@ -105,5 +95,7 @@
 
 .actions {
   display: flex;
+  margin: 0 auto;
+  justify-content: center;
   padding: 20px;
 }

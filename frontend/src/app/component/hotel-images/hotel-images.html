@@ -5,13 +5,13 @@
     <div class="help-text">Sube imágenes del hotel y de sus habitaciones y ordénalas arrastrándolas, la primera imagen de cada sección será la principal del hotel o de esa habitación</div>
 
     <input #fileInput class="image-uploader" type="file" multiple (change)="onFilesSelected($event)"/>
-    <button class="action-button" type="button" (click)="fileInput.click()">Subir imágenes</button>
+    <button class="primary-button" type="button" (click)="fileInput.click()">Subir imágenes</button>
 
     <div cdkDropListGroup>
         <div class="images-section">
             <h3 class="section-subtitle">Imágenes del hotel</h3>
 
-            <div class="image-list" cdkDropList id="hotel" cdkDropListOrientation="horizontal" [cdkDropListData]="hotelImages" (cdkDropListDropped)="drop($event)">
+            <div class="image-list card" cdkDropList id="hotel" cdkDropListOrientation="horizontal" [cdkDropListData]="hotelImages" (cdkDropListDropped)="drop($event)">
                 @for (image of hotelImages; track $index) {
                     <div class="image-item" cdkDrag>
                         <img alt="Hotel preview" class="image-preview" [src]="image.previewUrl || image.url">
@@ -20,12 +20,12 @@
                 }
             </div>
         </div>
-        
+
         @for (room of rooms; track $index) {
             <div class="images-section">
                 <h3 class="section-subtitle">{{room.name}}</h3>
 
-                <div class="image-list" cdkDropList id="room-{{room.id}}" cdkDropListOrientation="horizontal" [cdkDropListData]="roomImages[room.id]" (cdkDropListDropped)="drop($event)">
+                <div class="image-list card" cdkDropList id="room-{{room.id}}" cdkDropListOrientation="horizontal" [cdkDropListData]="roomImages[room.id]" (cdkDropListDropped)="drop($event)">
                     @for (image of roomImages[room.id]; track $index) {
                         <div class="image-item" cdkDrag>
                             <img alt="Room preview" class="image-preview" [src] = "image.previewUrl || image.url">
@@ -38,6 +38,6 @@
     </div>
 
     <div class="actions">
-        <button class="action-button" (click)="updateImages()">Guardar</button>
+        <button class="primary-button" (click)="updateImages()">Guardar</button>
     </div>
 </div>

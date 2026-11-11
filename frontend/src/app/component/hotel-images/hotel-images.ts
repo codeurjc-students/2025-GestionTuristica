@@ -35,18 +35,18 @@ export class HotelImages implements OnInit {
 
     ngOnInit(): void {
         this.hotelSlug = String(this.activatedRoute.snapshot.paramMap.get('slug'));
-        if(this.hotelSlug) {
+        if (this.hotelSlug) {
             this.roomService.getNonPaginatedRoomsByHotelSlug(this.hotelSlug).subscribe({
                 next: (data) => {
                     this.rooms = data;
 
-                    for(const room of this.rooms){
+                    for (const room of this.rooms) {
                         this.roomImages[room.id] = [];
                     };
 
                     this.loadHotelImages();
                 },
-                error: (err) => console.error(err)
+                error: () => this.router.navigate(['/error'])
             });
         }
 
@@ -57,7 +57,7 @@ export class HotelImages implements OnInit {
 
         const files = Array.from(input.files || []);
 
-        for(const file of  files){
+        for (const file of files) {
             this.hotelImages.push({
                 file,
                 type: 'HOTEL',
@@ -71,14 +71,14 @@ export class HotelImages implements OnInit {
 
     updatePositions(images: EditableImage[]) {
 
-        for(const [index, img] of images.entries()) {
+        for (const [index, img] of images.entries()) {
             img.position = index;
         }
     }
 
     drop(event: CdkDragDrop<EditableImage[]>) {
 
-        if(event.previousContainer === event.container) {
+        if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             this.updatePositions(event.container.data);
         } else {
@@ -90,29 +90,29 @@ export class HotelImages implements OnInit {
     }
 
     updateImages() {
-        for(const image of this.hotelImages) {
-            if(image.file) {
+        for (const image of this.hotelImages) {
+            if (image.file) {
                 const formData = new FormData();
                 formData.append('file', image.file);
                 this.imageService.uploadHotelImage(formData, this.hotelSlug, image.position).subscribe();
-            } else if(image.id){
+            } else if (image.id) {
                 this.imageService.updateImage(image.id, image).subscribe();
             }
         }
 
-        for(const roomImagesList of Object.values(this.roomImages)) {
-            for(const image of roomImagesList) {
-                if(image.file) {
+        for (const roomImagesList of Object.values(this.roomImages)) {
+            for (const image of roomImagesList) {
+                if (image.file) {
                     const formData = new FormData();
                     formData.append('file', image.file);
                     this.imageService.uploadRoomImage(formData, image.roomId!, image.position).subscribe();
-                } else if(image.id){
+                } else if (image.id) {
                     this.imageService.updateImage(image.id, image).subscribe();
                 }
             }
         }
 
-        for(const imageId of this.imagesToDelete) {
+        for (const imageId of this.imagesToDelete) {
             this.imageService.deleteImage(imageId).subscribe();
         }
 
@@ -120,7 +120,7 @@ export class HotelImages implements OnInit {
     }
 
     updateType(image: EditableImage, listId: string) {
-        if(listId.startsWith('hotel')) {
+        if (listId.startsWith('hotel')) {
             image.type = 'HOTEL';
             image.roomId = undefined;
         } else {
@@ -131,19 +131,19 @@ export class HotelImages implements OnInit {
     }
 
     removeImage(list: EditableImage[], image: EditableImage) {
-            const imageIndex = list.indexOf(image);
+        const imageIndex = list.indexOf(image);
 
-            if(image.previewUrl) {
-                URL.revokeObjectURL(image.previewUrl);
-            }
+        if (image.previewUrl) {
+            URL.revokeObjectURL(image.previewUrl);
+        }
 
-            list.splice(imageIndex, 1);
+        list.splice(imageIndex, 1);
 
-            this.updatePositions(list);
+        this.updatePositions(list);
 
-            if(image.id) {
-                this.imagesToDelete.push(image.id);
-            }
+        if (image.id) {
+            this.imagesToDelete.push(image.id);
+        }
     }
 
     loadHotelImages() {
@@ -151,7 +151,7 @@ export class HotelImages implements OnInit {
             (data) => this.hotelImages = data
         );
 
-        for(const room of this.rooms){
+        for (const room of this.rooms) {
             this.imageService.getImagesByRoomId(room.id).subscribe(
                 (data) => this.roomImages[room.id] = data
             );
