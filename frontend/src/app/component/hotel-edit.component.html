@@ -2,35 +2,35 @@
 
 <div class="hotel-edit-form">
   <form (ngSubmit)="submit()" #f="ngForm" class="hotel-form">
-    <div class="hotel-info-wrapper">
-      <div class="name-wrapper">
-        <label for="hotel-name">Nombre</label>
-        <input id="hotel-name" name="name" [(ngModel)]="hotelModel.name" required/>
+    <div class="hotel-info-wrapper card">
+      <div class="form-field">
+        <label class="form-label" for="hotel-name">Nombre</label>
+        <input id="hotel-name" class="text-input" name="name" [(ngModel)]="hotelModel.name" required/>
       </div>
 
-      <div class="description-wrapper">
-        <label for="hotel-description">Descripción</label>
-        <textarea id="hotel-description" name="description" [(ngModel)]="hotelModel.description" maxlength="500" required></textarea>
+      <div class="form-field">
+        <label class="form-label" for="hotel-description">Descripción</label>
+        <textarea id="hotel-description" class="text-input" name="description" [(ngModel)]="hotelModel.description" maxlength="500" required></textarea>
         <p>{{hotelModel.description.length}}/500 caracteres</p>
       </div>
 
-      <div class="country-wrapper">
-        <label for="hotel-country">País</label>
-        <input id="hotel-country" name="country" [(ngModel)]="hotelModel.country" required/>
+      <div class="form-field">
+        <label class="form-label" for="hotel-country">País</label>
+        <input id="hotel-country" class="text-input" name="country" [(ngModel)]="hotelModel.country" required/>
       </div>
 
-      <div class="city-wrapper">
-        <label for="hotel-city">Ciudad</label>
-        <input id="hotel-city" name="city" [(ngModel)]="hotelModel.city" required/>
+      <div class="form-field">
+        <label class="form-label" for="hotel-city">Ciudad</label>
+        <input id="hotel-city" class="text-input" name="city" [(ngModel)]="hotelModel.city" required/>
       </div>
 
-      <div class="address-wrapper">
-        <label for="hotel-address">Dirección</label>
-        <input id="hotel-address" name="address" [(ngModel)]="hotelModel.address" required/>
+      <div class="form-field">
+        <label class="form-label" for="hotel-address">Dirección</label>
+        <input id="hotel-address" class="text-input" name="address" [(ngModel)]="hotelModel.address" required/>
       </div>
 
-      <div class="stars-wrapper">
-        <div>Estrellas</div>
+      <div class="form-field">
+        <div class="form-label">Estrellas</div>
           <app-star-rating [rating]="hotelModel.stars" [editable]="true" [allowHalfStars]="false" (valueChange)="hotelModel.stars = $event"></app-star-rating>
       </div>
     </div>
@@ -39,58 +39,56 @@
 
     <div class="rooms-list">
       @for (room of hotelModel.rooms; track room.name; let i = $index) {
-        <div class="room-card">
+        <div class="room-card card">
           <div class="room-name">{{room.name}}</div>
           <div class="room-description">{{room.description}}</div>
           <div class="room-price">{{room.price}}€/noche</div>
           <div class="room-actions">
-            <button class="red-action-button" type="button" (click)="removeRoom(room)">Eliminar</button>
-            <button class="action-button" type="button" (click)="startRoomUpdate(room, i)">Editar</button>
+            <button class="secondary-button" type="button" (click)="removeRoom(room)">Eliminar</button>
+            <button class="primary-button" type="button" (click)="startRoomUpdate(room, i)">Editar</button>
           </div>
         </div>
       }
     </div>
 
-    @if(!showForm){ 
+    @if(!showForm){
       <div class="actions">
-        <button class="action-button" type="button" (click)="startRoomCreation()">Añadir habitación</button>
+        <button class="primary-button" type="button" (click)="startRoomCreation()">Añadir habitación</button>
       </div>
     }
     @if(showForm){
-      <div class="room-creation-wrapper">
-        <h4 class="section-subtitle">Nueva habitación</h4>
-        <div class="name-wrapper">
-          <label for="room-name">Nombre</label>
-          <input id="room-name" name="roomName" [(ngModel)]="roomModel.name" required/>
+      <div class="room-creation-wrapper card">
+        <h3 class="section-subtitle">Nueva habitación</h3>
+        <div class="form-field">
+          <input id="room-name" placeholder="Nombre*" class="text-input" name="roomName" [(ngModel)]="roomModel.name" required/>
         </div>
 
-        <div class="description-wrapper">
-          <label for="room-description">Descripción</label>
-          <textarea id="room-description" name="roomDescription" [(ngModel)]="roomModel.description" maxlength="500" required> </textarea>
-          <p>{{roomModel.description.length}}/500 caracteres</p>
+        <div class="form-field">
+          <textarea id="room-description" placeholder="Descripción*" class="text-input" name="roomDescription" [(ngModel)]="roomModel.description" maxlength="500" required> </textarea>
         </div>
+        <p>{{roomModel.description.length}}/500 caracteres</p>
 
-        <div class="price-wrapper">
+        <div class="form-field">
           <label for="room-price">Precio €</label>
-          <input id="room-price" name="roomPrice" [(ngModel)]="roomModel.price" type="number" required/>
+          <input id="room-price" class="text-input" name="roomPrice" [(ngModel)]="roomModel.price" type="number" required/>
         </div>
 
         <div class="actions">
           @if(creatingRoom){
-            <button class="action-button" type="button" (click)="addRoom()">Crear habitación</button>
-            <button class="red-action-button" type="button" (click)="cancelRoomUpdate()">Cancelar creación habitación</button>
-          } 
+            <button class="primary-button" type="button" (click)="addRoom()">Crear habitación</button>
+            <button class="secondary-button" type="button" (click)="cancelRoomUpdate()">Cancelar creación habitación</button>
+          }
           @if(updatingRoom){
-            <button class="action-button" type="button" (click)="updateRoom()">Actualizar habitación</button>
-            <button class="red-action-button" type="button" (click)="cancelRoomUpdate()">Cancelar actualización</button>
+            <button class="primary-button" type="button" (click)="updateRoom()">Actualizar habitación</button>
+            <button class="secondary-button" type="button" (click)="cancelRoomUpdate()">Cancelar actualización</button>
           }
         </div>
       </div>
     }
 
     <div class="actions">
-      <button class="action-button" type="submit">Guardar cambios</button>
-      <button class="red-action-button" type="button" (click)="cancel()">Cancelar</button>
+      <button class="primary-button" type="submit">Guardar cambios</button>
+      <button class="secondary-button" type="button" (click)="cancel()">Cancelar</button>
     </div>
   </form>
 </div>
