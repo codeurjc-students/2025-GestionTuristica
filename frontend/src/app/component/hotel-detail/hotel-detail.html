@@ -1,5 +1,5 @@
 @if (hotel){
-<h1 class="section-title">{{hotel.name}} - {{hotel.stars}}⭐ </h1>
+<h1 class="section-title">{{hotel.name}} @for(star of [].constructor(hotel.stars); track $index) {⭐} </h1>
 
 <div class="hotel-info-wrapper">
   <div class="hotel-info">
@@ -19,7 +19,7 @@
 
   @if(images.length > 0) {
   <div class="swiper-wrapper">
-    <swiper-container navigation="true" loop="true" pagination="true">
+    <swiper-container navigation="true" loop="false" pagination="true">
       @for(image of images; track $index) {
       <swiper-slide>
         <img alt="Hotel preview" [src]="image.url"/>
@@ -38,13 +38,13 @@
 
 <div class="rooms-list">
   @for (room of hotel.rooms; track room.name) {
-  <div class="room-card">
-    <a class="room-name" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']">{{room.name}}</a>
+  <div class="room-card card">
     <div class="card-content-wrapper">
       <div class="room-image-wrapper">
         <img alt="Room main" class="main-image" [src]="room.mainImageUrl || 'assets/room-placeholder.jpg'"/>
       </div>
       <div class="room-content">
+        <a class="room-name" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']">{{room.name}}</a>
         <div class="room-description">{{room.description}}</div>
         <div class="room-card-footer">
           <div class="room-rating">
@@ -63,15 +63,12 @@
   }
 
   <div class="pagination">
-    <button class="action-button" (click)="previousPage()" [disabled]="this.firstPage"> <</button>
+    <button class="primary-button" (click)="previousPage()" [disabled]="this.firstPage"> <</button>
     Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-    <button class="action-button" (click)="nextPage()" [disabled]="this.lastPage"> ></button>
+    <button class="primary-button" (click)="nextPage()" [disabled]="this.lastPage"> ></button>
   </div>
 </div>
 
-<div class="actions">
-  <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-</div>
 } @else {
 <p>Cargando datos del hotel...</p>
 }
