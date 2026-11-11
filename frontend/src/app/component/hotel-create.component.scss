@@ -1,75 +1,20 @@
 .section-title {
-    display: flex;
     justify-content: center;
+    padding: 2rem;
 }
 
 .hotel-creation-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 800px;
+    width: 50%;
     margin: 0 auto;
-    padding: 1rem;
 }
 
 .hotel-info-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    flex-grow: 1;
-    width: 700px;
-    box-sizing: border-box;
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-}
-
-.section-subtitle {
-    display: flex;
-    justify-content: center;
-}
-
-.name-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.description-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.country-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.city-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.address-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.stars-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.price-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    width: 90%;
 }
 
 textarea {
@@ -80,20 +25,17 @@ textarea {
 .room-creation-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    flex-grow: 1;
-    width: 700px;
-    box-sizing: border-box;
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    border-radius: 8px;
+    margin: 1rem auto;
+    gap: 1rem;
+    width: 70%;
 }
 
 .actions {
     display: flex;
-    padding: 1rem;
+    flex-direction: row;
     justify-content: center;
+    gap: 1rem;
+    margin: 1rem;
 }
 
 .rooms-list {
@@ -106,13 +48,9 @@ textarea {
 .room-card {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    width: 700px;
-    box-sizing: border-box;
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    margin: 1rem auto;
+    gap: 1rem;
+    width: 80%;
 }
 
 .room-name {
@@ -120,7 +58,13 @@ textarea {
     font-weight: bolder;
 }
 
-.room-card .red-action-button {
+.room-card .secondary-button {
     align-self: flex-start;
     width: fit-content;
+}
+
+.price-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
