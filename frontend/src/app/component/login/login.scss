@@ -1,15 +1,13 @@
 .section-title {
-    display: flex;
-    justify-content: center;
+    margin: 3rem;
+    justify-self: center;
 }
 
 .login-box {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    width: 600px;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    width: 40%;
 }
 
 .email-wrapper {
@@ -29,4 +27,13 @@
 .login-actions {
     gap: 0.5rem;
     padding: 1rem;
+}
+
+a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
 }
