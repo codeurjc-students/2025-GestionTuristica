@@ -1,6 +1,6 @@
 <h1 class="section-title">Detalle de la reseña</h1>
 
-<div class="review-detail-wrapper">
+<div class="review-detail-wrapper card">
     <div class="review-detail">
         <div>Mensaje: {{review.message}}</div>
         <div class="rating-selection">Puntuación: <app-star-rating [rating]="review.rating" [editable]="false"></app-star-rating> {{review.rating}}/5</div>
@@ -8,8 +8,7 @@
     </div>
 
     <div class="actions">
-    <button class="action-button" (click)="deleteReview()">Eliminar reseña</button>
-    <button class="action-button" (click)="updateReview()">Editar reseña</button>
-    <button class="action-button" (click)="cancel()">Volver atrás</button>
-</div>
+        <button class="primary-button" (click)="updateReview()">Editar reseña</button>
+        <button class="secondary-button" (click)="deleteReview()">Eliminar reseña</button>
+    </div>
 </div>
