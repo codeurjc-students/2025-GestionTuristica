@@ -1,71 +1,74 @@
 <h1 class="section-title">Reservas</h1>
 
 <div class="filter-button">
-    <button class="action-button" [class.selected]="!showCancelled" (click)="alterView(false)">Activas</button>
-    <button class="action-button" [class.selected]="showCancelled" (click)="alterView(true)">Canceladas</button>
+  <button class="tertiary-button" [class.selected]="!showCancelled" (click)="alterView(false)">Activas</button>
+  <button class="tertiary-button" [class.selected]="showCancelled" (click)="alterView(true)">Canceladas</button>
 </div>
 
 <div class="reservations-wrapper">
 
   <div class="reservations-list">
-      @for (reservation of reservations; track reservation.id) {
-        <div class="reservation-card">
-          <div class="reservation-card-header">
-            <div class="reservation-identifier">Reserva {{reservation.reservationIdentifier}}</div>
-            <div class="reservation-status">
-              @if(reservation.status == 'CANCELLED'){
-              <p>Reserva cancelada<p>
-              } @else if (reservation.status == 'MODIFICATION_REQUESTED') {
-              <p>Modificación solicitada</p>
-              } @else if (reservation.status == 'CANCELLATION_REQUESTED') {
-              <p>Cancelación solicitada</p>
-              }
-            </div>
-          </div>
-          <div class="reservation-info">
-          <p><strong>Usuario:</strong> {{reservation.userEmail}}</p>
-          <p><strong>Hotel:</strong> {{reservation.hotelName}} </p>
-          <p><strong>Habitación reservada:</strong> {{reservation.roomName}} </p>
-          <p><strong>Fecha de entrada:</strong> {{reservation.startDate | date: 'dd/MM/yyyy'}}</p>
-          <p><strong>Fecha de salida:</strong> {{reservation.endDate | date: 'dd/MM/yyyy'}}</p>
-          <p><strong>Fecha de reserva:</strong> {{reservation.createdAt | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
-          <p><strong>Precio:</strong> {{reservation.price}} €</p>
-          </div>
-
-          <div class="reservation-actions">
-            @if(reservation.status == 'ACTIVE') {
-              @if(userAdmin) {
-              <button class="action-button" type="button" [routerLink]="[reservation.reservationIdentifier]"> Modificar
-                reserva
-              </button>
-              } @else {
-              <button class="action-button" type="button" [routerLink]="[reservation.reservationIdentifier]"> Solicitar 
-                modificación
-              </button>
-              }
-              @if(userAdmin) {
-              <button class="action-button" type="button" (click)="cancelReservation(reservation.reservationIdentifier)">
-                Cancelar reserva
-              </button>
-              } @else {
-              <button class="action-button" type="button" (click)="requestCancellation(reservation)">
-                Solicitar cancelación
-              </button>
-              }
-              <button class="action-button" type="button" (click)="downloadPdf(reservation.reservationIdentifier)">Descargar pdf</button>
-            }
-          </div>
+    @for (reservation of reservations; track reservation.id) {
+    <div class="reservation-card card">
+      <div class="reservation-card-header">
+        <div class="reservation-identifier">Reserva {{reservation.reservationIdentifier}}</div>
+        <div class="reservation-status">
+          @if(reservation.status == 'CANCELLED'){
+          <p>Reserva cancelada
+          <p>
+            } @else if (reservation.status == 'MODIFICATION_REQUESTED') {
+          <p>Modificación solicitada</p>
+          } @else if (reservation.status == 'CANCELLATION_REQUESTED') {
+          <p>Cancelación solicitada</p>
+          }
         </div>
-      }
-    </div>
-  </div>
+      </div>
+      <div class="reservation-info">
+        <p><strong>Usuario:</strong> {{reservation.userEmail}}</p>
+        <p><strong>Hotel:</strong> {{reservation.hotelName}} </p>
+        <p><strong>Habitación reservada:</strong> {{reservation.roomName}} </p>
+        <p><strong>Fecha de entrada:</strong> {{reservation.startDate | date: 'dd/MM/yyyy'}}</p>
+        <p><strong>Fecha de salida:</strong> {{reservation.endDate | date: 'dd/MM/yyyy'}}</p>
+        <p><strong>Fecha de reserva:</strong> {{reservation.createdAt | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+        <p><strong>Precio:</strong> {{reservation.price}} €</p>
+      </div>
 
-  @if(numberOfPages !== 0) {
-  <div class="pagination">
-    <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
-    Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-    <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+      <div class="reservation-actions">
+        @if(reservation.status == 'ACTIVE') {
+        @if(userAdmin) {
+        <button class="primary-button" type="button" [routerLink]="[reservation.reservationIdentifier]"> Modificar
+          reserva
+        </button>
+        } @else {
+        <button class="primary-button" type="button" [routerLink]="[reservation.reservationIdentifier]"> Solicitar
+          modificación
+        </button>
+        }
+        @if(userAdmin) {
+        <button class="secondary-button" type="button" (click)="cancelReservation(reservation.reservationIdentifier)">
+          Cancelar reserva
+        </button>
+        } @else {
+        <button class="primary-button" type="button" (click)="requestCancellation(reservation)">
+          Solicitar cancelación
+        </button>
+        }
+        <button class="tertiary-button" type="button" (click)="downloadPdf(reservation.reservationIdentifier)">Descargar
+          pdf
+        </button>
+        }
+      </div>
+    </div>
+    }
   </div>
-  } @else {
-    <div class="alt-text"> 🔎 No existen reservas que cumplan los criterios</div>
-  }
+</div>
+
+@if(numberOfPages !== 0) {
+<div class="pagination">
+  <button type="button" class="primary-button" (click)="previousPage()" [disabled]="this.firstPage"> <</button>
+  Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
+  <button type="button" class="primary-button" (click)="nextPage()" [disabled]="this.lastPage"> ></button>
+</div>
+} @else {
+<div class="alt-text"> 🔎 No existen reservas que cumplan los criterios</div>
+}

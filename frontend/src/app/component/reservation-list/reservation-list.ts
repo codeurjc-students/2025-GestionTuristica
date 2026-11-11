@@ -1,10 +1,11 @@
+import { DialogService } from './../../services/dialog.service';
 import { ReservationFilter } from './../../services/reservation.service';
 import { RequestService, ModificationRequestCreation } from './../../services/request.service';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Reservation, ReservationService } from '../../services/reservation.service';
 import { DatePipe, CommonModule } from '@angular/common';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 
 @Component({
@@ -28,8 +29,10 @@ export class ReservationList implements OnInit {
   constructor(
     private readonly reservationService: ReservationService,
     private readonly authService: AuthService,
-    private readonly requestService: RequestService
-  ){}
+    private readonly requestService: RequestService,
+    private readonly router: Router,
+    private readonly dialogService: DialogService
+  ) { }
 
   ngOnInit(): void {
     this.loadReservations(this.showCancelled, this.pageNumber);
@@ -37,7 +40,7 @@ export class ReservationList implements OnInit {
 
   loadReservations(showCancelled: boolean, page: number) {
     let filter: ReservationFilter = showCancelled ? 'CANCELLED' : 'NON_CANCELLED';
-    if(this.authService.getRole() === 'ROLE_ADMIN'){
+    if (this.authService.getRole() === 'ROLE_ADMIN') {
       this.reservationService.getReservations(filter, page).subscribe({
         next: (data) => {
           this.reservations = data.content;
@@ -48,11 +51,11 @@ export class ReservationList implements OnInit {
           this.numberOfPages = data.totalPages;
           this.userAdmin = true;
         },
-        error: (err) => console.error(err)
+        error: () => this.router.navigate(['/error'])
       });
     } else {
       const userId = this.authService.getUserId();
-      if(userId) {
+      if (userId) {
         this.reservationService.getReservationsByUserId(userId, filter, page).subscribe({
           next: (data) => {
             this.reservations = data.content;
@@ -63,40 +66,50 @@ export class ReservationList implements OnInit {
             this.numberOfPages = data.totalPages;
             this.userAdmin = false;
           },
-          error: (err) => console.error(err)
+          error: () => this.router.navigate(['/error'])
         });
       }
     }
   }
 
   cancelReservation(reservationIdentifier: string): void {
-    const confirmed = globalThis.confirm('¿Confirmar cancelación de reserva?');
-
-    if(!confirmed) {
-      return;
-    }
-
-    this.reservationService.cancelReservation(reservationIdentifier).subscribe({
-      next: () => {
-        this.reservations = this.reservations.filter(reservation => reservation.reservationIdentifier !== reservationIdentifier);
-      },
-      error: (err) => console.error(err)
-    });
+    this.dialogService.confirmationDialog('Cancelar reserva', '¿Está seguro/a de que quieres cancelar esta reserva? Esta acción no se puede deshacer', 'Aceptar', 'Cancelar')
+      .subscribe(confirm => {
+        if (confirm) {
+          this.reservationService.cancelReservation(reservationIdentifier).subscribe({
+            next: () => {
+              this.dialogService.infoDialog('Éxito', 'Reserva cancelada con éxito.').subscribe(() =>
+                this.reservations = this.reservations.filter(reservation => reservation.reservationIdentifier !== reservationIdentifier)
+              )
+            },
+            error: (err) => this.dialogService.infoDialog('Error', 'No se ha podido cancelar la reserva. Inténtelo de nuevo más tarde.')
+              .subscribe(() => this.router.navigate(['/error']))
+          });
+        }
+      })
   }
 
   requestCancellation(reservation: Reservation) {
+    this.dialogService.confirmationDialog('Cancelar reserva', '¿Está seguro/a de que quieres solicitar la cancelación de esta reserva? Esta acción no se puede deshacer', 'Solicitar', 'Cancelar')
+      .subscribe(confirm => {
+        if (confirm) {
+          reservation.status = 'CANCELLATION_REQUESTED';
 
-    reservation.status = 'CANCELLATION_REQUESTED';
+          const cancellationRequest: ModificationRequestCreation = {
+            type: 'CANCELLATION',
+            userEmail: this.authService.getUserEmail()!,
+            reservationIdentifier: reservation.reservationIdentifier
+          };
 
-    const cancellationRequest: ModificationRequestCreation = {
-      type: 'CANCELLATION',
-      userEmail: this.authService.getUserEmail()!,
-      reservationIdentifier: reservation.reservationIdentifier
-    };
-
-    this.requestService.createRequest(cancellationRequest).subscribe({
-      error: (err) => console.error(err)
-    });
+          this.requestService.createRequest(cancellationRequest).subscribe({
+            next: () => {
+              this.dialogService.infoDialog('Éxito', 'Se ha creado la solicitud de cancelación. Se le informará por correo si es aceptada.');
+            },
+            error: (err) => this.dialogService.infoDialog('Error', 'No se ha podido crear la solicitud de cancelación. Inténtelo de nuevo más tarde. En caso de que el problema persista puede solicitar la cancelación directamente a nuestro equipo.')
+              .subscribe(() => this.router.navigate(['/']))
+          });
+        }
+      })
   }
 
   alterView(cancelled: boolean) {
@@ -115,19 +128,19 @@ export class ReservationList implements OnInit {
 
         globalThis.URL.revokeObjectURL(url);
       },
-      error: (err) => console.error(err)
+      error: (err) => this.dialogService.infoDialog('Error', 'No se ha podido descargar el archivo pdf. Inténtelo de nuevo más tarde.')
     });
   }
 
   nextPage() {
-    if(!this.lastPage) {
+    if (!this.lastPage) {
       this.pageNumber++;
       this.loadReservations(this.showCancelled, this.pageNumber);
     }
   }
 
   previousPage() {
-    if(!this.firstPage) {
+    if (!this.firstPage) {
       this.pageNumber--;
       this.loadReservations(this.showCancelled, this.pageNumber);
     }
