@@ -1,11 +1,6 @@
 .section-title {
-    display: flex;
-    justify-content: center;
-}
-
-.section-subtitle {
-    display: flex;
-    justify-content: center;
+    margin: 3rem;
+    justify-self: center;
 }
 
 .date-picker-wrapper {
@@ -21,4 +16,32 @@
     gap: 0.5rem;
 
     align-items: center;
+}
+
+::ng-deep .mat-calendar-body-disabled .mat-calendar-body-cell-content {
+    background-color: rgb(255, 150, 150);
+}
+
+::ng-deep .mat-calendar-body-range-start::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-start::after {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-end::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-range-end::after {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-in-range::before {
+    background-color: rgb(140, 205, 245);
+}
+
+::ng-deep .mat-calendar-body-in-range::after {
+    background-color: rgb(140, 205, 245);
 }

@@ -63,36 +63,38 @@ export class ReservationEdit implements OnInit {
     private readonly requestService: RequestService,
     private readonly roomService: RoomService,
     private readonly authService: AuthService
-  ){};
+  ) { };
 
   ngOnInit(): void {
     this.userAdmin = this.authService.getRole() === 'ROLE_ADMIN';
 
     this.reservationIdentifier = this.route.snapshot.paramMap.get('reservationIdentifier') as string;
-    
+
     this.reservationService.getReservationByIdentifier(this.reservationIdentifier).subscribe({
       next: (data) => {
         this.reservation = data;
         this.roomId = this.reservation.roomId;
-        this.actualReservedRange = {startDate: this.normalizeDate(new Date(this.reservation.startDate)), endDate: this.normalizeDate(new Date(this.reservation.endDate))}
+        this.actualReservedRange = { startDate: this.normalizeDate(new Date(this.reservation.startDate)), endDate: this.normalizeDate(new Date(this.reservation.endDate)) }
         this.loadReservedDates();
 
         this.roomService.getRoomByRoomId(this.roomId).subscribe({
           next: (data) => {
-          this.room = data;
-          }
+            this.room = data;
+          },
+          error: () => this.router.navigate(['/error'])
         });
-      }
+      },
+      error: () => this.router.navigate(['/error'])
     });
 
-    this.dateRange.valueChanges.subscribe(({start, end}) => {
-      if(start && end) {
-        if(this.checkOverlapedDates(this.normalizeDate(start), this.normalizeDate(end))) {
+    this.dateRange.valueChanges.subscribe(({ start, end }) => {
+      if (start && end) {
+        if (this.checkOverlapedDates(this.normalizeDate(start), this.normalizeDate(end))) {
           alert('Las fechas seleccionadas contienen fechas ya reservadas. Por favor, elija otras fechas.');
 
           this.picker.close();
           setTimeout(() =>
-                    this.dateRange.patchValue({start: null, end: null})
+            this.dateRange.patchValue({ start: null, end: null })
           );
           this.nights = 0;
           return;
@@ -110,7 +112,8 @@ export class ReservationEdit implements OnInit {
           startDate: this.normalizeDate(new Date(range.startDate)),
           endDate: this.normalizeDate(new Date(range.endDate))
         })).filter(range => !this.sameRange(range, this.actualReservedRange));
-      }
+      },
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -140,10 +143,10 @@ export class ReservationEdit implements OnInit {
   updateReservation() {
     const newStartDate = this.dateToString(this.dateRange.get('start')?.value!);
     const newEndDate = this.dateToString(this.dateRange.get('end')?.value!);
-    const reservationRequest = {startDate: newStartDate, endDate: newEndDate} as Partial<ReservationRequest>;
+    const reservationRequest = { startDate: newStartDate, endDate: newEndDate } as Partial<ReservationRequest>;
     this.reservationService.updateReservation(this.reservation.reservationIdentifier, reservationRequest).subscribe({
       next: () => void this.router.navigate(['/']),
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     })
   }
 
@@ -161,12 +164,12 @@ export class ReservationEdit implements OnInit {
     };
     this.requestService.createRequest(modificationRequest).subscribe({
       next: () => void this.router.navigate(['/']),
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     })
   }
 
   private calculatePrice(start: Date, end: Date) {
-    if(start && end) {
+    if (start && end) {
       const diffMs = end.getTime() - start.getTime();
       this.nights = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       this.priceDifference = (this.nights * this.room.price) - this.reservation.price;

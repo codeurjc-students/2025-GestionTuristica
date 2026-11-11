@@ -16,13 +16,13 @@
 				</mat-form-field>
 			</div>
 		</div>
-		
+
 		<div class="actions">
 			@if (nights > 0) {
 				@if (userAdmin){
-				<button class="action-button" type="button" (click)="updateReservation()">Guardar cambios</button>
+				<button class="primary-button" type="button" (click)="updateReservation()">Guardar cambios</button>
 				} @else {
-				<button class="action-button" type="button" (click)="requestModification()">Solicitar modificación</button>
+				<button class="primary-button" type="button" (click)="requestModification()">Solicitar modificación</button>
 				}
 				@if (priceDifference > 0) {
 					<p>La nueva reserva tendrá un coste adicional de {{priceDifference}} €</p>
@@ -30,7 +30,7 @@
 					<p>Se le reembolsarán {{priceDifference * -1}} €</p>
 				}
 			}
-			<button class="red-action-button" type="button" (click)="cancel()">Cancelar</button>
+			<button class="secondary-button" type="button" (click)="cancel()">Cancelar</button>
 		</div>
 	} @else {
 		<p>Cargando datos de la reserva...</p>
