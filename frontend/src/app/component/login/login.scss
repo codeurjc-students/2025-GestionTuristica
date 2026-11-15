@@ -1,0 +1,39 @@
+.section-title {
+    margin: 3rem;
+    justify-self: center;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 40%;
+}
+
+.email-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.password-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.login-actions {
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}

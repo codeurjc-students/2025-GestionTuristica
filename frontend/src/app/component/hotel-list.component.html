@@ -1,62 +1,81 @@
-<h2> Hoteles </h2>
+<div class="page-background">
+  <h1 class="section-title"> HOTELES </h1>
 
-<div class="chart">
-  <canvas baseChart [data]="reservationsData" [type]="'pie'"></canvas>
-</div>
+<div class="hotel-search-wrapper">
+  <div class="filters-chart-wrapper">
+    <div class="filters card">
+      <h3 class="section-subtitle">Filtros</h3>
+      <input type="text" placeholder="Nombre" class="text-input" [(ngModel)]="filters.name">
+      <input type="text" placeholder="País" class="text-input" [(ngModel)]="filters.country">
+      <input type="text" placeholder="Ciudad" class="text-input" [(ngModel)]="filters.city">
+      <div class="form-field">
+        Estrellas
+        <app-star-rating [rating]="filters.stars" [editable]="true" [allowClear]="true" [allowHalfStars]="false" (valueChange)="filters.stars = $event" (clear)="filters.stars = $event"></app-star-rating>
+      </div>
+      <div class="form-field">
+        Puntuación mínima
+        <app-star-rating [rating]="filters.rating" [editable]="true" [allowClear]="true" (valueChange)="filters.rating = $event" (clear)="filters.rating = $event"></app-star-rating>
+      </div>
+      <button type="button" class="primary-button" (click)="searchByFilters()">Filtrar</button>
+      <button type="button" class="secondary-button" (click)="resetFilters()">Restablecer filtros</button>
+    </div>
+    <div class="chart card">
+      <canvas baseChart [data]="reservationsData" [options]="reservationOptions" [type]="'pie'"></canvas>
+    </div>
+  </div>
 
-<ul>
-  @for (hotel of hotels; track hotel.id) {
-  <li>
-    <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl"/>
-    <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
-    - {{hotel.city}}, {{hotel.country}} {{hotel.stars}}* - Dirección: {{hotel.address}}
-    <br> {{hotel.description}} - Puntuación de los usuarios: {{hotel.rating}}
+  <div class="hotel-grid">
+    @if(hotels.length !== 0){
+      @for (hotel of hotels; track hotel.id) {
+      <div class="hotel-card card">
+        <div class="card-content-wrapper">
+          <div class="hotel-image-wrapper">
+            <img alt="Hotel main" class="main-image" [src]="hotel.mainImageUrl || 'assets/hotel-placeholder.jpg'"/>
+          </div>
+          <div class="hotel-content">
+            <div class="hotel-title">
+              <a [routerLink]="['/hotels/detail', hotel.slug]">{{hotel.name}}</a>
+              @for(star of [].constructor(hotel.stars); track $index) {
+                ⭐
+              }
+            </div>
+            <div class="hotel-description">
+              {{hotel.description}}
+            </div>
+            <div class="hotel-card-footer">
+              <div class="hotel-footer-info">
+                <div class="hotel-location">
+                  📍 {{hotel.city}}, {{hotel.country}} - Dirección: {{hotel.address}}
+                </div>
+                <div class="hotel-score">
+                  @if(hotel.rating) {
+                    <app-star-rating [rating]="hotel.rating" [editable]="false"></app-star-rating>{{hotel.rating}}/5
+                  } @else {
+                    Sin reseñas
+                  }
+                </div>
+              </div>
 
-    @if(adminUser){
-    <button type="button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar</button>
-    <button type="button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
+            @if(adminUser){
+              <div class="hotel-actions">
+                <button type="button" class="primary-button" [routerLink]="['/hotels/edit', hotel.slug]"> Editar</button>
+                <button type="button" class="secondary-button" (click)="deleteHotel(hotel.slug)"> Eliminar</button>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <div class="pagination">
+        <button type="button" class="primary-button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+        Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
+        <button type="button" class="primary-button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+      </div>
+    } @else {
+    <div class="alt-text"> 🔎 No existen hoteles que cumplan los criterios</div>
     }
-  </li>
-  }
-
-  @if(adminUser) {
-  <button type="button" [routerLink]="['/hotels/create']"> Crear hotel</button>
-  }
-</ul>
-
-<div class="filters">
-  <h3>Filtros</h3>
-  <label>Nombre:
-    <input type="text" [(ngModel)]="filters.name">
-  </label>
-  <label>País:
-    <input type="text" [(ngModel)]="filters.country">
-  </label>
-  <label>Ciudad:
-    <input type="text" [(ngModel)]="filters.city">
-  </label>
-  <label>
-    Estrellas:
-    <select name="stars" [(ngModel)]="filters.stars">
-      @for (s of [1,2,3,4,5]; track $index) {
-      <option [value]="s">{{ s }}</option>
-      }
-    </select>
-  </label>
-  <label>
-    Puntuación mínima:
-    <select name="rating" [(ngModel)]="filters.rating">
-      @for (r of [1,1.5,2,2.5,3,3.5,4,4.5,5]; track $index) {
-      <option [value]="r">{{ r }}</option>
-      }
-    </select>
-  </label>
-  <button type="button" (click)="searchByFilters()">Filtrar</button>
-  <button type="button" (click)="resetFilters()">Restablecer filtros</button>
+  </div>
 </div>
-
-<div class="pagination">
-  <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
-  Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-  <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
 </div>

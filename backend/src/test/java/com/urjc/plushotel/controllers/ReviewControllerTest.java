@@ -51,7 +51,8 @@ class ReviewControllerTest {
                 }
                 """;
 
-        ReviewDTO reviewDTO = new ReviewDTO("john@example.com", "Room1", "Test message", 4.5, "RSV-123", "2026-03-07");
+        ReviewDTO reviewDTO = new ReviewDTO("john@example.com", "John", "Room1", "Test message", 4.5, "RSV-123",
+                "2026-03-07");
 
         when(reviewService.createReview(any(), any())).thenReturn(reviewDTO);
 
@@ -69,10 +70,10 @@ class ReviewControllerTest {
     @WithMockUser
     void getReviewsByRoomTest() throws Exception {
 
-        ReviewDTO review1 = new ReviewDTO("john@example.com", "Room1", "message1", 4.5, "RSV-123",
+        ReviewDTO review1 = new ReviewDTO("john@example.com", "John", "Room1", "message1", 4.5, "RSV-123",
                 "2026-03-07 09:00:00");
 
-        ReviewDTO review2 = new ReviewDTO("mark@example.com", "Room2", "message2", 3.5, "RSV-1234",
+        ReviewDTO review2 = new ReviewDTO("mark@example.com", "Mark", "Room2", "message2", 3.5, "RSV-1234",
                 "2026-03-07 10:30:00");
 
         List<ReviewDTO> reviews = List.of(review1, review2);
@@ -96,7 +97,7 @@ class ReviewControllerTest {
     @WithMockUser(roles = "USER")
     void getReviewByReviewIdentifierTest() throws Exception {
 
-        ReviewDTO review = new ReviewDTO("john@example.com", "Room1", "message1", 4.5, "RSV-123",
+        ReviewDTO review = new ReviewDTO("john@example.com", "John", "Room1", "message1", 4.5, "RSV-123",
                 "2026-03-07 09:00:00");
 
         when(reviewService.getReviewByReservationIdentifier("RSV-123")).thenReturn(review);
@@ -120,7 +121,7 @@ class ReviewControllerTest {
                 }
                 """;
 
-        ReviewDTO review = new ReviewDTO("john@example.com", "Room1", "Updated message", 4.0, "RSV-123",
+        ReviewDTO review = new ReviewDTO("john@example.com", "John", "Room1", "Updated message", 4.0, "RSV-123",
                 "2026-03-07 09:00:00");
 
         when(reviewService.updateReview(any(), any())).thenReturn(review);

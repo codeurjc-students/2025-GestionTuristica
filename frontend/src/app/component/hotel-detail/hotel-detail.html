@@ -1,44 +1,74 @@
 @if (hotel){
-<div>
-  <h1>{{hotel.name}} - {{hotel.stars}}* </h1>
+<h1 class="section-title">{{hotel.name}} @for(star of [].constructor(hotel.stars); track $index) {⭐} </h1>
 
-  <p>{{hotel.description}}</p>
+<div class="hotel-info-wrapper">
+  <div class="hotel-info">
+    <div class="hotel-description">{{hotel.description}}</div>
 
-  <p> {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</p>
+    <div class="hotel-location"> 📍 {{hotel.city}}, {{hotel.country}} - {{hotel.address}}</div>
 
-  <p>Puntuación de los usuarios: {{hotel.rating}}</p>
+    <div class="hotel-rating">
+      @if(hotel.rating) {
+      <app-star-rating [rating]="hotel.rating" [editable]="false"></app-star-rating>
+      {{hotel.rating}}/5
+      } @else {
+      Sin valoraciones
+      }
+    </div>
+  </div>
+
+  @if(images.length > 0) {
+  <div class="swiper-wrapper">
+    <swiper-container navigation="true" loop="false" pagination="true">
+      @for(image of images; track $index) {
+      <swiper-slide>
+        <img alt="Hotel preview" [src]="image.url"/>
+      </swiper-slide>
+      }
+    </swiper-container>
+  </div>
+  } @else {
+  <div class="image-placeholder">
+    <img alt="No images available" [src]="'assets/hotel-placeholder.jpg'"/>
+  </div>
+  }
 </div>
 
-@for(image of images; track $index) {
-<img alt="Hotel preview" class="hotel-image" [src]="image.url"/>
-}
+<h2 class="section-subtitle"> Habitaciones</h2>
 
 <div class="rooms-list">
-  <h2> Habitaciones</h2>
-  <ul>
-    @for (room of hotel.rooms; track room.name) {
-    <li>
-      <h3>{{room.name}}</h3>
-      <img alt="Room main" class="main-image" [src]="room.mainImageUrl"/>
-      <p>{{room.description}}</p>
-      <p>{{room.price}}€/noche</p>
-      <p>Puntuación: {{room.rating}}</p>
-
-      <button type="button" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']"> Detalles</button>
-    </li>
-    }
-  </ul>
+  @for (room of hotel.rooms; track room.name) {
+  <div class="room-card card">
+    <div class="card-content-wrapper">
+      <div class="room-image-wrapper">
+        <img alt="Room main" class="main-image" [src]="room.mainImageUrl || 'assets/room-placeholder.jpg'"/>
+      </div>
+      <div class="room-content">
+        <a class="room-name" [routerLink]="['/hotels', hotel.slug, 'rooms', room.id, 'detail']">{{room.name}}</a>
+        <div class="room-description">{{room.description}}</div>
+        <div class="room-card-footer">
+          <div class="room-rating">
+            @if(room.rating) {
+            <app-star-rating [rating]="room.rating" [editable]="false"></app-star-rating>
+            {{room.rating}}/5
+            } @else {
+            Sin valoraciones
+            }
+          </div>
+          <div class="room-price">{{room.price}}€/noche</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 
   <div class="pagination">
-    <button type="button" (click)="previousPage()" [disabled]="this.firstPage"> < </button>
+    <button class="primary-button" (click)="previousPage()" [disabled]="this.firstPage"> <</button>
     Página {{this.pageNumber + 1}} de {{this.numberOfPages}}
-    <button type="button" (click)="nextPage()" [disabled]="this.lastPage"> > </button>
+    <button class="primary-button" (click)="nextPage()" [disabled]="this.lastPage"> ></button>
   </div>
 </div>
 
-<div class="actions">
-  <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-</div>
 } @else {
 <p>Cargando datos del hotel...</p>
 }

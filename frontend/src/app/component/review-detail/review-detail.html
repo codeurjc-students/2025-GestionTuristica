@@ -1,12 +1,14 @@
-<h1>Detalle de la reseña</h1>
-<p>Reserva: {{review.reservationIdentifier}}</p>
-<p>Habitación: {{review.roomName}}</p>
-<p>Hora de creación: {{review.creationTime}}</p>
+<h1 class="section-title">Detalle de la reseña</h1>
 
-<p>Mensaje: {{review.message}}</p>
-<p>Puntuación: {{review.rating}}</p>
+<div class="review-detail-wrapper card">
+    <div class="review-detail">
+        <div>Mensaje: {{review.message}}</div>
+        <div class="rating-selection">Puntuación: <app-star-rating [rating]="review.rating" [editable]="false"></app-star-rating> {{review.rating}}/5</div>
+        <div>Hora de creación: {{review.creationTime}}</div>
+    </div>
 
-<button matButton="outlined" (click)="deleteReview()">Eliminar reseña</button>
-<button matButton="outlined" (click)="updateReview()">Editar reseña</button>
-
-<button matButton="outlined" (click)="cancel()">Volver atrás</button>
+    <div class="actions">
+        <button class="primary-button" (click)="updateReview()">Editar reseña</button>
+        <button class="secondary-button" (click)="deleteReview()">Eliminar reseña</button>
+    </div>
+</div>

@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
   selector: 'app-reviews',
   imports: [DatePipe],
   templateUrl: './reviews.html',
+  styleUrl: './reviews.scss'
 })
 export class Reviews implements OnInit {
 
@@ -26,27 +27,27 @@ export class Reviews implements OnInit {
     private readonly reservationService: ReservationService,
     private readonly authService: AuthService,
     private readonly router: Router
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId() || '';
-    if(this.userId) {
+    if (this.userId) {
       this.loadReviews(this.userId, this.pageNumber);
     }
   }
 
   loadReviews(userId: string, page: number) {
     this.reservationService.getReservationsByUserId(userId, this.reservationsFilter, page).subscribe({
-        next: (data) => {
-          this.reservations = data.content;
-          this.pageNumber = data.number;
-          this.firstPage = data.first;
-          this.lastPage = data.last;
-          this.numberOfReviews = data.totalElements;
-          this.numberOfPages = data.totalPages;
-        },
-        error: (error) => console.error(error)
-      });
+      next: (data) => {
+        this.reservations = data.content;
+        this.pageNumber = data.number;
+        this.firstPage = data.first;
+        this.lastPage = data.last;
+        this.numberOfReviews = data.totalElements;
+        this.numberOfPages = data.totalPages;
+      },
+      error: () => this.router.navigate(['/error'])
+    });
   }
 
   goToReviewCreation(reservationIdentifier: string) {
@@ -61,21 +62,21 @@ export class Reviews implements OnInit {
     const today = new Date();
     const endDate = new Date(reservation.endDate);
 
-    today.setHours(0,0,0,0);
-    endDate.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
 
     return !reservation.reviewed && endDate <= today;
   }
 
   nextPage() {
-    if(!this.lastPage) {
+    if (!this.lastPage) {
       this.pageNumber++;
       this.loadReviews(this.userId, this.pageNumber);
     }
   }
 
   previousPage() {
-    if(!this.firstPage) {
+    if (!this.firstPage) {
       this.pageNumber--;
       this.loadReviews(this.userId, this.pageNumber);
     }

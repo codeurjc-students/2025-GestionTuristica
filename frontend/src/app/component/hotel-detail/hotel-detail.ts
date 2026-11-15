@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Hotel, HotelService } from '../../services/hotel.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { ImageService, Image } from '../../services/image-service';
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-hotel-detail',
   imports: [
-    RouterModule
+    RouterModule,
+    StarRating
   ],
   templateUrl: './hotel-detail.html',
   styleUrl: './hotel-detail.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HotelDetail implements OnInit {
   slug!: string;
@@ -42,7 +45,7 @@ export class HotelDetail implements OnInit {
     private readonly roomService: RoomService,
     private readonly router: Router,
     private readonly imageService: ImageService
-  ){};
+  ) { };
 
   ngOnInit() {
     this.loadHotel();
@@ -61,7 +64,7 @@ export class HotelDetail implements OnInit {
   }
 
   loadRooms(page: number) {
-      this.roomService.getRoomsByHotelSlug(this.hotel.slug, page).subscribe({
+    this.roomService.getRoomsByHotelSlug(this.hotel.slug, page).subscribe({
       next: (data) => {
         this.hotel.rooms = data.content;
         this.pageNumber = data.number;
@@ -70,8 +73,8 @@ export class HotelDetail implements OnInit {
         this.numberOfRooms = data.totalElements;
         this.numberOfPages = data.totalPages;
       },
-      error: (err) => console.error(err)
-      });
+      error: () => this.router.navigate(['/error'])
+    });
   }
 
   loadImages() {
@@ -79,22 +82,22 @@ export class HotelDetail implements OnInit {
       next: (data) => {
         this.images = data;
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
   nextPage() {
-      if(!this.lastPage) {
-          this.pageNumber++;
-          this.loadRooms(this.pageNumber);
-      }
+    if (!this.lastPage) {
+      this.pageNumber++;
+      this.loadRooms(this.pageNumber);
+    }
   }
 
   previousPage() {
-      if(!this.firstPage) {
-          this.pageNumber--;
-          this.loadRooms(this.pageNumber);
-      }
+    if (!this.firstPage) {
+      this.pageNumber--;
+      this.loadRooms(this.pageNumber);
+    }
   }
 
   cancel() {

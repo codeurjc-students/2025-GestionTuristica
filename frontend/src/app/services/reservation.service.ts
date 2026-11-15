@@ -9,18 +9,19 @@ export interface ReservationRequest {
 }
 
 export interface Reservation {
-        id: number;
-        reservationIdentifier: string;
-        roomId: number;
-        roomName: string;
-        userEmail: string;
-        startDate: string;
-        endDate: string;
-        status: string;
-        createdAt: Date;
-        reviewed: boolean;
-        price: number;
-    };
+    id: number;
+    reservationIdentifier: string;
+    hotelName: string;
+    roomId: number;
+    roomName: string;
+    userEmail: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    createdAt: Date;
+    reviewed: boolean;
+    price: number;
+};
 
 export interface ReservedRange {
     startDate: Date;
@@ -41,7 +42,7 @@ export class ReservationService {
 
     private readonly apiUrl = 'http://localhost:8080/api/v1';
 
-    constructor(private readonly http: HttpClient){}
+    constructor(private readonly http: HttpClient) { }
 
     reserveRoom(roomId: number, reservation: ReservationRequest): Observable<Reservation> {
         return this.http.post<Reservation>(this.apiUrl + "/reservations/" + roomId + "/reserve", reservation);
@@ -49,8 +50,8 @@ export class ReservationService {
 
     getReservations(filter: ReservationFilter, page: number): Observable<Page<Reservation>> {
         return this.http.get<Page<Reservation>>(this.apiUrl + "/reservations", {
-                params: filter ? {filter: filter, page: page} : {page:page}
-            });
+            params: filter ? { filter: filter, page: page } : { page: page }
+        });
     };
 
     getReservedDates(roomId: number): Observable<ReservedRange[]> {
@@ -63,8 +64,8 @@ export class ReservationService {
 
     getReservationsByUserId(userId: string, filter: ReservationFilter, page: number): Observable<Page<Reservation>> {
         return this.http.get<Page<Reservation>>(this.apiUrl + "/reservations/user/" + userId, {
-            params: filter ? {filter: filter, page: page} : {page: page}
-         });
+            params: filter ? { filter: filter, page: page } : { page: page }
+        });
     }
 
     updateReservation(reservationIdentifier: string, reservationRequest: Partial<ReservationRequest>): Observable<Reservation> {
@@ -76,7 +77,7 @@ export class ReservationService {
     }
 
     downloadReservationPdf(reservationIdentifier: string): Observable<Blob> {
-        return this.http.get(this.apiUrl + "/reservations/download/summary/" + reservationIdentifier, {responseType: 'blob'});
+        return this.http.get(this.apiUrl + "/reservations/download/summary/" + reservationIdentifier, { responseType: 'blob' });
     }
 
     getMostReservedHotels(): Observable<HotelReservationCount[]> {

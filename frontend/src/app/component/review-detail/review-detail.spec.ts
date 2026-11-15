@@ -5,6 +5,7 @@ import { ReviewDetail } from './review-detail';
 import { provideHttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ReviewService } from '../../services/review.service';
+import { DialogService } from '../../services/dialog.service';
 
 describe('ReviewDetail', () => {
   let component: ReviewDetail;
@@ -12,8 +13,10 @@ describe('ReviewDetail', () => {
   let activatedRouteMock: any;
   let reviewServiceMock: any;
   let routerMock: any;
+  let dialogServiceMock: any;
 
   const mockReview = {
+    userName: 'John',
     userEmail: 'john@example.com',
     reservationIdentifier: 'RSV-123',
     roomName: 'Room1',
@@ -41,16 +44,22 @@ describe('ReviewDetail', () => {
       navigate: jasmine.createSpy('navigate')
     };
 
+    dialogServiceMock = {
+      confirmationDialog: jasmine.createSpy('confirmationDialog').and.returnValue(of(true)),
+      infoDialog: jasmine.createSpy('infoDialog').and.returnValue(of(true))
+    }
+
     await TestBed.configureTestingModule({
       imports: [ReviewDetail],
       providers: [
         { provide: ReviewService, useValue: reviewServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: Router, useValue: routerMock },
+        { provide: DialogService, useValue: dialogServiceMock },
         provideHttpClient()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ReviewDetail);
     component = fixture.componentInstance;

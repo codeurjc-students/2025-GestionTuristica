@@ -4,6 +4,7 @@ import { Login } from './login';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 describe('Login', () => {
   let component: Login;
@@ -19,9 +20,9 @@ describe('Login', () => {
     await TestBed.configureTestingModule({
       imports: [Login],
       providers: [
-        {provide: AuthService, useValue: authServiceMock},
+        { provide: AuthService, useValue: authServiceMock },
         provideRouter([]),
-        {provide: ActivatedRoute, useValue: {}}
+        { provide: ActivatedRoute, useValue: {} }
       ]
     }).compileComponents();
 
@@ -39,7 +40,7 @@ describe('Login', () => {
   it('login should call authService login and navigate to main page', () => {
     component.email = 'john@email.com';
     component.password = 'john';
-    component.login();
+    component.login(new NgForm([], []));
     expect(authServiceMock.login).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });

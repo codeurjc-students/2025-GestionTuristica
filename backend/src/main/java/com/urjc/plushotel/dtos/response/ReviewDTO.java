@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ReviewDTO {
 
     private String userEmail;
+    private String userName;
     private String roomName;
     private String message;
     private Double rating;

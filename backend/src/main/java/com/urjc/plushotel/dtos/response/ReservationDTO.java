@@ -16,6 +16,7 @@ public class ReservationDTO {
 
     private Long id;
     private String reservationIdentifier;
+    private String hotelName;
     private Long roomId;
     private String roomName;
     private String userEmail;

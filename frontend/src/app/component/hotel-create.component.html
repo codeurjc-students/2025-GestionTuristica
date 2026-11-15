@@ -1,101 +1,83 @@
-<form (ngSubmit)="submit()" #f="ngForm" class="hotel-form">
-  <div>
-    <label>
-      Nombre
-      <input name="name" [(ngModel)]="hotelModel.name" required/>
-    </label>
-  </div>
+<h1 class="section-title">Crear hotel</h1>
 
-  <div>
-    <label>
-      Descripción
-      <textarea name="description" [(ngModel)]="hotelModel.description"></textarea>
-    </label>
-  </div>
+<div class="hotel-creation-form">
+  <form (ngSubmit)="submit(hotelForm)" #hotelForm="ngForm" class="hotel-form">
+    <div class="hotel-info-wrapper card">
+      <div class="form-field">
+        <input id="hotel-name" placeholder="Nombre*" class="text-input" name="name" [(ngModel)]="hotelModel.name" required/>
+      </div>
+      <div class="form-field">
+        <textarea id="hotel-description" placeholder="Descripción*" class="text-input" name="description" [(ngModel)]="hotelModel.description"
+                  maxlength="500" required></textarea>
+        <p>{{hotelModel.description.length}}/500 caracteres</p>
+      </div>
+      <div class="form-field">
+        <input id="hotel-country" placeholder="País*" class="text-input" name="country" [(ngModel)]="hotelModel.country" required/>
+      </div>
 
-  <div>
-    <label>
-      País
-      <input name="country" [(ngModel)]="hotelModel.country" required/>
-    </label>
-  </div>
+      <div class="form-field">
+        <input id="hotel-city" placeholder="Ciudad*" class="text-input" name="city" [(ngModel)]="hotelModel.city" required/>
+      </div>
 
-  <div>
-    <label>
-      Ciudad
-      <input name="city" [(ngModel)]="hotelModel.city" required/>
-    </label>
-  </div>
+      <div class="form-field">
+        <input id="hotel-address" placeholder="Dirección*" class="text-input" name="address" [(ngModel)]="hotelModel.address" required/>
+      </div>
 
-  <div>
-    <label>
-      Dirección
-      <input name="address" [(ngModel)]="hotelModel.address" required/>
-    </label>
-  </div>
+      <div class="form-field">
+        <div>Estrellas</div>
+        <app-star-rating [rating]="hotelModel.stars" [editable]="true" [allowHalfStars]="false"
+                         (valueChange)="hotelModel.stars = $event"></app-star-rating>
+      </div>
+    </div>
 
-  <div>
-    <label>
-      Estrellas
-      <select name="stars" [(ngModel)]="hotelModel.stars">
-        @for (s of [1,2,3,4,5]; track $index) {
-        <option [value]="s">{{ s }}</option>
-        }
-      </select>
-    </label>
-  </div>
-
-  <div class="rooms-list">
-    <h3> Habitaciones</h3>
-    <ul>
+    <h3 class="section-subtitle"> Habitaciones</h3>
+    <div class="rooms-list">
       @for (room of hotelModel.rooms; track room.name) {
-      <li>
-        {{room.name}} - {{room.description}} - {{room.price}}€
-        <button class="action_buton" type="button" (click)="removeRoom(room)">Eliminar habitación</button>
-      </li>
+      <div class="room-card card">
+        <div class="room-name">{{room.name}}</div>
+        <div class="room-description">Descripción: {{room.description}}</div>
+        <div class="room-price">Precio: {{room.price}}€/noche</div>
+        <button class="secondary-button" type="button" (click)="removeRoom(room)">Eliminar habitación</button>
+      </div>
       }
-    </ul>
-  </div>
+    </div>
 
-  @if (!showForm) {
-  <div class="actions">
-    <button class="action-button" type="button" (click)="toggleRoomFormVisibility()">Añadir habitación</button>
-  </div>
-  }
+    @if (!showForm) {
+    <div class="actions">
+      <button class="primary-button" type="button" (click)="toggleRoomFormVisibility()">Añadir habitación</button>
+    </div>
+    }
 
-  @if (showForm) {
-  <h3>Nueva habitación</h3>
+    @if (showForm) {
+    <div class="room-creation-wrapper card">
+      <h4 class="section-subtitle">Nueva habitación</h4>
 
-  <div>
-    <label>
-      Nombre
-      <input name="name" [(ngModel)]="roomModel.name" required/>
-    </label>
-  </div>
+      <div class="form-field">
+        <input id="room-name" placeholder="Nombre*" class="text-input" name="room-name" [(ngModel)]="roomModel.name" required/>
+      </div>
 
-  <div>
-    <label>
-      Descripción
-      <input name="description" [(ngModel)]="roomModel.description" required/>
-    </label>
-  </div>
+      <div class="form-field">
+        <textarea id="room-description" placeholder="Descripción*" class="text-input" name="room-description" [(ngModel)]="roomModel.description"
+                  maxlength="500" required></textarea>
+        <p>{{roomModel.description.length}}/500 caracteres</p>
+      </div>
 
-  <div>
-    <label>
-      Precio
-      <input name="room" [(ngModel)]="roomModel.price" required/>
-      €
-    </label>
-  </div>
+      <div class="price-wrapper">
+        <label for="room-price">Precio €</label>
+        <input id="room-price" type="number" min="0" class="text-input" name="room" [(ngModel)]="roomModel.price" required/>
+      </div>
 
-  <div class="actions">
-    <button class="action-button" type="button" (click)="addRoom()">Crear habitación</button>
-    <button class="action-button" type="button" (click)="cancelRoomCreation()">Cancelar creación habitación</button>
-  </div>
-  }
+      <div class="actions">
+        <button class="primary-button" type="button" (click)="addRoom()">Crear habitación</button>
+        <button class="secondary-button" type="button" (click)="cancelRoomCreation()">Cancelar creación habitación
+        </button>
+      </div>
+    </div>
+    }
 
-  <div class="actions">
-    <button class="action-button" type="submit">Crear</button>
-    <button class="action-button" type="button" (click)="cancel()">Cancelar</button>
-  </div>
-</form>
+    <div class="actions">
+      <button class="primary-button" type="submit" [disabled]="">Crear hotel</button>
+      <button class="secondary-button" type="button" (click)="cancel()">Cancelar</button>
+    </div>
+  </form>
+</div>

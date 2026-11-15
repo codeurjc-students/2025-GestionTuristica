@@ -73,7 +73,9 @@ public class ReviewService {
     }
 
     private ReviewDTO convertToDTO(Review review) {
-        return new ReviewDTO(review.getUser().getEmail(),
+        return new ReviewDTO(
+                review.getUser().getEmail(),
+                review.getUser().getName(),
                 review.getReservation().getRoom().getName(),
                 review.getMessage(),
                 review.getRating(),

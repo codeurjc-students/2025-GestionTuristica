@@ -53,7 +53,12 @@ class ReservationServiceTest {
     @Test
     void getNonCancelledTestReservations() {
 
+        Hotel hotel = new Hotel();
+        hotel.setName("Hotel1");
+
         Room room = new Room();
+
+        hotel.addRoom(room);
 
         User user = new User();
 
@@ -84,7 +89,12 @@ class ReservationServiceTest {
     @Test
     void getCancelledReservationsTest() {
 
+        Hotel hotel = new Hotel();
+        hotel.setName("Hotel1");
+
         Room room = new Room();
+
+        hotel.addRoom(room);
 
         User user = new User();
 
@@ -140,7 +150,12 @@ class ReservationServiceTest {
 
         User user = new User();
 
+        Hotel hotel = new Hotel();
+        hotel.setName("Hotel1");
+
         Room room = Room.builder().id(1L).name("Room1").build();
+
+        hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -356,7 +371,12 @@ class ReservationServiceTest {
     @Test
     void getNonCancelledReservationsByUser() {
 
+        Hotel hotel = new Hotel();
+        hotel.setName("Hotel1");
+
         Room room = new Room();
+
+        hotel.addRoom(room);
 
         User user = new User();
 
@@ -389,7 +409,12 @@ class ReservationServiceTest {
     @Test
     void getCancelledReservationsByUser() {
 
+        Hotel hotel = new Hotel();
+        hotel.setName("Hotel1");
+
         Room room = new Room();
+
+        hotel.addRoom(room);
 
         User user = new User();
 

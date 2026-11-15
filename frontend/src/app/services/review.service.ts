@@ -16,6 +16,7 @@ export interface ReviewUpdateRequest {
 
 export interface Review {
     userEmail: string;
+    userName: string;
     reservationIdentifier: string;
     roomName: string;
     message: string;

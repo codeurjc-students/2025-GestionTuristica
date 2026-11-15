@@ -2,17 +2,18 @@ import { HotelRequest, HotelService, RoomRequest } from './../services/hotel.ser
 import { Component, OnInit } from '@angular/core';
 import { Hotel } from '../services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoomService } from '../services/room.service';
+import { StarRating } from "./star-rating/star-rating";
 
 @Component({
   selector: 'hotel-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, StarRating],
   templateUrl: './hotel-edit.component.html',
+  styleUrl: './hotel-edit.component.scss'
 })
-export class HotelEdit implements OnInit{
+export class HotelEdit implements OnInit {
   slug!: string;
   hotel!: Hotel;
 
@@ -38,7 +39,7 @@ export class HotelEdit implements OnInit{
     private readonly hotelService: HotelService,
     private readonly roomService: RoomService,
     private readonly router: Router
-  ){};
+  ) { };
 
   ngOnInit() {
     this.slug = String(this.route.snapshot.paramMap.get('slug'));
@@ -48,8 +49,8 @@ export class HotelEdit implements OnInit{
         this.hotel = data;
         this.hotelModel = this.hotel;
         this.loadRooms();
-      }
-
+      },
+      error: () => this.router.navigate(['/error'])
     })
   }
 
@@ -60,7 +61,7 @@ export class HotelEdit implements OnInit{
       next: () => {
         this.router.navigate(['/hotels/' + this.hotelModel.slug + '/images']);
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -70,7 +71,7 @@ export class HotelEdit implements OnInit{
 
   toggleRoomFormVisibility() {
     this.showForm = !this.showForm;
-    if(!this.showForm){
+    if (!this.showForm) {
       this.creatingRoom = false;
       this.updatingRoom = false;
     }
@@ -82,7 +83,7 @@ export class HotelEdit implements OnInit{
 
   showRoomUpdateForm() {
     this.updatingRoom = true;
-    if(this.showForm) {
+    if (this.showForm) {
       this.cancelRoomCreation();
     }
     this.toggleRoomFormVisibility();
@@ -90,7 +91,7 @@ export class HotelEdit implements OnInit{
 
   startRoomCreation() {
     this.creatingRoom = true;
-    if(this.showForm) {
+    if (this.showForm) {
       this.cancelRoomUpdate();
     }
     this.toggleRoomFormVisibility();
@@ -127,6 +128,7 @@ export class HotelEdit implements OnInit{
 
     this.toggleRoomFormVisibility();
     this.resetSelectedRoomIndex();
+    this.resetRoomForm();
   }
 
   removeRoom(room: RoomRequest) {
@@ -138,11 +140,11 @@ export class HotelEdit implements OnInit{
       next: (data) => {
         this.hotelModel.rooms = data;
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
   resetRoomForm() {
-    this.roomModel = { name: '', description: '', price: 0};
+    this.roomModel = { name: '', description: '', price: 0 };
   }
 }

@@ -174,6 +174,7 @@ public class ReservationService {
         return new ReservationDTO(
                 reservation.getId(),
                 reservation.getReservationIdentifier(),
+                reservation.getRoom().getHotel().getName(),
                 reservation.getRoom().getId(),
                 reservation.getRoom().getName(),
                 reservation.getUser().getEmail(),

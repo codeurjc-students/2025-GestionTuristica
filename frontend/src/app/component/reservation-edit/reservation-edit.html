@@ -1,26 +1,28 @@
 	@if (reservation){
-		<h2>Editando reserva {{reservation.reservationIdentifier}}</h2>
+		<h1 class="section-title">Editando reserva {{reservation.reservationIdentifier}}</h1>
 
-		<p>Seleccionar nuevas fechas de reserva</p>
+		<h3 class="section-subtitle">Seleccionar nuevas fechas de reserva</h3>
 
-		<div [formGroup]="dateRange">
-			<mat-form-field appearance="fill">
-				<mat-label>Fechas reserva</mat-label>
-				<mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
-						<input matStartDate formControlName="start" placeholder="Fecha entrada">
-						<input matEndDate formControlName="end" placeholder="Fecha salida">
-				</mat-date-range-input>
-				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-				<mat-date-range-picker #picker></mat-date-range-picker>
-			</mat-form-field>
+		<div class="date-picker-wrapper">
+			<div [formGroup]="dateRange">
+				<mat-form-field appearance="fill">
+					<mat-label>Fechas reserva</mat-label>
+					<mat-date-range-input [rangePicker]="picker" [min]="minDate" [dateFilter]="dateFilter">
+							<input matStartDate formControlName="start" placeholder="Fecha entrada">
+							<input matEndDate formControlName="end" placeholder="Fecha salida">
+					</mat-date-range-input>
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-date-range-picker #picker></mat-date-range-picker>
+				</mat-form-field>
+			</div>
 		</div>
-		
+
 		<div class="actions">
 			@if (nights > 0) {
 				@if (userAdmin){
-				<button class="action-button" type="button" (click)="updateReservation()">Guardar cambios</button>
+				<button class="primary-button" type="button" (click)="updateReservation()">Guardar cambios</button>
 				} @else {
-				<button class="action-button" type="button" (click)="requestModification()">Solicitar modificación</button>
+				<button class="primary-button" type="button" (click)="requestModification()">Solicitar modificación</button>
 				}
 				@if (priceDifference > 0) {
 					<p>La nueva reserva tendrá un coste adicional de {{priceDifference}} €</p>
@@ -28,7 +30,7 @@
 					<p>Se le reembolsarán {{priceDifference * -1}} €</p>
 				}
 			}
-			<button class="action-button" type="button" (click)="cancel()">Cancelar</button>
+			<button class="secondary-button" type="button" (click)="cancel()">Cancelar</button>
 		</div>
 	} @else {
 		<p>Cargando datos de la reserva...</p>

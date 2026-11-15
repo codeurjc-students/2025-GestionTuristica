@@ -1,0 +1,34 @@
+.section-title {
+    justify-content: center;
+    padding: 2rem;
+}
+
+.review-detail-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 3rem;
+    width: 40%;
+}
+
+.review-detail {
+    display: flex;
+    flex-direction: column;
+    align-items:first baseline;
+    font-size: 1.2rem;
+    gap: 1rem;
+}
+
+.rating-selection {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    justify-content: center;
+}

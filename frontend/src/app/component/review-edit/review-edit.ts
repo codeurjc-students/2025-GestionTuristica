@@ -1,36 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { Review, ReviewService, ReviewUpdateRequest } from '../../services/review.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
+import { StarRating } from "../star-rating/star-rating";
 
 @Component({
   selector: 'app-review-edit',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, StarRating],
   templateUrl: './review-edit.html',
+  styleUrl: './review-edit.scss'
 })
-export class ReviewEdit implements OnInit{
+export class ReviewEdit implements OnInit {
 
   review: Review = {
-      userEmail: '',
-      reservationIdentifier: '',
-      roomName: '',
-      message: '',
-      rating: 0,
-      creationTime: ''
-    };
+    userEmail: '',
+    userName: '',
+    reservationIdentifier: '',
+    roomName: '',
+    message: '',
+    rating: 0,
+    creationTime: ''
+  };
 
-    constructor(
-      private readonly reviewService: ReviewService,
-      private readonly router: Router,
-      private readonly activatedRoute: ActivatedRoute
-    ) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     const reservationIdentifier = this.activatedRoute.snapshot.paramMap.get('reservationIdentifier');
     this.reviewService.getReviewByReservationIdentifier(reservationIdentifier!).subscribe({
       next: (data) => this.review = data,
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 
@@ -45,7 +48,7 @@ export class ReviewEdit implements OnInit{
       next: () => {
         this.router.navigate(['/reviews']);
       },
-      error: (err) => console.error(err)
+      error: () => this.router.navigate(['/error'])
     });
   }
 

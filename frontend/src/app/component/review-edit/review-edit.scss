@@ -1,0 +1,48 @@
+.section-title {
+    margin: 3rem;
+    justify-self: center;
+}
+
+.review-edit-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 700px;
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.rating-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.rating-selector {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.review-edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.message-input {
+    min-height: 180px;
+    max-height: 300px;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+textarea {
+    resize: none;
+}

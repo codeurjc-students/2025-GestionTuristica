@@ -1,21 +1,23 @@
-import { CommonModule } from "@angular/common";
+import { DialogService } from './../services/dialog.service';
+
 import { Component, OnInit } from "@angular/core";
 import { Hotel, HotelFilters, HotelService } from "../services/hotel.service";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { FormsModule } from "@angular/forms";
 import { ChartData, ChartOptions } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
 import { ReservationService } from "../services/reservation.service";
+import { StarRating } from "./star-rating/star-rating";
 
 @Component({
     selector: 'hotel-list',
     standalone: true,
-    imports: [CommonModule, RouterLink, FormsModule, BaseChartDirective],
+    imports: [RouterLink, FormsModule, BaseChartDirective, StarRating],
     templateUrl: './hotel-list.component.html',
     styleUrl: './hotel-list.component.scss'
 })
-export class HotelListComponent implements OnInit{
+export class HotelListComponent implements OnInit {
 
     hotels: Hotel[] = [];
     adminUser!: boolean;
@@ -34,13 +36,13 @@ export class HotelListComponent implements OnInit{
     };
 
     reservationsData: ChartData<'pie', number[], string | string[]> = {
-                    labels: [],
-                    datasets: [
-                        {
-                            data: []
-                        }
-                    ]
-                };
+        labels: [],
+        datasets: [
+            {
+                data: []
+            }
+        ]
+    };
 
     reservationOptions: ChartOptions<'pie'> = {
         plugins: {
@@ -55,7 +57,7 @@ export class HotelListComponent implements OnInit{
         }
     }
 
-    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService){}
+    constructor(private readonly hotelService: HotelService, private readonly authService: AuthService, private readonly reservationService: ReservationService, private readonly router: Router, private readonly dialogService: DialogService) { }
 
     ngOnInit() {
         this.adminUser = this.authService.getRole() === 'ROLE_ADMIN';
@@ -66,13 +68,22 @@ export class HotelListComponent implements OnInit{
     }
 
     deleteHotel(slug: string) {
-        this.hotelService.removeHotel(slug).subscribe({
-            next: () => {
-                this.hotels = this.hotels.filter(hotel => hotel.slug !== slug);
-                this.loadHotels(this.pageNumber);
-            },
-            error: (err) => console.error(err)
-        });
+        this.dialogService.confirmationDialog('Eliminar hotel', '¿Estás seguro/a que quieres eliminar este hotel? Esta acción no se puede deshacer.', 'Eliminar', 'Cancelar')
+            .subscribe(
+                confirm => {
+                    if (confirm === true) {
+                        this.hotelService.removeHotel(slug).subscribe({
+                            next: () => {
+                                this.hotels = this.hotels.filter(hotel => hotel.slug !== slug);
+                                this.loadHotels(this.pageNumber);
+                                this.dialogService.infoDialog('Éxito', 'Hotel eliminado correctamente')
+                            },
+                            error: () => this.dialogService.infoDialog('Error', 'Ha habido un error eliminando el hotel. Inténtalo de nuevo más tarde.')
+                        });
+                    }
+                }
+            )
+
     }
 
     loadHotels(page: number) {
@@ -85,23 +96,23 @@ export class HotelListComponent implements OnInit{
                 this.numberOfHotels = data.totalElements;
                 this.numberOfPages = data.totalPages;
 
-                if(this.numberOfHotels === 0 && !this.firstPage) {
+                if (this.numberOfHotels === 0 && !this.firstPage) {
                     this.loadHotels(this.pageNumber - 1);
                 }
             },
-            error: (err) => console.error(err)
+            error: () => this.router.navigate(['/error'])
         });
     }
 
     nextPage() {
-        if(!this.lastPage) {
+        if (!this.lastPage) {
             this.pageNumber++;
             this.loadHotels(this.pageNumber);
         }
     }
 
     previousPage() {
-        if(!this.firstPage) {
+        if (!this.firstPage) {
             this.pageNumber--;
             this.loadHotels(this.pageNumber);
         }

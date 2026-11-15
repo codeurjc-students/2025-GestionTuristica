@@ -9,7 +9,7 @@ public interface ImageRepository extends JpaRepository<HotelImage, Long> {
 
     List<HotelImage> findByRoom_IdOrderByPosition(Long roomId);
 
-    List<HotelImage> findByPositionAndHotel_IdIn(int position, List<Long> hotelIds);
+    List<HotelImage> findByPositionAndRoomNullAndHotel_IdIn(int position, List<Long> hotelIds);
 
     List<HotelImage> findByPositionAndRoom_IdIn(int position, List<Long> roomIds);
 

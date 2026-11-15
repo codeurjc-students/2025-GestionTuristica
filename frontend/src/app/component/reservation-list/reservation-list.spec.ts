@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { RequestService } from '../../services/request.service';
+import { DialogService } from '../../services/dialog.service';
 
 describe('ReservationList', () => {
   let component: ReservationList;
@@ -14,11 +15,13 @@ describe('ReservationList', () => {
   let reservationServiceMock: any;
   let authServiceMock: any;
   let requestServiceMock: any;
+  let dialogServiceMock: any;
 
   const mockReservations = [
     {
       id: 1,
       reservationIdentifier: 'RSV-123',
+      hotelName: 'Test Hotel',
       roomId: 1,
       roomName: 'Room Test',
       startDate: '2025-12-28',
@@ -32,6 +35,7 @@ describe('ReservationList', () => {
     {
       id: 2,
       reservationIdentifier: 'RSV-1234',
+      hotelName: 'Test Hotel',
       roomId: 1,
       roomName: 'Room Test',
       startDate: '2026-01-02',
@@ -69,17 +73,23 @@ describe('ReservationList', () => {
       createRequest: jasmine.createSpy('requestCancellation').and.returnValue(of({}))
     }
 
+    dialogServiceMock = {
+      confirmationDialog: jasmine.createSpy('confirmationDialog').and.returnValue(of(true)),
+      infoDialog: jasmine.createSpy('infoDialog').and.returnValue(of(true))
+    }
+
     await TestBed.configureTestingModule({
       imports: [ReservationList],
       providers: [
         { provide: ReservationService, useValue: reservationServiceMock },
-        { provide: AuthService, useValue: authServiceMock},
+        { provide: AuthService, useValue: authServiceMock },
         { provide: RequestService, useValue: requestServiceMock },
+        { provide: DialogService, useValue: dialogServiceMock },
         provideRouter([]),
         provideHttpClient()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ReservationList);
     component = fixture.componentInstance;
