@@ -18,35 +18,36 @@ describe('ReservationEdit', () => {
   let requestServiceMock: any;
 
   const mockReservedRanges = [
-    {startDate: new Date(2025,11,24), endDate: new Date(2025,11,26)},
-    {startDate: new Date(2025,11,28), endDate: new Date(2025,11,31)}
+    { startDate: new Date(2025, 11, 24), endDate: new Date(2025, 11, 26) },
+    { startDate: new Date(2025, 11, 28), endDate: new Date(2025, 11, 31) }
   ]
 
   const mockReservation = {
     id: 1,
     reservationIdentifier: 'RSV-123',
+    hotelName: 'Test Hotel',
     roomId: 1,
     roomName: 'Room Test',
     startDate: '2025-12-28',
     endDate: '2025-12-31',
     createdAt: new Date(),
     status: 'ACTIVE',
-    userEmail: 'john@test.com', 
+    userEmail: 'john@test.com',
     reviewed: false,
     price: 30
   }
 
   const mockRoom: Room = {
-      id: 1,
-      name: 'Room Test',
-      description: 'Test room',
-      price: 30,
-      rating: 4,
-    }
+    id: 1,
+    name: 'Room Test',
+    description: 'Test room',
+    price: 30,
+    rating: 4,
+  }
 
   beforeEach(async () => {
     roomServiceMock = {
-        getRoomByRoomId: jasmine.createSpy('getRoomByRoomId').and.returnValue(of(mockRoom))
+      getRoomByRoomId: jasmine.createSpy('getRoomByRoomId').and.returnValue(of(mockRoom))
     };
 
     reservationServiceMock = {
@@ -95,26 +96,26 @@ describe('ReservationEdit', () => {
   it('reservation data and reserved ranges should be loaded on init', () => {
     expect(reservationServiceMock.getReservationByIdentifier).toHaveBeenCalledWith('RSV-123');
     expect(component.reservation).toEqual(mockReservation);
-    expect(component.actualReservedRange.startDate).toEqual(new Date(2025,11,28));
-    expect(component.actualReservedRange.endDate).toEqual(new Date(2025,11,31));
+    expect(component.actualReservedRange.startDate).toEqual(new Date(2025, 11, 28));
+    expect(component.actualReservedRange.endDate).toEqual(new Date(2025, 11, 31));
     expect(reservationServiceMock.getReservedDates).toHaveBeenCalledWith(1);
     expect(component.reservedDates).toEqual(mockReservedRanges.filter(range => !component.sameRange(range, component.actualReservedRange)));
   });
 
   it('updateReservation should call updateReservation service method', () => {
 
-    component.dateRange.setValue({start: new Date(2026,0,5), end: new Date(2026,0,10)});
+    component.dateRange.setValue({ start: new Date(2026, 0, 5), end: new Date(2026, 0, 10) });
 
     component.updateReservation();
 
-    expect(reservationServiceMock.updateReservation).toHaveBeenCalledWith('RSV-123', {startDate: '2026-01-05', endDate: '2026-01-10'});
+    expect(reservationServiceMock.updateReservation).toHaveBeenCalledWith('RSV-123', { startDate: '2026-01-05', endDate: '2026-01-10' });
     expect(routerMock.navigate).toHaveBeenCalledWith(['/']);
   });
 
   it('user update should call request service createReservation', () => {
     component.userAdmin = false;
-    component.dateRange.setValue({start: new Date(2026,0,5), end: new Date(2026,0,10)});
-    
+    component.dateRange.setValue({ start: new Date(2026, 0, 5), end: new Date(2026, 0, 10) });
+
     component.requestModification();
     expect(requestServiceMock.createRequest).toHaveBeenCalled();
   });

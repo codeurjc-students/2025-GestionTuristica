@@ -2,13 +2,16 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HotelCreateComponent } from "./hotel-create.component";
 import { HotelService, Room } from "../services/hotel.service";
 import { Router } from "@angular/router";
-import {of} from 'rxjs';
+import { of } from 'rxjs';
+import { NgForm } from "@angular/forms";
+import { DialogService } from "../services/dialog.service";
 
 describe('HotelCreateComponent', () => {
     let component: HotelCreateComponent;
     let fixture: ComponentFixture<HotelCreateComponent>;
     let hotelServiceMock: any;
     let routerMock: any;
+    let dialogServiceMock: any;
 
     beforeEach(async () => {
         hotelServiceMock = {
@@ -19,11 +22,17 @@ describe('HotelCreateComponent', () => {
             navigate: jasmine.createSpy('navigate')
         };
 
+        dialogServiceMock = {
+            confirmationDialog: jasmine.createSpy('confirmationDialog').and.returnValue(of(true)),
+            infoDialog: jasmine.createSpy('infoDialog').and.returnValue(of(true))
+        }
+
         await TestBed.configureTestingModule({
             imports: [HotelCreateComponent],
-            providers:[
-                {provide: HotelService, useValue: hotelServiceMock},
-                {provide: Router, useValue: routerMock}
+            providers: [
+                { provide: HotelService, useValue: hotelServiceMock },
+                { provide: Router, useValue: routerMock },
+                { provide: DialogService, useValue: dialogServiceMock }
             ]
         }).compileComponents();
 
@@ -38,19 +47,19 @@ describe('HotelCreateComponent', () => {
 
     it('Slug should be generated successfully when submitting', () => {
         component.hotelModel.name = "Hotel España Test";
-        component.submit();
+        component.submit(new NgForm([], []));
         expect(component.hotelModel.slug).toBe('hotel-espana-test');
     });
 
     it('Submit should call hotelService create and navigate to main page', () => {
         component.hotelModel.name = 'Hotel Test';
-        component.submit();
+        component.submit(new NgForm([], []));
         expect(hotelServiceMock.create).toHaveBeenCalled();
         expect(routerMock.navigate).toHaveBeenCalledWith(['/hotels/hotel-test/images']);
     });
 
     it('Room should be added when addRoom is called', () => {
-        const room: Room = {id: 1, name: 'Room 1', description: '', price: 30};
+        const room: Room = { id: 1, name: 'Room 1', description: 'Test', price: 30 };
         component.roomModel = room;
         component.addRoom();
         expect(component.hotelModel.rooms.length).toBe(1);
@@ -58,8 +67,8 @@ describe('HotelCreateComponent', () => {
     });
 
     it('Room should be removed when removeRoom is called', () => {
-        const room1: Room = {id: 1, name: 'Room 1', description: '', price: 30};
-        const room2: Room = {id: 1, name: 'Room 2', description: '', price: 50};
+        const room1: Room = { id: 1, name: 'Room 1', description: '', price: 30 };
+        const room2: Room = { id: 1, name: 'Room 2', description: '', price: 50 };
         component.hotelModel.rooms = [room1, room2];
         component.removeRoom(room1);
         expect(component.hotelModel.rooms.length).toBe(1);

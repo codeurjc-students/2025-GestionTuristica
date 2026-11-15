@@ -5,21 +5,23 @@ import { HotelListComponent } from "./hotel-list.component";
 import { provideHttpClient } from '@angular/common/http';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ReservationService } from '../services/reservation.service';
+import { DialogService } from '../services/dialog.service';
 
 describe('HotelListComponent', () => {
     let component: HotelListComponent;
     let fixture: ComponentFixture<HotelListComponent>;
     let mockHotelService: any;
     let mockReservationService: any;
+    let dialogServiceMock: any;
 
 
     const mockPage = {
-    content: [],
-    number: 0,
-    first: true,
-    last: true,
-    totalElements: 2,
-    totalPages: 1
+        content: [],
+        number: 0,
+        first: true,
+        last: true,
+        totalElements: 2,
+        totalPages: 1
     }
 
     const mockReservationsData = [
@@ -55,11 +57,17 @@ describe('HotelListComponent', () => {
             getMostReservedHotels: jasmine.createSpy('getMostReservedHotels').and.returnValue(of(mockReservationsData))
         }
 
+        dialogServiceMock = {
+            confirmationDialog: jasmine.createSpy('confirmationDialog').and.returnValue(of(true)),
+            infoDialog: jasmine.createSpy('infoDialog').and.returnValue(of(true))
+        }
+
         await TestBed.configureTestingModule({
             imports: [HotelListComponent],
             providers: [
-                {provide: HotelService, useValue: mockHotelService},
-                {provide: ReservationService, useValue: mockReservationService},
+                { provide: HotelService, useValue: mockHotelService },
+                { provide: ReservationService, useValue: mockReservationService },
+                { provide: DialogService, useValue: dialogServiceMock },
                 provideHttpClient(),
                 provideCharts(withDefaultRegisterables())
             ]
@@ -81,7 +89,7 @@ describe('HotelListComponent', () => {
     });
 
     it('empty initially', () => {
-       expect(component.hotels.length).toBe(0);
+        expect(component.hotels.length).toBe(0);
     });
 
     it('remove hotel', () => {

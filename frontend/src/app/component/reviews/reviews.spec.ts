@@ -18,6 +18,7 @@ describe('Reviews', () => {
     {
       id: 1,
       reservationIdentifier: 'RSV-123',
+      hotelName: 'Test Hotel',
       roomId: 1,
       roomName: 'Room Test',
       startDate: '2025-12-28',
@@ -31,6 +32,7 @@ describe('Reviews', () => {
     {
       id: 2,
       reservationIdentifier: 'RSV-1234',
+      hotelName: 'Test Hotel',
       roomId: 1,
       roomName: 'Room Test',
       startDate: '2026-01-02',
@@ -75,10 +77,10 @@ describe('Reviews', () => {
         provideHttpClient()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Reviews);
-    component = fixture.componentInstance; 
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 

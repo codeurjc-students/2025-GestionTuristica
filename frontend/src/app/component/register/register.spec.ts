@@ -4,6 +4,7 @@ import { Register } from './register';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 describe('Register', () => {
   let component: Register;
@@ -19,12 +20,12 @@ describe('Register', () => {
     await TestBed.configureTestingModule({
       imports: [Register],
       providers: [
-        {provide: AuthService, useValue: authServiceMock},
+        { provide: AuthService, useValue: authServiceMock },
         provideRouter([]),
-        {provide: ActivatedRoute, useValue: {}}
+        { provide: ActivatedRoute, useValue: {} }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Register);
     component = fixture.componentInstance;
@@ -41,7 +42,7 @@ describe('Register', () => {
     component.name = 'John Doe';
     component.email = 'john@email.com';
     component.password = 'john';
-    component.register();
+    component.register(new NgForm([], []));
     expect(authServiceMock.register).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });

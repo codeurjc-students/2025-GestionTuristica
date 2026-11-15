@@ -14,6 +14,7 @@ describe('ReviewEdit', () => {
   let routerMock: any;
 
   const mockReview = {
+    userName: 'John',
     userEmail: 'john@example.com',
     reservationIdentifier: 'RSV-123',
     roomName: 'Room1',
@@ -50,7 +51,7 @@ describe('ReviewEdit', () => {
         provideHttpClient()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ReviewEdit);
     component = fixture.componentInstance;
