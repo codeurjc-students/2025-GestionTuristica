@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -354,7 +355,8 @@ class ReservationChangeRequestServiceTest {
 
         Room r1 = new Room();
 
-        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN, false,
+                LocalDateTime.now(), LocalDate.now(), LocalDate.now().plusDays(10));
         reservation.setId(1L);
 
         ReservationChangeRequest reservationChangeRequest = new ReservationChangeRequest(reservation, user,

@@ -178,7 +178,8 @@ class ReviewServiceTest {
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
-        Review review = new Review(1L, user, reservation, "Old message", 4.5, LocalDateTime.now());
+        Review review = new Review(user, reservation, "Old message", 4.5, LocalDateTime.now());
+        review.setId(1L);
 
         ReviewUpdateRequest request = new ReviewUpdateRequest("New message", 3.5);
 
@@ -219,7 +220,8 @@ class ReviewServiceTest {
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
 
-        Review review = new Review(1L, user, reservation, "message", 4.5, LocalDateTime.now());
+        Review review = new Review(user, reservation, "message", 4.5);
+        review.setId(1L);
 
         when(reviewRepository.findByReservationReservationIdentifier("RSV-123")).thenReturn(Optional.of(review));
 
