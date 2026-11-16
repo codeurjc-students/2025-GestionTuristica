@@ -84,9 +84,13 @@ public class ReservationService {
         Room room = roomService.getRoomEntityById(roomId);
         long days = request.getStartDate().until(request.getEndDate(), ChronoUnit.DAYS);
         BigDecimal reservationPrice = room.getPrice().multiply(BigDecimal.valueOf(days));
-        Reservation reservation =
-                Reservation.builder().user(user).startDate(request.getStartDate()).endDate(request.getEndDate())
-                        .room(room).reservationIdentifier(generateReservationCode()).reviewed(false).price(reservationPrice).build();
+        Reservation reservation = new Reservation
+                (
+                        generateReservationCode(),
+                        room,
+                        user,
+                        reservationPrice
+                );
 
         emailService.sendReservationConfirmation(convertToEmailDTO(reservation));
 

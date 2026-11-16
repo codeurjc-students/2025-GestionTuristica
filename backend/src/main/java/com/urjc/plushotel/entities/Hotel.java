@@ -3,7 +3,6 @@ package com.urjc.plushotel.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
@@ -16,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Check(constraints = "stars >= 1 AND stars <= 5")
-@Builder
 public class Hotel {
 
     @Id
@@ -24,6 +22,7 @@ public class Hotel {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(length = 500)
     private String description;
     @Column(nullable = false)
     private String country;
@@ -46,4 +45,18 @@ public class Hotel {
         rooms.add(room);
         room.setHotel(this);
     }
+
+    public Hotel(String name, String description, String country, String city, String address, Integer stars,
+                 String slug, List<Room> rooms) {
+        this.name = name;
+        this.description = description;
+        this.country = country;
+        this.city = city;
+        this.address = address;
+        this.stars = stars;
+        this.slug = slug;
+        this.rooms = rooms;
+    }
+
+
 }

@@ -127,16 +127,16 @@ public class HotelService {
     }
 
     private Hotel requestToHotel(HotelRequest request) {
-        return Hotel.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .country(request.getCountry())
-                .city(request.getCity())
-                .address(request.getAddress())
-                .stars(request.getStars())
-                .slug(request.getSlug())
-                .rooms(request.getRooms())
-                .build();
+        return new Hotel(
+                request.getName(),
+                request.getDescription(),
+                request.getCountry(),
+                request.getCity(),
+                request.getAddress(),
+                request.getStars(),
+                request.getSlug(),
+                request.getRooms()
+        );
     }
 
     private HotelDTO convertToDTO(Hotel hotel) {

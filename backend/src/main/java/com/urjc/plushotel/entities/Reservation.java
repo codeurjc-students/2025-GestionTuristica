@@ -2,7 +2,6 @@ package com.urjc.plushotel.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Reservation {
 
     @Id
@@ -29,7 +27,7 @@ public class Reservation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Enumerated(EnumType.STRING)
-    private ReservationStatus status;
+    private ReservationStatus status = ReservationStatus.ACTIVE;
     @Column(nullable = false)
     private boolean reviewed;
     @Column(nullable = false)
@@ -41,6 +39,23 @@ public class Reservation {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.status = ReservationStatus.ACTIVE;
+    }
+
+    public Reservation(String reservationIdentifier, Room room, User user, BigDecimal price) {
+        this.reservationIdentifier = reservationIdentifier;
+        this.room = room;
+        this.user = user;
+        this.price = price;
+    }
+
+    public Reservation(String reservationIdentifier, Room room, User user, BigDecimal price, boolean reviewed, LocalDateTime createdAt, LocalDate startDate, LocalDate endDate) {
+        this.reservationIdentifier = reservationIdentifier;
+        this.room = room;
+        this.user = user;
+        this.price = price;
+        this.reviewed = reviewed;
+        this.createdAt = createdAt;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }

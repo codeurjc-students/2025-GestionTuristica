@@ -67,8 +67,12 @@ public class ReservationChangeRequestService {
         Reservation reservation =
                 reservationService.getReservationEntityByIdentifier(modificationRequest.getReservationIdentifier());
 
-        ReservationChangeRequest request =
-                ReservationChangeRequest.builder().reservation(reservation).user(user).type(modificationRequest.getType()).build();
+        ReservationChangeRequest request = new ReservationChangeRequest
+                (
+                        reservation,
+                        user,
+                        modificationRequest.getType()
+                );
 
         if (request.getType().equals(RequestType.MODIFICATION)) {
             request.setRequestedStartDate(modificationRequest.getRequestedStartDate());

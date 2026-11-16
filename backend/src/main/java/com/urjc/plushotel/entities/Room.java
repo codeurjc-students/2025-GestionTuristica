@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Room {
 
     @Id
@@ -23,6 +21,7 @@ public class Room {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(length = 500)
     private String description;
     @Column(nullable = false)
     private BigDecimal price;
@@ -36,4 +35,11 @@ public class Room {
     @JsonIgnore
     private List<Reservation> reservations;
     private boolean deleted = false;
+
+    public Room(String name, String description, BigDecimal price, Hotel hotel) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.hotel = hotel;
+    }
 }

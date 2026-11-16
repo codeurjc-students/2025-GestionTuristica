@@ -38,13 +38,13 @@ public class ReviewService {
         Reservation reservation =
                 reservationService.getReservationEntityByIdentifier(request.getReservationIdentifier());
 
-        Review review = Review.builder()
-                .message(request.getMessage())
-                .user(user)
-                .reservation(reservation)
-                .rating(request.getRating())
-                .build();
-
+        Review review = new Review(
+                user,
+                reservation,
+                request.getMessage(),
+                request.getRating()
+        );
+        
         reservationService.updateReviewed(request.getReservationIdentifier(), true);
 
         Review createdReview = reviewRepository.save(review);
