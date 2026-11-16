@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -48,14 +49,11 @@ class ReservationChangeRequestServiceTest {
 
         Reservation r2 = new Reservation();
 
-        ReservationChangeRequest request1 =
-                ReservationChangeRequest.builder().id(1L).reservation(r1).user(user)
-                        .type(RequestType.CANCELLATION).status(RequestStatus.PENDING).build();
+        ReservationChangeRequest request1 = new ReservationChangeRequest(r1, user, RequestType.CANCELLATION);
 
-        ReservationChangeRequest request2 =
-                ReservationChangeRequest.builder().id(2L).reservation(r2).user(user)
-                        .type(RequestType.MODIFICATION).requestedStartDate(LocalDate.now())
-                        .requestedEndDate(LocalDate.now().plusDays(10)).status(RequestStatus.PENDING).build();
+        ReservationChangeRequest request2 = new ReservationChangeRequest(r2, user, RequestType.MODIFICATION);
+        request2.setRequestedStartDate(LocalDate.now());
+        request2.setRequestedEndDate(LocalDate.now().plusDays(10));
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
@@ -88,14 +86,13 @@ class ReservationChangeRequestServiceTest {
 
         Reservation r2 = new Reservation();
 
-        ReservationChangeRequest request1 =
-                ReservationChangeRequest.builder().id(1L).reservation(r1).user(user)
-                        .type(RequestType.CANCELLATION).status(RequestStatus.APPROVED).build();
+        ReservationChangeRequest request1 = new ReservationChangeRequest(r1, user, RequestType.CANCELLATION);
+        request1.setStatus(RequestStatus.APPROVED);
 
-        ReservationChangeRequest request2 =
-                ReservationChangeRequest.builder().id(2L).reservation(r2).user(user)
-                        .type(RequestType.MODIFICATION).requestedStartDate(LocalDate.now())
-                        .requestedEndDate(LocalDate.now().plusDays(10)).status(RequestStatus.REJECTED).build();
+        ReservationChangeRequest request2 = new ReservationChangeRequest(r2, user, RequestType.MODIFICATION);
+        request2.setRequestedStartDate(LocalDate.now());
+        request2.setRequestedEndDate(LocalDate.now().plusDays(10));
+        request2.setStatus(RequestStatus.REJECTED);
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
@@ -130,14 +127,13 @@ class ReservationChangeRequestServiceTest {
 
         Reservation r2 = new Reservation();
 
-        ReservationChangeRequest request1 =
-                ReservationChangeRequest.builder().id(1L).reservation(r1).user(user)
-                        .type(RequestType.CANCELLATION).status(RequestStatus.APPROVED).build();
+        ReservationChangeRequest request1 = new ReservationChangeRequest(r1, user, RequestType.CANCELLATION);
+        request1.setStatus(RequestStatus.APPROVED);
 
-        ReservationChangeRequest request2 =
-                ReservationChangeRequest.builder().id(2L).reservation(r2).user(user)
-                        .type(RequestType.MODIFICATION).requestedStartDate(LocalDate.now())
-                        .requestedEndDate(LocalDate.now().plusDays(10)).status(RequestStatus.APPROVED).build();
+        ReservationChangeRequest request2 = new ReservationChangeRequest(r2, user, RequestType.MODIFICATION);
+        request2.setRequestedStartDate(LocalDate.now());
+        request2.setRequestedEndDate(LocalDate.now().plusDays(10));
+        request2.setStatus(RequestStatus.APPROVED);
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
@@ -170,14 +166,13 @@ class ReservationChangeRequestServiceTest {
 
         Reservation r2 = new Reservation();
 
-        ReservationChangeRequest request1 =
-                ReservationChangeRequest.builder().id(1L).reservation(r1).user(user)
-                        .type(RequestType.CANCELLATION).status(RequestStatus.REJECTED).build();
+        ReservationChangeRequest request1 = new ReservationChangeRequest(r1, user, RequestType.CANCELLATION);
+        request1.setStatus(RequestStatus.REJECTED);
 
-        ReservationChangeRequest request2 =
-                ReservationChangeRequest.builder().id(2L).reservation(r2).user(user)
-                        .type(RequestType.MODIFICATION).requestedStartDate(LocalDate.now())
-                        .requestedEndDate(LocalDate.now().plusDays(10)).status(RequestStatus.REJECTED).build();
+        ReservationChangeRequest request2 = new ReservationChangeRequest(r2, user, RequestType.MODIFICATION);
+        request2.setRequestedStartDate(LocalDate.now());
+        request2.setRequestedEndDate(LocalDate.now().plusDays(10));
+        request2.setStatus(RequestStatus.REJECTED);
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
@@ -210,14 +205,12 @@ class ReservationChangeRequestServiceTest {
 
         Reservation r2 = new Reservation();
 
-        ReservationChangeRequest request1 =
-                ReservationChangeRequest.builder().id(1L).reservation(r1).user(user)
-                        .type(RequestType.CANCELLATION).status(RequestStatus.PENDING).build();
+        ReservationChangeRequest request1 = new ReservationChangeRequest(r1, user, RequestType.CANCELLATION);
 
-        ReservationChangeRequest request2 =
-                ReservationChangeRequest.builder().id(2L).reservation(r2).user(user)
-                        .type(RequestType.MODIFICATION).requestedStartDate(LocalDate.now())
-                        .requestedEndDate(LocalDate.now().plusDays(10)).status(RequestStatus.REJECTED).build();
+        ReservationChangeRequest request2 = new ReservationChangeRequest(r2, user, RequestType.MODIFICATION);
+        request2.setRequestedStartDate(LocalDate.now());
+        request2.setRequestedEndDate(LocalDate.now().plusDays(10));
+        request2.setStatus(RequestStatus.REJECTED);
 
         List<ReservationChangeRequest> requests = List.of(request1, request2);
 
@@ -245,7 +238,10 @@ class ReservationChangeRequestServiceTest {
 
         User user = new User();
 
-        Reservation reservation = Reservation.builder().id(1L).build();
+        Room r1 = new Room();
+
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        reservation.setId(1L);
 
         ModificationRequest modificationRequest = ModificationRequest.builder().type(RequestType.CANCELLATION)
                 .userEmail("john@test.com").reservationIdentifier("RSV-123").build();
@@ -265,7 +261,10 @@ class ReservationChangeRequestServiceTest {
 
         User user = new User();
 
-        Reservation reservation = Reservation.builder().id(1L).build();
+        Room r1 = new Room();
+
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        reservation.setId(1L);
 
         ModificationRequest modificationRequest = ModificationRequest.builder().type(RequestType.MODIFICATION)
                 .requestedStartDate(LocalDate.now()).requestedEndDate(LocalDate.now().plusDays(13))
@@ -295,10 +294,15 @@ class ReservationChangeRequestServiceTest {
     @Test
     void approveRequestCancellationSuccessTest() {
 
-        Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
+        User user = new User();
 
-        ReservationChangeRequest reservationChangeRequest =
-                ReservationChangeRequest.builder().id(1L).reservation(reservation).type(RequestType.CANCELLATION).build();
+        Room r1 = new Room();
+
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        reservation.setId(1L);
+
+        ReservationChangeRequest reservationChangeRequest = new ReservationChangeRequest(reservation, user,
+                RequestType.CANCELLATION);
 
         when(reservationChangeRequestRepository.findById(anyLong())).thenReturn(Optional.of(reservationChangeRequest));
 
@@ -311,11 +315,18 @@ class ReservationChangeRequestServiceTest {
     @Test
     void approveRequestModificationSuccessTest() {
 
-        Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
+        User user = new User();
 
-        ReservationChangeRequest reservationChangeRequest =
-                ReservationChangeRequest.builder().id(1L).reservation(reservation).type(RequestType.MODIFICATION)
-                        .requestedStartDate(LocalDate.now()).requestedEndDate(LocalDate.now().plusDays(10)).build();
+        Room r1 = new Room();
+
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        reservation.setId(1L);
+
+        ReservationChangeRequest reservationChangeRequest = new ReservationChangeRequest(reservation, user,
+                RequestType.MODIFICATION);
+        reservationChangeRequest.setRequestedStartDate(LocalDate.now());
+        reservationChangeRequest.setRequestedEndDate(LocalDate.now().plusDays(10));
+        reservationChangeRequest.setId(1L);
 
         when(reservationChangeRequestRepository.findById(anyLong())).thenReturn(Optional.of(reservationChangeRequest));
 
@@ -339,10 +350,16 @@ class ReservationChangeRequestServiceTest {
     @Test
     void rejectRequestSuccessTest() {
 
-        Reservation reservation = Reservation.builder().id(1L).reservationIdentifier("RSV-123").build();
+        User user = new User();
 
-        ReservationChangeRequest reservationChangeRequest =
-                ReservationChangeRequest.builder().id(1L).reservation(reservation).type(RequestType.CANCELLATION).build();
+        Room r1 = new Room();
+
+        Reservation reservation = new Reservation("RSV-123", r1, new User(), BigDecimal.TEN);
+        reservation.setId(1L);
+
+        ReservationChangeRequest reservationChangeRequest = new ReservationChangeRequest(reservation, user,
+                RequestType.CANCELLATION);
+        reservationChangeRequest.setId(1L);
 
         when(reservationChangeRequestRepository.findById(anyLong())).thenReturn(Optional.of(reservationChangeRequest));
 

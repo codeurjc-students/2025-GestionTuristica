@@ -50,11 +50,14 @@ class ReviewServiceTest {
 
     @Test
     void createReviewTest() {
-        User user = User.builder().email("john@example.com").build();
+        User user = new User();
+        user.setEmail("john@example.com");
 
-        Hotel hotel = Hotel.builder().slug("Hotel1").rooms(new ArrayList<>()).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room = Room.builder().id(1L).name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         hotel.addRoom(room);
 
@@ -84,10 +87,12 @@ class ReviewServiceTest {
 
     @Test
     void getReviewsByRoomTest() {
-        User user1 = User.builder().email("john@example.com").build();
-        User user2 = User.builder().email("mark@example.com").build();
+        User user1 = new User();
+        user1.setEmail("john@example.com");
+        User user2 = new User();
+        user2.setEmail("mark@example.com");
 
-        Room room = Room.builder().name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
 
         Reservation reservation1 = new Reservation(1L, "RSV-123", room, user1, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -124,9 +129,10 @@ class ReviewServiceTest {
 
     @Test
     void getReviewByReservationIdentifierSuccessfulTest() {
-        User user = User.builder().email("john@example.com").build();
+        User user = new User();
+        user.setEmail("john@example.com");
 
-        Room room = Room.builder().name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -158,11 +164,14 @@ class ReviewServiceTest {
 
     @Test
     void updateReviewSuccessfulTest() {
-        User user = User.builder().email("john@example.com").build();
+        User user = new User();
+        user.setEmail("john@example.com");
 
-        Hotel hotel = Hotel.builder().slug("h1").rooms(new ArrayList<>()).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room = Room.builder().id(1L).name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        room.setId(1L);
 
         hotel.addRoom(room);
 
@@ -202,9 +211,10 @@ class ReviewServiceTest {
 
     @Test
     void deleteReviewSucessfulTest() {
-        User user = User.builder().email("john@example.com").build();
+        User user = new User();
+        user.setEmail("john@example.com");
 
-        Room room = Room.builder().name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));

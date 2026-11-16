@@ -52,7 +52,8 @@ class RoomServiceTest {
 
     @Test
     void getRoomEntityById() {
-        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        room.setId(1L);
         when(roomRepository.findById(anyLong())).thenReturn(Optional.of(room));
 
         Room resultRoom = roomService.getRoomEntityById(1L);
@@ -73,7 +74,8 @@ class RoomServiceTest {
 
     @Test
     void deleteRoomSuccessfulTest() {
-        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).deleted(false).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        room.setId(1L);
 
         when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
 

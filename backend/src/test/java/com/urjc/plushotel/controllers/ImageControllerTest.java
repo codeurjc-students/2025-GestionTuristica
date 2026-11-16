@@ -20,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +54,8 @@ class ImageControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file".getBytes());
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 0);
         image1.setId(1L);
@@ -72,9 +75,10 @@ class ImageControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file".getBytes());
 
-        Room room = Room.builder().id(1L).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room, 0);
         image1.setId(1L);
@@ -168,7 +172,8 @@ class ImageControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file".getBytes());
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 0);
         image1.setId(1L);
@@ -186,9 +191,10 @@ class ImageControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file".getBytes());
 
-        Room room = Room.builder().id(1L).build();
-
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
+        
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room, 0);
         image1.setId(1L);

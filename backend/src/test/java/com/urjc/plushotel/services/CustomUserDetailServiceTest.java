@@ -28,7 +28,7 @@ class CustomUserDetailServiceTest {
     @Test
     void loadUserByUsernameTest() {
 
-        User user = User.builder().name("John").role(Role.USER).email("john@example.com").build();
+        User user = new User("John", "john@example.com", "john", Role.USER);
 
         when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(user));
 
