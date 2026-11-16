@@ -153,7 +153,8 @@ class ReservationServiceTest {
         Hotel hotel = new Hotel();
         hotel.setName("Hotel1");
 
-        Room room = Room.builder().id(1L).name("Room1").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         hotel.addRoom(room);
 
@@ -180,8 +181,10 @@ class ReservationServiceTest {
     void reserveRoomTest() {
 
         User user = new User();
-        Room room = Room.builder().id(1L).name("Room1").price(BigDecimal.TEN).build();
-        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
         hotel.addRoom(room);
 
         ReservationRequest request = new ReservationRequest(LocalDate.parse("2025-12-19"), LocalDate.parse("2025-12" +
@@ -244,8 +247,10 @@ class ReservationServiceTest {
     void cancelReservationTest() {
 
         User user = new User();
-        Room room = new Room();
-        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
         hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,
@@ -332,8 +337,10 @@ class ReservationServiceTest {
     void updateReservationTest() {
 
         User user = new User();
-        Room room = Room.builder().price(BigDecimal.TEN).build();
-        Hotel hotel = Hotel.builder().name("Hotel1").rooms(new ArrayList<>()).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
         hotel.addRoom(room);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, true,

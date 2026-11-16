@@ -2,7 +2,6 @@ package com.urjc.plushotel.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +15,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User implements UserDetails {
 
     @Id
@@ -35,6 +33,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    public User(String name, String email, String password, Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

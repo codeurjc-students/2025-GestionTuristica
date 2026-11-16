@@ -93,8 +93,8 @@ class HotelControllerTest {
                 "Madrid").address("C/" +
                 " Example 4, Madrid").stars(3).slug("h1").build();
 
-        Hotel savedH1 = Hotel.builder().id(1L).name("H1").description("Hotel1 desc").country("España").city("Madrid")
-                .address("C/ Example 4, Madrid").stars(3).slug("h1").build();
+        Hotel savedH1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         when(hotelService.createHotel(any())).thenReturn(savedH1);
 
@@ -114,17 +114,17 @@ class HotelControllerTest {
                 HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
                         " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
 
-        Room room = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).build();
-        Room deletedRoom = Room.builder().id(3L).name("Deleted room").description("").price(BigDecimal.ONE).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        Room deletedRoom = new Room("Deleted", "", BigDecimal.ONE, null);
 
         request.getRooms().add(room);
         request.getRooms().add(deletedRoom);
 
-        Room updatedRoom = Room.builder().id(1L).name("Room 1").description("").price(BigDecimal.ONE).build();
-        Room newRoom = Room.builder().name("Room 2").description("").price(BigDecimal.ONE).build();
+        Room updatedRoom = new Room("Updated Room 1", "", BigDecimal.ONE, null);
+        Room newRoom = new Room("Room 2", "", BigDecimal.ONE, null);
 
-        Hotel updatedH1 = Hotel.builder().name("Updated H1").description("Hotel1 desc").country("España").city("Madrid")
-                .address("C/ Example 4, Madrid").stars(3).slug("updated-h1").rooms(new ArrayList<>()).build();
+        Hotel updatedH1 = new Hotel(1L, "Updated H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "updated-h1", 3.6, new ArrayList<>(), false);
 
         updatedH1.addRoom(updatedRoom);
         updatedH1.addRoom(newRoom);

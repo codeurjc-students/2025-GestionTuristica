@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +48,8 @@ class ImageServiceTest {
 
         MultipartFile file = mock(MultipartFile.class);
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         HotelImage savedImage = new HotelImage("file.jpg", hotel, 0);
         savedImage.setId(1L);
@@ -70,9 +73,11 @@ class ImageServiceTest {
 
         MultipartFile file = mock(MultipartFile.class);
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room = Room.builder().id(1L).hotel(hotel).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         HotelImage savedImage = new HotelImage("file.jpg", hotel, room, 0);
         savedImage.setId(1L);
@@ -94,9 +99,11 @@ class ImageServiceTest {
     @Test
     void getImagesByRoomIdTest() {
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room = Room.builder().id(1L).hotel(hotel).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room, 0);
         image1.setId(1L);
@@ -120,9 +127,11 @@ class ImageServiceTest {
     @Test
     void getHotelsMainImagesTest() {
 
-        Hotel h1 = Hotel.builder().id(1L).slug("h1").build();
+        Hotel h1 = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Hotel h2 = Hotel.builder().id(1L).slug("h2").build();
+        Hotel h2 = new Hotel(2L, "H2", "Hotel2 desc", "España", "Madrid", "C/" +
+                " Example 5, Madrid", 3, "h2", 3.6, new ArrayList<>(), false);
 
         HotelImage image1 = new HotelImage("file1.jpg", h1, 0);
         image1.setId(1L);
@@ -146,10 +155,13 @@ class ImageServiceTest {
     @Test
     void getHotelRoomsMainImagesTest() {
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room1 = Room.builder().id(1L).hotel(hotel).build();
-        Room room2 = Room.builder().id(2L).hotel(hotel).build();
+        Room room1 = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room1.setId(1L);
+        Room room2 = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room2.setId(2L);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room1, 0);
         image1.setId(1L);
@@ -173,9 +185,11 @@ class ImageServiceTest {
     @Test
     void getHotelImagesTest() {
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Room room = Room.builder().id(1L).hotel(hotel).build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        room.setId(1L);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 0);
         image1.setId(1L);
@@ -199,7 +213,8 @@ class ImageServiceTest {
     @Test
     void deleteImageSuccessTest() {
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 0);
         image1.setId(1L);
@@ -228,9 +243,11 @@ class ImageServiceTest {
 
         HotelImageUpdateRequest request = new HotelImageUpdateRequest(1L, ImageType.ROOM, 1);
 
-        Room room = Room.builder().id(1L).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 1);
         image1.setId(1L);
@@ -261,9 +278,11 @@ class ImageServiceTest {
 
         HotelImageUpdateRequest request = new HotelImageUpdateRequest(null, ImageType.ROOM, 1);
 
-        Room room = Room.builder().id(1L).build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
+        room.setId(1L);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room, 0);
         image1.setId(1L);
@@ -291,7 +310,8 @@ class ImageServiceTest {
     @Test
     void updateImageNotFoundTest() {
 
-        Hotel hotel = Hotel.builder().id(1L).slug("hotel-test").build();
+        Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
+                " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, 0);
         image1.setId(1L);

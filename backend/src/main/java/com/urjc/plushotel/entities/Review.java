@@ -2,7 +2,6 @@ package com.urjc.plushotel.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Check(constraints = "rating >= 1 AND rating <= 5")
-@Builder
 public class Review {
 
     @Id
@@ -36,5 +34,20 @@ public class Review {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Review(User user, Reservation reservation, String message, Double rating) {
+        this.user = user;
+        this.reservation = reservation;
+        this.message = message;
+        this.rating = rating;
+    }
+
+    public Review(User user, Reservation reservation, String message, Double rating, LocalDateTime createdAt) {
+        this.user = user;
+        this.reservation = reservation;
+        this.message = message;
+        this.rating = rating;
+        this.createdAt = createdAt;
     }
 }

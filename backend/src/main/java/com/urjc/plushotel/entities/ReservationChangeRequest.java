@@ -2,7 +2,6 @@ package com.urjc.plushotel.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ReservationChangeRequest {
 
     @Id
@@ -30,7 +28,7 @@ public class ReservationChangeRequest {
     private RequestType type;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private RequestStatus status;
+    private RequestStatus status = RequestStatus.PENDING;
     private LocalDate requestedStartDate;
     private LocalDate requestedEndDate;
     @Column(nullable = false)
@@ -39,6 +37,11 @@ public class ReservationChangeRequest {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.status = RequestStatus.PENDING;
+    }
+
+    public ReservationChangeRequest(Reservation reservation, User user, RequestType type) {
+        this.reservation = reservation;
+        this.user = user;
+        this.type = type;
     }
 }

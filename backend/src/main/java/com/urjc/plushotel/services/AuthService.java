@@ -39,11 +39,12 @@ public class AuthService {
             throw new EmailAlreadyRegisteredException("This email is already registered");
         }
 
-        User newUser = User.builder()
-                .name(registerRequest.getName())
-                .email(registerRequest.getEmail())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(Role.USER).build();
+        User newUser = new User(
+                registerRequest.getName(),
+                registerRequest.getEmail(),
+                passwordEncoder.encode(registerRequest.getPassword()),
+                Role.USER
+        );
 
         userRepository.save(newUser);
     }

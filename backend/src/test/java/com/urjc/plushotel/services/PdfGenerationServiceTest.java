@@ -26,11 +26,11 @@ class PdfGenerationServiceTest {
 
         Hotel hotel = new Hotel();
 
-        Room room = Room.builder().name("Room").build();
+        Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
 
         hotel.addRoom(room);
 
-        User user = User.builder().email("john@example.com").name("John").build();
+        User user = new User("John", "john@example.com", "john", Role.USER);
 
         Reservation reservation = new Reservation(1L, "RSV-123", room, user, ReservationStatus.ACTIVE, false,
                 BigDecimal.TEN, LocalDateTime.now(), LocalDate.parse("2025-12-24"), LocalDate.parse("2025-12-26"));
@@ -40,7 +40,7 @@ class PdfGenerationServiceTest {
         pdfGenerationService.generateReservationPdf(reservation, outputStream);
 
         byte[] resultArray = outputStream.toByteArray();
-        
+
         assertNotNull(resultArray);
         assertTrue(resultArray.length > 0);
     }
