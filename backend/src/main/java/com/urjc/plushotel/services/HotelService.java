@@ -6,6 +6,7 @@ import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Reservation;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.HotelNotFoundException;
 import com.urjc.plushotel.repositories.HotelRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class HotelService {
 
     public Hotel findBySlug(String slug) {
         return hotelRepository.findBySlug(slug).orElseThrow(
-                () -> new RuntimeException("This hotel doesn't exist")
+                () -> new HotelNotFoundException("This hotel doesn't exist")
         );
     }
 
@@ -69,7 +70,7 @@ public class HotelService {
 
     public Hotel updateHotel(HotelRequest hotel, String slug) {
         Hotel savedHotel = hotelRepository.findBySlug(slug).orElseThrow(
-                () -> new RuntimeException("This hotel doesn't exist")
+                () -> new HotelNotFoundException("This hotel doesn't exist")
         );
 
         savedHotel.setName(hotel.getName());
@@ -107,7 +108,7 @@ public class HotelService {
 
     public void removeHotel(String slug) {
         Hotel hotelToRemove = hotelRepository.findBySlug(slug).orElseThrow(
-                () -> new RuntimeException("Hotel not found")
+                () -> new HotelNotFoundException("Hotel not found")
         );
 
         hotelToRemove.setDeleted(true);
