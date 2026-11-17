@@ -9,9 +9,9 @@ export const roleGuard: CanActivateFn = (route) => {
     const expectedRoles = route.data['roles'] as string[];
     const userRole = authService.getRole();
 
-    if(userRole && expectedRoles.includes(userRole)) {
+    if (userRole && expectedRoles.includes(userRole)) {
         return true;
     }
 
-    return router.createUrlTree(['/login']);
+    return router.navigate(['/error'], { queryParams: { reason: 'not-found' } });
 }
