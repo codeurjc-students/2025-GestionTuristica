@@ -35,5 +35,6 @@ export const routes: Routes = [
     { path: 'reviews/edit/:reservationIdentifier', component: ReviewEdit, canActivate: [roleGuard], data: { roles: ['ROLE_USER'] } },
     { path: 'hotels/:slug/images', component: HotelImages, canActivate: [roleGuard], data: { roles: ['ROLE_ADMIN'] } },
     { path: 'error', component: Error },
+    { path: '', redirectTo: 'hotels', pathMatch: 'full' },
     { path: '**', redirectTo: 'error' }
 ];
