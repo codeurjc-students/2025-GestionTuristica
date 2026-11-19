@@ -5,6 +5,7 @@ import com.urjc.plushotel.config.JwtAuthenticationFilter;
 import com.urjc.plushotel.dtos.request.LoginRequest;
 import com.urjc.plushotel.dtos.request.RegisterRequest;
 import com.urjc.plushotel.dtos.response.LoginTokenDTO;
+import com.urjc.plushotel.exceptions.EmailAlreadyRegisteredException;
 import com.urjc.plushotel.services.AuthService;
 import com.urjc.plushotel.utils.EndpointConstants;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,6 +47,19 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void registerUserEmailRegisteredTest() throws Exception {
+
+        RegisterRequest registerRequest = new RegisterRequest("John", "john@email.com", "john");
+
+        doThrow(EmailAlreadyRegisteredException.class).when(authService).registerUser(registerRequest);
+
+        mockMvc.perform(post("/api/v1/auth" + EndpointConstants.AuthorizationEndpoints.REGISTER_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
+                .andExpect(status().isConflict());
     }
 
     @Test
