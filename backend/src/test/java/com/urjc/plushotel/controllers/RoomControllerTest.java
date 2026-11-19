@@ -1,6 +1,7 @@
 package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.dtos.response.RoomDTO;
+import com.urjc.plushotel.exceptions.RoomNotFoundException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.JwtService;
@@ -56,6 +57,16 @@ class RoomControllerTest {
                 .andExpect(jsonPath("$.name").value("Room1"))
                 .andExpect(jsonPath("$.description").value("Small room"))
                 .andExpect(jsonPath("$.price").value(10));
+    }
+
+    @Test
+    @WithMockUser
+    void getRoomByRoomIdNotFoundTest() throws Exception {
+
+        when(roomService.getRoomById(anyLong())).thenThrow(RoomNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.RoomsEndpoints.ROOMS_ID_URL, "1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

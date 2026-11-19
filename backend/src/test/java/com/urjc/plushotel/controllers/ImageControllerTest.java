@@ -8,6 +8,8 @@ import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.HotelImage;
 import com.urjc.plushotel.entities.ImageType;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.ImageNotFoundException;
+import com.urjc.plushotel.exceptions.MinioErrorException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.ImageService;
 import com.urjc.plushotel.services.JwtService;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -67,6 +70,20 @@ class ImageControllerTest {
                         .param("position", "0"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/v1/images/1"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void uploadImageMinioExceptionTest() throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file".getBytes());
+
+        when(imageService.uploadImage(any(), eq("hotel-test"), eq(0))).thenThrow(MinioErrorException.class);
+
+        mockMvc.perform(multipart("/api/v1/images/hotel/{slug}", "hotel-test")
+                        .file(file)
+                        .param("position", "0"))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -161,10 +178,35 @@ class ImageControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
+    void updateImageNotFoundTest() throws Exception {
+
+        HotelImageUpdateRequest request = new HotelImageUpdateRequest(null, ImageType.HOTEL, 2);
+
+        when(imageService.updateImage(eq(1L), any(HotelImageUpdateRequest.class))).thenThrow(ImageNotFoundException.class);
+
+        mockMvc.perform(put("/api/v1/images/{imageId}", 1)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void deleteImageTest() throws Exception {
 
         mockMvc.perform(delete("/api/v1/images/{imageId}", 1))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void deleteImageNotFoundTest() throws Exception {
+
+        doThrow(ImageNotFoundException.class).when(imageService).deleteImage(1L);
+
+        mockMvc.perform(delete("/api/v1/images/{imageId}", 1))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -193,7 +235,7 @@ class ImageControllerTest {
 
         Hotel hotel = new Hotel(1L, "H1", "Hotel1 desc", "España", "Madrid", "C/" +
                 " Example 4, Madrid", 3, "h1", 3.6, new ArrayList<>(), false);
-        
+
         Room room = new Room("Room 1", "", BigDecimal.ONE, hotel);
 
         HotelImage image1 = new HotelImage("file1.jpg", hotel, room, 0);

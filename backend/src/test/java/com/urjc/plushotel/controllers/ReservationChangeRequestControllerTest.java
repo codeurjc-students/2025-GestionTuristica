@@ -6,6 +6,8 @@ import com.urjc.plushotel.dtos.request.ModificationRequest;
 import com.urjc.plushotel.dtos.response.ModificationRequestDTO;
 import com.urjc.plushotel.entities.RequestStatus;
 import com.urjc.plushotel.entities.RequestType;
+import com.urjc.plushotel.exceptions.NullModificationDatesException;
+import com.urjc.plushotel.exceptions.ReservationChangeRequestNotFoundException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.ReservationChangeRequestService;
@@ -48,7 +50,7 @@ class ReservationChangeRequestControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void findReservationChangeRequestsSuccess() throws Exception {
+    void findReservationChangeRequestsSuccessTest() throws Exception {
 
         ModificationRequestDTO request1 =
                 ModificationRequestDTO.builder().id(1L).reservationIdentifier("RSV-123").userEmail("john@test.com")
@@ -76,7 +78,7 @@ class ReservationChangeRequestControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    void createRequestSuccess() throws Exception {
+    void createRequestSuccessTest() throws Exception {
 
         ModificationRequest modificationRequest = ModificationRequest.builder().type(RequestType.CANCELLATION)
                 .userEmail("john@test.com").reservationIdentifier("RSV-123").build();
@@ -90,8 +92,25 @@ class ReservationChangeRequestControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
+    void createRequestNullModificationDatesNullTest() throws Exception {
+
+        ModificationRequest modificationRequest = ModificationRequest.builder().type(RequestType.MODIFICATION)
+                .userEmail("john@test.com").reservationIdentifier("RSV-123").build();
+
+        doThrow(NullModificationDatesException.class).when(reservationChangeRequestService).createRequest(modificationRequest);
+
+        mockMvc.perform(post("/api/v1/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(modificationRequest)))
+                .andExpect(status().isBadRequest());
+
+        verify(reservationChangeRequestService, times(1)).createRequest(any());
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
-    void approveRequestSuccess() throws Exception {
+    void approveRequestSuccessTest() throws Exception {
 
         mockMvc.perform(patch("/api/v1/requests/approve/1")).andExpect(status().isOk());
 
@@ -100,9 +119,31 @@ class ReservationChangeRequestControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void rejectRequestSuccess() throws Exception {
+    void approveRequestNotFoundTest() throws Exception {
+
+        doThrow(ReservationChangeRequestNotFoundException.class).when(reservationChangeRequestService).approveRequest(1L);
+
+        mockMvc.perform(patch("/api/v1/requests/approve/1")).andExpect(status().isNotFound());
+
+        verify(reservationChangeRequestService, times(1)).approveRequest(1L);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void rejectRequestSuccessTest() throws Exception {
 
         mockMvc.perform(patch("/api/v1/requests/reject/1")).andExpect(status().isOk());
+
+        verify(reservationChangeRequestService, times(1)).rejectRequest(1L);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void rejectRequestNotFoundTest() throws Exception {
+
+        doThrow(ReservationChangeRequestNotFoundException.class).when(reservationChangeRequestService).rejectRequest(1L);
+
+        mockMvc.perform(patch("/api/v1/requests/reject/1")).andExpect(status().isNotFound());
 
         verify(reservationChangeRequestService, times(1)).rejectRequest(1L);
     }

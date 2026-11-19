@@ -27,16 +27,20 @@ export class AuthService {
     private readonly loggedInSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
     loggedIn$ = this.loggedInSubject.asObservable();
 
-    constructor(private readonly http: HttpClient){}
+     private readonly roleSubject = new BehaviorSubject<string | null>(this.getRole());
+     role$ = this.roleSubject.asObservable();
+
+    constructor(private readonly http: HttpClient) { }
 
     login(credentials: LoginRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(this.apiUrl + "/login", credentials)
-        .pipe(
-            tap(response => {
-                this.storeToken(response.token);
-                this.loggedInSubject.next(true);
-            })
-        );
+            .pipe(
+                tap(response => {
+                    this.storeToken(response.token);
+                    this.loggedInSubject.next(true);
+                    this.roleSubject.next(this.getRole());
+                })
+            );
     }
 
     register(credentials: RegisterRequest): Observable<void> {
@@ -46,6 +50,7 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem('auth_token');
         this.loggedInSubject.next(false);
+        this.roleSubject.next(null);
     }
 
     getToken(): string | null {
@@ -54,23 +59,23 @@ export class AuthService {
 
     getRole(): string | null {
         const token = this.getToken();
-        if(!token) return null;
+        if (!token) return null;
 
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.role;
     }
-    
+
     getUserId(): string | null {
         const token = this.getToken();
-        if(!token) return null;
-        
+        if (!token) return null;
+
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.userId;
     }
 
     getUserEmail(): string | null {
         const token = this.getToken();
-        if(!token) return null;
+        if (!token) return null;
 
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.sub;

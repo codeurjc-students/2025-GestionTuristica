@@ -6,6 +6,8 @@ import com.urjc.plushotel.dtos.response.ReservationDTO;
 import com.urjc.plushotel.dtos.response.ReservedDatesDTO;
 import com.urjc.plushotel.entities.ReservationFilter;
 import com.urjc.plushotel.entities.ReservationStatus;
+import com.urjc.plushotel.exceptions.InvalidReservationRangeException;
+import com.urjc.plushotel.exceptions.ReservationNotFoundException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.ReservationService;
@@ -25,8 +27,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.endsWith;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -91,6 +93,17 @@ class ReservationControllerTest {
 
     @Test
     @WithMockUser
+    void getReservationByReservationIdentifierNotFoundTest() throws Exception {
+
+        when(reservationService.getReservationByIdentifier(anyString())).thenThrow(ReservationNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL,
+                        "RSV-123L"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
     void getReservedDatesByRoomIdTest() throws Exception {
 
         ReservedDatesDTO dates1 = new ReservedDatesDTO(LocalDate.parse("2025-12-23"), LocalDate.now().plusDays(3));
@@ -136,8 +149,29 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
+    void reserveRoomInvalidDatesTest() throws Exception {
+
+        String reservationRequest = """
+                {
+                    "startDate": "2025-12-23",
+                    "endDate": "2025-12-21",
+                    "roomId": "1"
+                }
+                """;
+
+        when(reservationService.reserveRoom(any(), any(), any())).thenThrow(InvalidReservationRangeException.class);
+
+        mockMvc.perform(post("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_CREATE_URL, "1")
+                        .content(reservationRequest)
+                        .header("Content-Type", "application/json")
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
-    void updateRoomTest() throws Exception {
+    void updateReservationTest() throws Exception {
 
         String request = """
                 {
@@ -162,6 +196,25 @@ class ReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
+    void updateReservationNotFoundTest() throws Exception {
+
+        String request = """
+                {
+                    "startDate": "2025-12-23",
+                    "endDate": "2025-12-25"
+                }
+                """;
+
+        when(reservationService.updateReservation(anyString(), any())).thenThrow(ReservationNotFoundException.class);
+
+        mockMvc.perform(patch("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL, "1")
+                        .content(request)
+                        .header("Content-Type", "application/json"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void cancelReservationTest() throws Exception {
 
         mockMvc.perform(delete("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL,
@@ -170,13 +223,35 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
+    void cancelReservationNotFoundTest() throws Exception {
+
+        doThrow(ReservationNotFoundException.class).when(reservationService).cancelReservation("RSV-123");
+
+        mockMvc.perform(delete("/api/v1" + EndpointConstants.ReservationsEndpoints.RESERVATIONS_IDENTIFIER_URL,
+                        "RSV-123"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @WithMockUser(roles = "USER")
-    void generatePdf() throws Exception {
+    void generatePdfTest() throws Exception {
 
         mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.GENERATE_PDF_URL,
                         "RSV-123"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/pdf"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void generatePdfNotFoundTest() throws Exception {
+
+        doThrow(ReservationNotFoundException.class).when(reservationService).generatePdf(eq("RSV-123"), any());
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReservationsEndpoints.GENERATE_PDF_URL,
+                        "RSV-123"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

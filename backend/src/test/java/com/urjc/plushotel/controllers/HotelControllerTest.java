@@ -7,6 +7,7 @@ import com.urjc.plushotel.dtos.request.HotelRequest;
 import com.urjc.plushotel.dtos.response.HotelDTO;
 import com.urjc.plushotel.entities.Hotel;
 import com.urjc.plushotel.entities.Room;
+import com.urjc.plushotel.exceptions.HotelNotFoundException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.HotelRoomCardService;
 import com.urjc.plushotel.services.HotelService;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -86,6 +88,15 @@ class HotelControllerTest {
     }
 
     @Test
+    void findHotelBySlugNotFoundTest() throws Exception {
+
+        when(hotelService.getHotelBySlug(anyString())).thenThrow(HotelNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1/hotels/{}", "h1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void createHotelTest() throws Exception {
 
@@ -140,7 +151,39 @@ class HotelControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
+    void updateHotelNotFoundTest() throws Exception {
+
+        HotelRequest request =
+                HotelRequest.builder().name("H1").description("Hotel1 desc").country("España").city("Madrid").address("C/" +
+                        " Example 4, Madrid").stars(3).slug("h1").rooms(new ArrayList<>()).build();
+
+        Room room = new Room("Room 1", "", BigDecimal.ONE, null);
+        Room deletedRoom = new Room("Deleted", "", BigDecimal.ONE, null);
+
+        request.getRooms().add(room);
+        request.getRooms().add(deletedRoom);
+
+        when(hotelService.updateHotel(any(), anyString())).thenThrow(HotelNotFoundException.class);
+
+        mockMvc.perform(put("/api/v1/hotels/{}", "h1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void removeHotelTest() throws Exception {
+
+        mockMvc.perform(delete("/api/v1/hotels/{}", "h1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void removeHotelNotFoundTest() throws Exception {
+
+        doThrow(HotelNotFoundException.class).when(hotelService).removeHotel("h1");
 
         mockMvc.perform(delete("/api/v1/hotels/{}", "h1"))
                 .andExpect(status().isNoContent());

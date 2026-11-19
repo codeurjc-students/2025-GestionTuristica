@@ -2,6 +2,7 @@ package com.urjc.plushotel.controllers;
 
 import com.urjc.plushotel.config.SecurityConfig;
 import com.urjc.plushotel.dtos.response.ReviewDTO;
+import com.urjc.plushotel.exceptions.ReviewNotFoundException;
 import com.urjc.plushotel.services.CustomUserDetailsService;
 import com.urjc.plushotel.services.JwtService;
 import com.urjc.plushotel.services.ReviewService;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -112,6 +114,17 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
+    void getReviewByReviewIdentifierNotFoundTest() throws Exception {
+
+        when(reviewService.getReviewByReservationIdentifier("RSV-123")).thenThrow(ReviewNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL, "RSV" +
+                        "-123"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
     void updateReviewTest() throws Exception {
 
         String request = """
@@ -138,10 +151,41 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
+    void updateReviewNotFoundTest() throws Exception {
+
+        String request = """
+                {
+                    "message": "Updated message",
+                    "rating": 4.0
+                }
+                """;
+
+        when(reviewService.updateReview(any(), any())).thenThrow(ReviewNotFoundException.class);
+
+        mockMvc.perform(patch("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL,
+                        "RSV-123")
+                        .content(request)
+                        .header("Content-Type", "application/json"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
     void deleteReviewTest() throws Exception {
 
         mockMvc.perform(delete("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL,
                         "RSV-123"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void deleteReviewNotFoundTest() throws Exception {
+
+        doThrow(ReviewNotFoundException.class).when(reviewService).deleteReview("RSV-123");
+
+        mockMvc.perform(delete("/api/v1" + EndpointConstants.ReviewsEndpoints.REVIEW_RESERVATION_IDENTIFIER_URL,
+                        "RSV-123"))
+                .andExpect(status().isNotFound());
     }
 }
